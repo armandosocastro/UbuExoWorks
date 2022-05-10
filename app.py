@@ -3,6 +3,7 @@ import os
 from flask_sqlalchemy import SQLAlchemy
 from flask import Flask
 
+#Importamos la configuracion del fichero config.py
 from config import config
 
 # Routes
@@ -10,14 +11,13 @@ from routes import Usuarios
 
 
 app = Flask(__name__)
-#app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://adminDB:3x0w0rks@localhost:5432/DBexoWorks'
-#app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
 
 
 def page_not_found(error):
     return "<h1> Not found page </h1>",404
 
-#db = SQLAlchemy(app)
+db = SQLAlchemy(app)
 
 _port = os.environ.get('PORT', 5000)
 
