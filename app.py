@@ -10,7 +10,7 @@ from config import config
 from routes import Usuarios
 
 
-app = Flask(__name__)
+app = Flask(__name__, static_url_path='/')
 
 
 
@@ -20,6 +20,7 @@ def page_not_found(error):
 db = SQLAlchemy(app)
 
 _port = os.environ.get('PORT', 5000)
+
 
 @app.route("/")
 def home():
