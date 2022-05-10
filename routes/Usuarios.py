@@ -13,4 +13,3 @@ def get_usuarios():
         return jsonify(usuarios)
     except Exception as ex:
         return jsonify({'mensaje': str(ex)}), 500
-    

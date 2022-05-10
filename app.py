@@ -33,8 +33,8 @@ if __name__ == '__main__':
     
     # Blueprints
     # Cuando accedamos a localhost/api/usuarios nos enlace con la ruta / del blueprint usuarios
-    app.register_blueprint(Usuarios.main, url_prefix='/api/usuarios')
-    
+    #app.register_blueprint(Usuarios.main, url_prefix='/api/usuarios')
+    app.register_blueprint(Usuarios.main, url_prefix='/api')
     #Manejador de errores
     app.register_error_handler(404, page_not_found)
     app.run(threaded=True, port=_port)
