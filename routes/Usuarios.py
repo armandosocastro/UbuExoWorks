@@ -6,6 +6,12 @@ from models.UsuariosModel import UsuarioModel
 
 main = Blueprint('usuarios_blueprint', __name__)
 
+prueba = Blueprint('prueba', __name__)
+
+@prueba.route('/')
+def probando():
+    return "PRobando Probando......"
+
 @main.route('/', methods=('GET', 'POST'))
 def get_usuarios():
     try:
