@@ -27,6 +27,16 @@ def home():
     return "Hello, Flask!"
 
 
+@app.route('/rutas')
+def muestra_rutas():
+
+    routes = []
+
+    for rule in app.url_map.iter_rules():
+        routes.append('%s' % rule)
+
+    return routes
+
 if __name__ == '__main__':
     # Threaded option to enable multiple instances for multiple user access support
     app.config.from_object(config['development'])
@@ -38,4 +48,4 @@ if __name__ == '__main__':
     app.register_blueprint(Usuarios.main, url_prefix='/api/usuarios')
     #Manejador de errores
     app.register_error_handler(404, page_not_found)
-    app.run(threaded=True, port=_port)
+    app.run(host='0.0.0.0', port=_port)
