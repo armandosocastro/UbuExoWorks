@@ -20,7 +20,7 @@ def create_app():
 
     db = SQLAlchemy(app)
 
-    _port = os.environ.get('PORT', 5000)
+    #_port = os.environ.get('PORT', 5000)
 
 
     @app.route("/")
