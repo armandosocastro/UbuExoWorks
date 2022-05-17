@@ -4,6 +4,7 @@ import re
 
 from flask_sqlalchemy import SQLAlchemy
 from flask import Flask
+from werkzeug.security import generate_password_hash,check_password_hash
 
 #Importamos la configuracion del fichero config.py
 from config import config
@@ -56,36 +57,5 @@ def create_app():
     app.register_error_handler(404, page_not_found)
            #app.run(host='0.0.0.0', port=_port)
     
-    
-    
-
-    
-    
-    
-
-
-    
-    
-
-    
-
-    
-    
-
-    
-
- 
- 
- 
-
- 
- 
- 
- 
- 
- 
- 
- 
- 
-
+            
     return app    

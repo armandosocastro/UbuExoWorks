@@ -4,6 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Boolean, Column, ForeignKey, DateTime, Integer, Text, Float, Time
 from sqlalchemy.orm import relationship
 from database.database import db
+from werkzeug.security import generate_password_hash, check_password_hash
 
 
 class Usuario(db.Model):
@@ -28,7 +29,7 @@ class Usuario(db.Model):
         self.nombre=nombre
         self.apellidos=apellidos
         self.login=login
-        self.password=password
+        self.password=generate_password_hash(password)
         self.estado=estado
         self.idEmpresa=idEmpresa
         self.idJornadaLaboral=idJornadaLaboral
@@ -42,6 +43,12 @@ class Usuario(db.Model):
     @staticmethod
     def get_by_login(login):    
         return Usuario.query.filter_by(login=login).first()
+    
+    def set_password(self, password):
+        self.password = generate_password_hash(password)
+        
+    def check_password(self, password):
+        return check_password_hash(self.password, password)
     
     #Metodo para poder serializarlo y enviarlo como un JSON
     def to_JSON(self):
