@@ -44,7 +44,7 @@ def get_usuariios2():
 @expects_json()
 def login():
     datos = request.get_json()
-    
+   
     password=datos.get('password','')
     if password == "":
         return jsonify(error = "username vacio"),400

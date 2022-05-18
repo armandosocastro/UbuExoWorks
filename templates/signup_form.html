@@ -1,0 +1,40 @@
+{% extends "base_template.html" %}
+
+{% block title %}Registro de usuarios{% endblock %}
+
+{% block content %}
+    {% if error %}
+        <p style="color: red;"><strong>Error:</strong> {{ error }}
+    {% endif %}
+    <form action="" method="post" novalidate>
+        {{ form.hidden_tag() }}
+
+        <p>
+            {{ form.email.label }}<br>
+            {{ form.email(size=60) }}<br>
+            {% for error in form.email.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+          </p>
+          <p>
+            {{ form.password.label }}<br>
+                  {{ form.password(size=32) }}<br>
+                  {% for error in form.password2.errors %}
+                  <span style="color: red;">[{{ error }}]</span>
+                  {% endfor %}
+          </p>
+          <p>
+                  {{ form.password2.label }}<br>
+                  {{ form.password2(size=30) }}<br>
+                  {% for error in form.password2.errors %}
+                  <span style="color: red;">[{{ error }}]</span>
+                  {% endfor %}
+              </p>
+              <p>{{ form.submit() }}</p>
+          </form>
+
+
+>
+
+    </form>
+{% endblock %}        

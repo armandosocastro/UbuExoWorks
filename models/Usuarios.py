@@ -15,7 +15,7 @@ class Usuario(db.Model):
     nombre = db.Column(db.String(45), nullable=False)
     apellidos = db.Column(db.String(45), nullable=False)
     login = db.Column(db.String(45), nullable=False)
-    password = db.Column(db.String(45), nullable=False)
+    password = db.Column(db.String(128), nullable=False)
     estado = db.Column(db.Boolean, nullable=False)
     idEmpresa = db.Column(db.Integer, ForeignKey('EMPRESA.idEmpresa'))
     empresa = db.relationship('Empresa')
