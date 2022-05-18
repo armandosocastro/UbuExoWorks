@@ -40,15 +40,17 @@ def create_app():
             idempresa = 1
             estado = True
             idRol = 1
+            idJornadaLaboral = 1
+            
             print('email y pass: ', email, password)
             user = Usuarios.Usuario.get_by_login(email)
             if user is not None:
-                error = f'Usuario ya existe'
+                error = 'E usuario ya existe en la aplicacion'
             else:
-                user = Usuarios.Usuario(nombre=nombre, apellidos=apellidos ,login=email, estado=estado,idEmpresa=idempresa,idRol=idRol)    
+                user = Usuarios.Usuario(nombre=nombre, apellidos=apellidos ,login=email, estado=estado,idEmpresa=idempresa,idRol=idRol, idJornadaLaboral=idJornadaLaboral)    
                 user.set_password(password)
                 user.save()
-            return redirect(url_for('/'))
+                return redirect(url_for('home'))
         return render_template("signup_form.html", form=form, error=error)
     
     

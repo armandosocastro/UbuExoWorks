@@ -9,6 +9,22 @@
     <form action="" method="post" novalidate>
         {{ form.hidden_tag() }}
 
+
+        <p>
+            {{ form.nombre.label }}<br>
+            {{ form.nombre(size=60) }}<br>
+            {% for error in form.nombre.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+          </p>
+          <p>
+            {{ form.apellidos.label }}<br>
+            {{ form.apellidos(size=60) }}<br>
+            {% for error in form.apellidos.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+          </p>
+          
         <p>
             {{ form.email.label }}<br>
             {{ form.email(size=60) }}<br>

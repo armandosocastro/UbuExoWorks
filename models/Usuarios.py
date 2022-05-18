@@ -23,7 +23,7 @@ class Usuario(db.Model):
     jornada = db.relationship('Jornada_Laboral')                                
     idRol = db.Column(db.Integer, nullable=False)
     
-    def __init__(self, idUsuario, nombre=None, apellidos=None, login=None, password=None, 
+    """def __init__(self, idUsuario=None, nombre=None, apellidos=None, login=None, password=None, 
         estado=None, idEmpresa=None,idJornadaLaboral=None, idRol=None) -> None:
         self.idUsuario=idUsuario
         self.nombre=nombre
@@ -33,10 +33,10 @@ class Usuario(db.Model):
         self.estado=estado
         self.idEmpresa=idEmpresa
         self.idJornadaLaboral=idJornadaLaboral
-        self.idRol=idRol
+        self.idRol=idRol """
         
     def save(self):
-        if not self.id:
+        if not self.idUsuario:
             db.session.add(self)
         db.session.commit()
         
