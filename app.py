@@ -21,12 +21,12 @@ def create_app():
 
     app = Flask(__name__)
 
-    app.config ['MAIL_SERVER'] = os.environ.get ('MAIL_SERVER')
-    app.config ['MAIL_PORT'] = os.environ.get ('MAIL_SPORT')
-    app.config ['MAIL_USERNAME'] = os.environ.get ('MAIL_USERNAME')
-    app.config ['MAIL_PASSWORD'] = os.environ.get ('MAIL_PASSWORD')
-    app.config ['MAIL_USE_SSL'] = os.environ.get ('MAIL_USE_SSL')
-    app.config ['MAIL_USE_TLS'] = os.environ.get ('MAIL_USE_TLS')
+    app.config ['MAIL_SERVER'] = 'smtp.gmail.com'
+    app.config ['MAIL_PORT'] = 587
+    app.config ['MAIL_USERNAME'] = 'ubuexoworks@gmail.com'
+    app.config ['MAIL_PASSWORD'] = '3x0w0rks'
+    app.config ['MAIL_USE_SSL'] = False
+    app.config ['MAIL_USE_TLS'] = True
     
     print('servidor:' ,os.environ.get('MAIL_SERVER'))
     
