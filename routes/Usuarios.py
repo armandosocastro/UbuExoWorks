@@ -25,20 +25,18 @@ def probando():
 
 
 @main.route('/usuario', methods=('GET', 'POST'))
+@expects_json()
 def get_usuarios():
     try:
         #usuarios = Usuario.query.filter(Usuario.login.like('prueba@prueba.com')).first()
+        datos=request.get_json()
+        usuario = datos.get('login','')
         
-        
-        usuarios = Usuario.get_by_login('alejandro@correo.com')
+        usuarios = Usuario.get_by_login(usuario)
         
         return jsonify(usuarios.to_JSON())
     except Exception as ex:
         return jsonify({'mensaje': str(ex)}), 500
-    
-@main.route('/2')
-def get_usuariios2():
-    return "Mas pruebas"
 
 @main.route('/login')
 @expects_json()

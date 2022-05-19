@@ -1,16 +1,20 @@
 # app.py
+
 import os
 import re
 
 from flask_sqlalchemy import SQLAlchemy
 from flask import Flask, redirect, render_template, url_for
 from werkzeug.security import generate_password_hash,check_password_hash
+from flask_mail import Mail, Message
 
 #Importamos la configuracion del fichero config.py
 from config import config
 
 from formularios import FormRegistro
 from models.Usuarios import Usuario
+
+mail = Mail()
 
 
 def create_app():
@@ -27,6 +31,10 @@ def create_app():
     db.init_app(app)
     with app.app_context():
         db.create_all()
+    
+    #Creamos el objeto mail y lo inicializamos
+
+    mail.init_app(app)
     
     @app.route('/registro', methods=['GET', 'POST'])
     def registro():
@@ -50,6 +58,13 @@ def create_app():
                 user = Usuarios.Usuario(nombre=nombre, apellidos=apellidos ,login=email, estado=estado,idEmpresa=idempresa,idRol=idRol, idJornadaLaboral=idJornadaLaboral)    
                 user.set_password(password)
                 user.save()
+                
+                #enviamos el correo confirmando
+                
+                msg = Message("Registro UbuExoWorks", sender='ubuexoworks@gmail.com' ,recipients=[email])
+                msg.html = '<p>Se ha completado el registro correctamente</p>'
+                mail.send(msg)
+                            
                 return redirect(url_for('home'))
         return render_template("signup_form.html", form=form, error=error)
     
