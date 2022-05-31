@@ -1,19 +1,25 @@
 
 
+import string
+import secrets
+import os
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Boolean, Column, ForeignKey, DateTime, Integer, Text, Float, Time
 from sqlalchemy.orm import relationship
 from database.database import db
 from werkzeug.security import generate_password_hash, check_password_hash
+from flask_login import UserMixin
 
 
-class Usuario(db.Model):
+
+class Usuario(UserMixin, db.Model):
     
     __tablename__ = 'USUARIO'
     
     idUsuario = db.Column(db.Integer, primary_key=True)
     nombre = db.Column(db.String(45), nullable=False)
     apellidos = db.Column(db.String(45), nullable=False)
+    nif = db.Column(db.String(45), nullable=False)
     login = db.Column(db.String(45), nullable=False)
     password = db.Column(db.String(128), nullable=False)
     estado = db.Column(db.Boolean, nullable=False)
@@ -34,21 +40,48 @@ class Usuario(db.Model):
         self.idEmpresa=idEmpresa
         self.idJornadaLaboral=idJornadaLaboral
         self.idRol=idRol """
-        
+    
+    def get_id_empresa(self):
+        return self.idEmpresa    
+    
+    def get_id(self):
+        return self.idUsuario
+    
     def save(self):
         if not self.idUsuario:
             db.session.add(self)
         db.session.commit()
         
+    def get_by_empresa(idEmpresa):
+        return Usuario.query.filter_by(idEmpresa=idEmpresa).all()
+        
     @staticmethod
     def get_by_login(login):    
         return Usuario.query.filter_by(login=login).first()
     
+    @staticmethod
+    def get_by_id(user_id):    
+        return Usuario.query.filter_by(idUsuario=user_id).first()
+
     def set_password(self, password):
         self.password = generate_password_hash(password)
         
     def check_password(self, password):
         return check_password_hash(self.password, password)
+    
+    @staticmethod
+    def generate_password():
+        alfabeto = string.ascii_letters + string.digits
+        while True:
+            password = ''.join(secrets.choice(alfabeto) for i in range(10))
+            if (any(c.islower() for c in password)
+                and any(c.isupper() for c in password)
+                and sum(c.isdigit() for c in password) >= 3):
+                break
+        print('password generada: ', password)
+        return password
+    
+    
     
     #Metodo para poder serializarlo y enviarlo como un JSON
     def to_JSON(self):
@@ -72,24 +105,41 @@ class Empresa(db.Model):
     nombre = db.Column(db.String(45), nullable=False)
     cif = db.Column(db.String(20), nullable=False)
     planContratado = db.Column(db.Integer, nullable=False)
+    numEmpleados = db.Column(db.Integer, nullable=False)
     
-    def __init__(self, idEmpresa, nombre=None, cif=None, planContratado=None) -> None:
+    """
+    def __init__(self, idEmpresa, nombre=None, cif=None, planContratado=None, numEmpleados=1) -> None:
         self.idEmpresa = idEmpresa
         self.nombre = nombre
         self.cif = cif
         self.planContratado = planContratado
-    
+        self.numEmpleados = numEmpleados
+    """        
                  
     @staticmethod
     def get_by_id(idEmpresa):    
         return Empresa.query.filter_by(idEmpresa=idEmpresa).first()
+    
+    @staticmethod
+    def get_by_cif(cif):    
+        return Empresa.query.filter_by(cif=cif).first()
+    
+    def get_id_empresa(self):
+        return self.idEmpresa
+     
+    
+    def save(self):
+        if not self.idEmpresa:
+            db.session.add(self)
+        db.session.commit()
 
     def to_JSON(self):
         return {
             'idEmpresa': self.idEmpresa,
             'nombre': self.nombre,
             'cif': self.cif,
-            'planContratado': self.planContratado
+            'planContratado': self.planContratado,
+            'numEmpleados': self.numEmpleados
         }  
     
 class Jornada_Laboral(db.Model):

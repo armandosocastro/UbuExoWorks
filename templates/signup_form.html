@@ -3,12 +3,39 @@
 {% block title %}Registro de usuarios{% endblock %}
 
 {% block content %}
+
+<body class="m-0 vh-100 row justify-content-center align-items-center ">
+  <div class="col-auto p-5 text-center">
+
     {% if error %}
         <p style="color: red;"><strong>Error:</strong> {{ error }}
     {% endif %}
     <form action="" method="post" novalidate>
         {{ form.hidden_tag() }}
 
+        <p>
+            {{ form.empresa.label }}<br>
+            {{ form.empresa(size=60) }}<br>
+            {% for error in form.empresa.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+          </p>
+         
+          <p>
+            {{ form.cif.label }}<br>
+            {{ form.cif(size=60) }}<br>
+            {% for error in form.cif.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+          </p>
+          
+          <p>
+            {{ form.planContratado.label }}<br>
+            {{ form.planContratado(size=60) }}<br>
+            {% for error in form.planContratado.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+          </p> 
 
         <p>
             {{ form.nombre.label }}<br>
@@ -24,7 +51,7 @@
             <span style="color: red;">[{{ error }}]</span>
             {% endfor %}
           </p>
-          
+
         <p>
             {{ form.email.label }}<br>
             {{ form.email(size=60) }}<br>
@@ -48,9 +75,7 @@
               </p>
               <p>{{ form.submit() }}</p>
           </form>
-
-
->
-
     </form>
+  </div>
+</body>
 {% endblock %}        
