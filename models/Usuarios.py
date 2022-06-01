@@ -47,6 +47,9 @@ class Usuario(UserMixin, db.Model):
     def get_id(self):
         return self.idUsuario
     
+    def get_login(self):
+        return self.login
+    
     def save(self):
         if not self.idUsuario:
             db.session.add(self)

@@ -178,6 +178,7 @@ def create_app():
             if user is not None and user.check_password(password):
                 login_user(user)
                 session['idEmpresa'] = user.get_id_empresa()
+                session['username'] = user.get_login()
                 print('idempresa: ', session['idEmpresa'])
                 return redirect(url_for("home"))
             form.email.errors.append("Usuario o contraseña incorrectos.")
