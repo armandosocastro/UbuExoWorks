@@ -5,7 +5,7 @@ import os
 
 app = create_app()
 
-app.config['SECRET_KEY'] = 'pASSW0Rd'
+#app.config['SECRET_KEY'] = 'pASSW0Rd'
 
 if __name__ == '__main__':
 

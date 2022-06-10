@@ -26,10 +26,10 @@ from os import environ as env
 mail = Mail()
 
 
-def create_app(settings_module='config.DevelopmentConfig'):
-
+#def create_app(settings_module='config.DevelopmentConfig'):
+def create_app():
     app = Flask(__name__)
-    app.config.from_object(settings_module)
+    #app.config.from_object(settings_module)
     #app.config.from_envvar('')
     
    #csrf = CSRFProtect()   
