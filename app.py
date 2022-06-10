@@ -16,7 +16,7 @@ from flask_wtf import CSRFProtect
 
 
 #Importamos la configuracion del fichero config.py
-from config import config
+#from config import config
 
 from formularios import FormRegistro, FormLogin
 #from models.Usuarios import Usuario, Empresa
@@ -67,7 +67,7 @@ def create_app():
     
      #if __name__ == '__main__':
     #Threaded option to enable multiple instances for multiple user access support
-    app.config.from_object(config['development'])
+    #app.config.from_object(config['development'])
     
     def page_not_found(error):
         return "<h1> Not found page </h1>",404
