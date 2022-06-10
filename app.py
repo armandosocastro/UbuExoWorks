@@ -22,6 +22,7 @@ from formularios import FormRegistro, FormLogin
 #from models.Usuarios import Usuario, Empresa
 from models.Usuarios import Usuario, Empresa
 from os import environ as env
+from dotenv import load_dotenv
 
 mail = Mail()
 
@@ -29,9 +30,19 @@ mail = Mail()
 #def create_app(settings_module='config.DevelopmentConfig'):
 def create_app():
     app = Flask(__name__)
-    #app.config.from_object(settings_module)
-    app.config.from_envvar('DATABASE_URL')
+    load_dotenv()
     
+    #app.config.from_object(settings_module)
+    #app.config.from_envvar('SQLALCHEMY_DATABASE_URI')
+    
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('SQLALCHEMY_DATABASE_URI')
+    app.config ['MAIL_SERVER'] = os.getenv('MAIL_SERVER')
+    app.config ['MAIL_PORT'] = os.getenv('MAIL_PORT')
+    app.config ['MAIL_USERNAME'] = os.getenv('MAIL_USERNAME')
+    app.config ['MAIL_PASSWORD'] = os.getenv('MAIL_PASSWORD')
+    app.config ['MAIL_USE_SSL'] = False
+    app.config ['MAIL_USE_TLS'] = True
+    app.config['SECRET_KEY'] = 'pASSW0Rd'
    #csrf = CSRFProtect()   
    
     #Session(app)
