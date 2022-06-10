@@ -1,6 +1,4 @@
 
-
-
 from lib2to3.pgen2 import token
 from flask import Blueprint, jsonify, request, redirect, render_template, session, url_for
 from flask_expects_json import expects_json
@@ -8,13 +6,13 @@ from werkzeug.security import check_password_hash
 from flask_wtf import CSRFProtect
 
 from flask_mail import Mail, Message
-from flask_login import current_user
+from flask_login import current_user, login_required
 
 
 #from models.Usuarios import db
 #from app import db
 # Modelos
-from models.Usuarios import Usuario, Empresa
+from models.Usuarios import Fichaje, Usuario, Empresa
 
 from formularios import FormAlta
 
@@ -32,10 +30,6 @@ prueba = Blueprint('prueba', __name__)
 @prueba.errorhandler(404)
 def not_found(e):
     return prueba.send_static_file('index.html')
-
-@prueba.route('/')
-def probando():
-    return "PRobando Probando......"
 
 
 @main.route('/usuario', methods=('GET', 'POST'))
@@ -73,26 +67,47 @@ def login():
         return jsonify(error="contraseña incorrecta"),300
     return jsonify(error="No existe usuario"),300
 
-#@csrf.exempt
-@main.route('/ubicacion', methods=['POST','GET'])
-@expects_json
-def ubicacion():
-    """try:
+@main.route('/fichaje', methods=['POST','GET'])
+@expects_json()
+def fichar():
+    try:
         datos = request.get_json()
         print(datos)
-    
+
+        idUsuario= datos.get('idUsuario','')
+        fecha = datos.get('fecha','')
+        hora = datos.get('hora','')
         longitud = datos.get('longitud','')
         latitud = datos.get('latitud','')
-    
+        
         print('Longitud recibida: ', longitud)
         print('latitud recibida: ', latitud)
-    
+        
+        fichaje = Fichaje(fecha=fecha, hora_entrada=hora, entrada_longitud=longitud, entrada_latitud=latitud,hora_salida=None,
+                          salida_longitud=None, salida_latitud=None, incidencia=None,idUsuario=idUsuario)
+        fichaje.save()
+        
         return jsonify(token="OK"),200
     except Exception as ex:
-        return jsonify({'mensaje': str(ex)}), 500 """
-    return 'Esto es un JSON'
+        print(ex)
+        return 'JSON incorrecto'
     
+@main.route("/ubicacion", methods=['post'])
+@expects_json()
+def ubicacion():
+    try:
+        datos = request.get_json()
+        print(datos)
+        longitud = datos.get('longitud','')
+        latitud = datos.get('latitud','')
+        print('Longitud recibida: ', longitud)
+        print('latitud recibida: ', latitud)
+        return jsonify(token="OK"),200
+    except Exception as ex:
+        return jsonify({'mensaje': str(ex)}), 500     
+   
 @main.route('/alta', methods=['get', 'post'])
+@login_required
 def alta_usuario():
     print("en altas")
     form = FormAlta()
@@ -122,7 +137,7 @@ def alta_usuario():
             password = Usuario.generate_password()
             user.set_password(password)
             user.save()
-
+            print("Creado usuario")
             #enviamos el correo confirmando
 
             msg = Message("Registro UbuExoWorks", sender='ubuexoworks@gmail.com' ,recipients=[email])

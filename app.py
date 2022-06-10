@@ -21,27 +21,20 @@ from config import config
 from formularios import FormRegistro, FormLogin
 #from models.Usuarios import Usuario, Empresa
 from models.Usuarios import Usuario, Empresa
+from os import environ as env
 
 mail = Mail()
 
 
-def create_app():
+def create_app(settings_module='config.DevelopmentConfig'):
 
     app = Flask(__name__)
+    app.config.from_object(settings_module)
+    #app.config.from_envvar('')
     
-   #csrf = CSRFProtect()
-
-    app.config ['MAIL_SERVER'] = 'smtp.gmail.com'
-    app.config ['MAIL_PORT'] = 587
-    app.config ['MAIL_USERNAME'] = 'ubuexoworks@gmail.com'
-    app.config ['MAIL_PASSWORD'] = '3x0w0rks'
-    app.config ['MAIL_USE_SSL'] = False
-    app.config ['MAIL_USE_TLS'] = True
-    app.config['SECRET_KEY'] = 'pASSW0Rd'
-    
+   #csrf = CSRFProtect()   
+   
     #Session(app)
-    
-    #print('servidor:' ,os.environ.get('MAIL_SERVER'))
     
     #Aosciamos la BD con nuestra aplicacion
     from database.database import db
@@ -97,7 +90,7 @@ def create_app():
         form = FormRegistro()
         error = None
         if form.validate_on_submit():
-            empresa = form.empresa.data
+            nombre_empresa = form.empresa.data
             cif = form.cif.data
             plan = form.planContratado.data
             nombre = form.nombre.data
@@ -116,43 +109,24 @@ def create_app():
             
             if empresa is not None:
                 error = 'La empresa ya existe en la aplicacion'
+            elif user is not None:
+                error = 'Email ya registrado en el sistema'
             else:
-                empresa = Usuarios.Empresa(nombre=nombre, cif=cif, planContratado=plan, numEmpleados=1)
-                
-                
+                empresa = Usuarios.Empresa(nombre=nombre_empresa, cif=cif, planContratado=plan, numEmpleados=1)           
                 empresa.save()
                 idempresa = empresa.get_id_empresa()
                 print('emrpesa: ', idempresa)
                 user = Usuarios.Usuario(nombre=nombre, apellidos=apellidos ,login=email, estado=estado, idEmpresa=idempresa,idRol=idRol, idJornadaLaboral=idJornadaLaboral)    
                 user.set_password(password)
                 user.save()
-                
                 #enviamos el correo confirmando
-                
                 msg = Message("Registro UbuExoWorks", sender='ubuexoworks@gmail.com' ,recipients=[email])
                 msg.html = '<p>Se ha completado el registro correctamente</p>' + '<p>Usuario: '+email+'</p>'
                 mail.send(msg)
                             
                 return redirect(url_for('home'))
         return render_template("signup_form.html", form=form, error=error)
-    
-    
-    @app.route("/ubicacion", methods=['post'])
-    @expects_json()
-    def ubicacion():
-        try:
-            datos = request.get_json()
-            print(datos)
-
-            longitud = datos.get('longitud','')
-            latitud = datos.get('latitud','')
-
-            print('Longitud recibida: ', longitud)
-            print('latitud recibida: ', latitud)
-
-            return jsonify(token="OK"),200
-        except Exception as ex:
-            return jsonify({'mensaje': str(ex)}), 500     
+        
 
 
     @app.route("/" )
@@ -184,15 +158,13 @@ def create_app():
             form.email.errors.append("Usuario o contraseña incorrectos.")
         return render_template('login_form.html', form=form)
         #return render_template('login_register.html', form=form)
-     
+        
+
+
+
     @app.route("/logout")
     def logout():
         logout_user()
         return redirect(url_for("login"))            
-        
    
-   
-   
-                
-
     return app    

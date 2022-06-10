@@ -3,7 +3,14 @@
 {% block title %}Alta usuarios empresa{% endblock %}
 
 {% block content %}
+
+<body class="m-0 vh-100 row justify-content-center align-items-center ">
     <div>
+
+        {% if error %}
+        <p style="color: red;"><strong>Error:</strong> {{ error }}
+        {% endif %}
+
         <form action="" method="post" novalidate>
             {{ form.hidden_tag() }}
             <div>
@@ -38,4 +45,5 @@
             </div>
         </form>
     </div>
+</body>
 {% endblock %}

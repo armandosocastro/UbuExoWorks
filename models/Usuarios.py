@@ -186,3 +186,53 @@ class Jornada_Laboral(db.Model):
                 'horasJornada': self.horasJornada,
                 'idEmpresa': self.idEmpresa
             }  
+            
+class Fichaje(db.Model):
+    __tablename__ = "FICHAJE"
+    
+    idFichaje = db.Column(db.Integer, primary_key=True)
+    fecha = db.Column(db.Date, nullable=False)
+    hora_entrada = db.Column(db.Time, nullable=False)
+    entrada_latitud = db.Column(db.Float, nullable=False)
+    entrada_longitud = db.Column(db.Float, nullable=False)
+    hora_salida= db.Column(db.Time, nullable=False)
+    salida_latitud = db.Column(db.Float, nullable=False)
+    salida_longitud = db.Column(db.Float, nullable=False)
+    incidencia = db.Column(db.String, nullable=False)
+    idUsuario =  db.Column(db.Integer, ForeignKey('USUARIO.idUsuario'))
+    usuario = db.relationship('Usuario')
+   
+    """ 
+    def __init__(self, idFichaje, fecha=None, hora_entrada=None, entrada_latitud=None, entrada_longitud=None,
+                 hora_salida=None, salida_latitud=None, salida_longitud=None, incidencia=None, idUsuario=None) -> None:
+        
+        self.idFichaje=idFichaje
+        self.fecha=fecha
+        self.hora_entrada=hora_entrada
+        self.entrada_latitud=entrada_latitud
+        self.entrada_longitud=entrada_longitud
+        self.hora_salida=hora_salida
+        self.salida_latitud=salida_latitud
+        self.salida_longitud=salida_longitud
+        self.incidencia=incidencia
+        self.idUsuario=idUsuario 
+    """
+        
+    def to_JSON(self):
+        return {
+            'idFichaje': self.idFichaje,
+            'fecha': self.fecha,
+            'hora_entrada':self.hora_entrada,
+            'entrada_latitud':self.entrada_latitud,
+            'entrada_longitud':self.entrada_longitud,
+            'hora_salida':self.hora_salida,
+            'salida_latitud':self.entrada_latitud,
+            'salida_longitud':self.entrada_longitud,
+            'incidencia':self.incidencia,
+            'idUsuario':self.idUsuario
+        }
+        
+    def save(self):
+        if not self.idFichaje:
+            db.session.add(self)
+        db.session.commit()    

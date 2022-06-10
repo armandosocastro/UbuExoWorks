@@ -8,15 +8,38 @@
 {% if current_user.is_authenticated %}
 <nav class="navbar bg-light"
 <div class="container-fluid">
-    <a class="navbar-brand " href="/logout"> {{ session["username"]}} (Salir)</a>
+    Usuario conectado: {{ session["username"]}}
+    <a class="navbar-brand " href="/logout">  (Salir)</a>
 </div>
 </nav>
 
-    {% for usuario in usuarios %}
-        <p> {{usuario.nombre}} {{usuario.apellidos}} {{usuario.login}} {{usuario.nif}} {{usuario.estado}} </p>
-    {% endfor %}
- 
+    
 
+    <h2>Lsitado de usuarios</h2>
+      <div class="table-responsive">
+        <table class="table table-striped table-sm">
+          <thead>
+            <tr>
+                <th scope="col">Nombre</th>
+                <th scope="col">Apellidos</th>
+                <th scope="col">Email</th>
+                <th scope="col">NIF</th>
+                <th scope="col">Estado</th>
+            </tr>
+           </thead>  
+           <tbody>
+            {% for usuario in usuarios %}
+               <tr class="clikable" onclick="window.location='/api/usuario' ">
+                   <td>{{usuario.nombre}}</td>
+                   <td>{{usuario.apellidos}}</td>
+                   <td>{{usuario.login}}</td>
+                   <td>{{usuario.nif}}</td>
+                   <td>{{usuario.estado}}</td>
+               </tr>
+            {% endfor %}   
+            </tbody>
+        </ttable>
+    </div>
 
 {% else %}
     <a class="navbar-brand " href="/login">Login</a>
