@@ -30,7 +30,7 @@ mail = Mail()
 def create_app():
     app = Flask(__name__)
     #app.config.from_object(settings_module)
-    #app.config.from_envvar('')
+    app.config.from_envvar('DATABASE_URL')
     
    #csrf = CSRFProtect()   
    
