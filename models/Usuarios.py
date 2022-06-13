@@ -1,10 +1,12 @@
 
 
+from datetime import datetime
 import string
 import secrets
 import os
+from time import timezone
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import Boolean, Column, ForeignKey, DateTime, Integer, Text, Float, Time
+from sqlalchemy import Boolean, Column, ForeignKey, DateTime, Integer, Text, Float, Time, false
 from sqlalchemy.orm import relationship
 from database.database import db
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -192,12 +194,12 @@ class Fichaje(db.Model):
     
     idFichaje = db.Column(db.Integer, primary_key=True)
     fecha = db.Column(db.Date, nullable=False)
-    hora_entrada = db.Column(db.Time, nullable=False)
+    hora_entrada = db.Column(db.Time(timezone=false), nullable=False)
     entrada_latitud = db.Column(db.Float, nullable=False)
     entrada_longitud = db.Column(db.Float, nullable=False)
-    hora_salida= db.Column(db.Time, nullable=False)
-    salida_latitud = db.Column(db.Float, nullable=False)
-    salida_longitud = db.Column(db.Float, nullable=False)
+    #hora_salida= db.Column(db.Time(timezone=false), nullable=False)
+    #salida_latitud = db.Column(db.Float, nullable=False)
+    #salida_longitud = db.Column(db.Float, nullable=False)
     incidencia = db.Column(db.String, nullable=False)
     idUsuario =  db.Column(db.Integer, ForeignKey('USUARIO.idUsuario'))
     usuario = db.relationship('Usuario')
@@ -219,19 +221,32 @@ class Fichaje(db.Model):
     """
         
     def to_JSON(self):
+        
+        
+        hora = str(self.hora_entrada)
+        print(hora)
         return {
             'idFichaje': self.idFichaje,
             'fecha': self.fecha,
-            'hora_entrada':self.hora_entrada,
+            #'hora_entrada':self.hora_entrada,
+            'hora_entrada':hora,
             'entrada_latitud':self.entrada_latitud,
             'entrada_longitud':self.entrada_longitud,
-            'hora_salida':self.hora_salida,
-            'salida_latitud':self.entrada_latitud,
-            'salida_longitud':self.entrada_longitud,
+            #'hora_salida':self.hora_salida,
+            #'salida_latitud':self.entrada_latitud,
+            #'salida_longitud':self.entrada_longitud,
             'incidencia':self.incidencia,
             'idUsuario':self.idUsuario
         }
         
+    @staticmethod
+    def get_by_idEmpleado(idEmpleado):    
+        return Fichaje.query.filter_by(idUsuario=idEmpleado).all()
+    
+    @staticmethod
+    def get_by_idEmpleadoFecha(idEmpleado,fecha):
+        return Fichaje.query.filter_by(idUsuario=idEmpleado, fecha=fecha).all()       
+    
     def save(self):
         if not self.idFichaje:
             db.session.add(self)

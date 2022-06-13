@@ -7,5 +7,20 @@
     
     <link rel="stylesheet" href="{{ url_for("static", filename="base.css") }}">
 </head>
-{% block content %}{% endblock %}
+{% block content %}
+
+{% if current_user.is_authenticated %}
+<nav class="navbar bg-light"
+<div class="container-fluid">
+    Usuario conectado: {{ session["username"]}}
+    <a class="navbar-brand " href="/logout">  (Salir)</a>
+</div>
+</nav>
+
+{% else %}
+    <a class="navbar-brand " href="/login">Login</a>
+    <a class="navbar-brand " href="/registro">Registro</a>
+{% endif %} 
+
+{% endblock %}
 </html>

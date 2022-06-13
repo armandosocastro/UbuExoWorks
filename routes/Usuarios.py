@@ -1,4 +1,5 @@
 
+#from crypt import methods
 from lib2to3.pgen2 import token
 from flask import Blueprint, jsonify, request, redirect, render_template, session, url_for
 from flask_expects_json import expects_json
@@ -83,14 +84,49 @@ def fichar():
         print('Longitud recibida: ', longitud)
         print('latitud recibida: ', latitud)
         
-        fichaje = Fichaje(fecha=fecha, hora_entrada=hora, entrada_longitud=longitud, entrada_latitud=latitud,hora_salida=None,
-                          salida_longitud=None, salida_latitud=None, incidencia=None,idUsuario=idUsuario)
+        fichaje = Fichaje(fecha=fecha, hora_entrada=hora, entrada_longitud=longitud, entrada_latitud=latitud,
+                          incidencia=None,idUsuario=idUsuario)
         fichaje.save()
         
         return jsonify(token="OK"),200
     except Exception as ex:
         print(ex)
         return 'JSON incorrecto'
+    
+@main.route('/get/fichajes', methods=['get'])
+@expects_json()
+def getFichaje():
+    try:
+        datos = request.get_json()
+        print(datos)
+        
+        idUsuario = datos.get('idUsuario','')
+        print('usuario: ',idUsuario)
+        fichajes = Fichaje.get_by_idEmpleado(idUsuario)
+        print(fichajes)
+        
+        return jsonify([fichaje.to_JSON() for fichaje in fichajes])
+    except Exception as ex:
+        return jsonify({'mensaje': str(ex)}), 500    
+    
+@main.route('/get/fichaje', methods=['get'])
+@expects_json()
+def getFichajeFecha():
+    try:
+        datos = request.get_json()
+        print(datos)
+
+        idUsuario = datos.get('idUsuario','')
+        fecha = datos.get('fecha','')
+        print('usuario: ',idUsuario)
+        print('fecha fichaje: ',fecha)
+        
+        fichajes = Fichaje.get_by_idEmpleadoFecha(idUsuario,fecha)
+        print(fichajes)
+        
+        return jsonify([fichaje.to_JSON() for fichaje in fichajes])
+    except Exception as ex:
+        return jsonify({'mensaje': str(ex)}), 500        
     
 @main.route("/ubicacion", methods=['post'])
 @expects_json()
