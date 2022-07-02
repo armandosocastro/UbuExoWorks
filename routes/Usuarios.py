@@ -1,5 +1,6 @@
 
 #from crypt import methods
+
 from lib2to3.pgen2 import token
 from flask import Blueprint, jsonify, request, redirect, render_template, session, url_for
 from flask_expects_json import expects_json
@@ -47,7 +48,7 @@ def get_usuarios():
     except Exception as ex:
         return jsonify({'mensaje': str(ex)}), 500
 
-@main.route('/login')
+@main.route('/login', methods=['POST'])
 @expects_json()
 def login():
     datos = request.get_json()
@@ -127,6 +128,20 @@ def getFichajeFecha():
         return jsonify([fichaje.to_JSON() for fichaje in fichajes])
     except Exception as ex:
         return jsonify({'mensaje': str(ex)}), 500        
+    
+@main.route('/usuario/fichajes<idUsuario>', methods=['get'])
+def usuarioFichajes(idUsuario):
+    print('usuario: ',idUsuario)
+    fichajes = Fichaje.get_by_idEmpleado(idUsuario)
+    print(fichajes)
+    return render_template('fichajes.html', listaFichajes=fichajes)
+
+@main.route('/mapa<longitud><latitud>')
+def mapa(longitud,latitud):
+    #longitud=20.35235054304456
+    #latitud=-8.402286665327859
+    return render_template('mapa.html',longitud=longitud, latitud=latitud)
+    
     
 @main.route("/ubicacion", methods=['post'])
 @expects_json()
