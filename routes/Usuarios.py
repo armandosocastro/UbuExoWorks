@@ -94,14 +94,17 @@ def fichar():
         print(ex)
         return 'JSON incorrecto'
     
+#Metodo API para obtener los fichajes de un usuario    
 @main.route('/get/fichajes', methods=['get'])
-@expects_json()
+#@expects_json()
 def getFichaje():
     try:
-        datos = request.get_json()
-        print(datos)
+        #datos = request.get_json()
+        #print(datos)
         
-        idUsuario = datos.get('idUsuario','')
+        
+        #idUsuario = datos.get('idUsuario','')
+        idUsuario = request.args.get('idUsuario')
         print('usuario: ',idUsuario)
         fichajes = Fichaje.get_by_idEmpleado(idUsuario)
         print(fichajes)
@@ -109,6 +112,25 @@ def getFichaje():
         return jsonify([fichaje.to_JSON() for fichaje in fichajes])
     except Exception as ex:
         return jsonify({'mensaje': str(ex)}), 500    
+    
+@main.route('/get/fichaje/fecha', methods=['get'])
+#@expects_json()
+def getFichajePorFecha():
+    try:
+        #datos = request.get_json()
+        #print(datos)
+
+        idUsuario = request.args.get('idUsuario')
+        fecha = request.args.get('fecha')
+        print('usuario: ',idUsuario)
+        print('fecha fichaje: ',fecha)
+        
+        fichajes = Fichaje.get_by_idEmpleadoFecha(idUsuario,fecha)
+        print(fichajes)
+        
+        return jsonify([fichaje.to_JSON() for fichaje in fichajes])
+    except Exception as ex:
+        return jsonify({'mensaje': str(ex)}), 500        
     
 @main.route('/get/fichaje', methods=['get'])
 @expects_json()
