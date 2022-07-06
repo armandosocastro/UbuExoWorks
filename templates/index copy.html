@@ -1,0 +1,97 @@
+
+
+{% extends "base_template.html" %}
+
+{% block title %}PAgina inicio logueado{% endblock %}
+
+{% block content %}
+
+
+<div class="container-fluid">
+    <div class="row flex-nowrap">
+        <div class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 bg-light">
+
+            <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100">
+                <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none">
+                    <img src="/static/icons/logoUbuExoWorks.png" alt="" width="182" height="52">
+                </a>
+                <hr>
+
+                <ul class="nav nav-pills flex-column mb-sm-auto" id="menu">
+                    <li class="nav-item">
+                        <a href="#" class="nav-link active" aria-current="page">
+                            <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#home"/></svg>
+                            Home
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/api/fichajes" aria-current="page">
+                            <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#home"/></svg>
+                                Fichajes
+                            </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/api/alta" aria-current="page">
+                            <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#home"/></svg>
+                                Alta empleados
+                        </a>
+
+                    </li>  
+                </ul>
+                <hr>
+
+                <div class="dropdown">
+                    <a href="#" class="d-flex align-items-center link-dark text-decoration-none dropdown-toggle" 
+                        id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+                        <img src="https://github.com/mdo.png" alt="" width="32" height="32" class="rounded-circle me-2">
+                        <strong>{{ session["username"]}}</strong>
+                    </a>
+                    <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdownUser1">
+                        <li><a class="dropdown-item" href="#">Configuracion</a></li>
+                        <li><a class="dropdown-item" href="#">Perfil</a></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li><a class="dropdown-item" href="/logout">Sign out</a></li>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+
+
+        <div class="col py-3">
+            <h2>Lsitado de usuarios</h2>
+            <p class="lead">
+
+                <div class="table-responsive">
+                    <table class="table table-striped table-sm">
+                      <thead>
+                        <tr>
+                            <th scope="col">Nombre</th>
+                            <th scope="col">Apellidos</th>
+                            <th scope="col">Email</th>
+                            <th scope="col">NIF</th>
+                            <th scope="col">Estado</th>
+                        </tr>
+                       </thead>  
+                       <tbody>
+                        {% for usuario in usuarios %}
+                           <tr class="clikable" onclick="window.location='/api/usuario' ">
+                               <td>{{usuario.nombre}}</td>
+                               <td>{{usuario.apellidos}}</td>
+                               <td>{{usuario.login}}</td>
+                               <td>{{usuario.nif}}</td>
+                               <td>{{usuario.estado}}</td>
+                           </tr>
+                        {% endfor %}   
+                        </tbody>
+                    </ttable>
+                </div>
+
+            </p>
+        </div>
+
+    </div>
+
+{% endblock %}

@@ -1,0 +1,89 @@
+
+
+{% extends "base_template.html" %}
+
+{% block title %}PAgina inicio logueado{% endblock %}
+
+{% block content2 %}
+
+ <!--   <div class="col py-3"> -->
+<!-- Button trigger modal 
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#mimodal">
+    Launch demo modal
+  </button>
+-->
+        <div id="mimodal" class="modal" id="exampleModal" role="dialog">
+            <div class="modal-dialog modal-lg" role="document" style="width:500px; height:500px">
+                <div id="contenido" class="modal-content" style="width:500px; height:500px">
+
+                                <iframe width="500" height="500" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" 
+                                src="https://maps.google.com/maps?width=500&amp;height=500&amp;hl=en&amp;
+                                q={{longitud}},%20{{latitud}}+(a)&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed">
+                            </iframe>
+                                                  
+                </div>
+            <div>
+        </div>
+        
+        <!--
+        <script type="text/javascript">
+            var map = L.map('map').setView([43.35235054304456, -8.402286665327859], 16)
+            // {s}, {z}, {x} and {y} are placeholders for map tiles
+            // {x} and {y} are the x/y of where you are on the map
+            // {z} is the zoom level
+            // {s} is the subdomain of cartodb
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 22,
+                attribution: '© OpenStreetMap'
+            }).addTo(map)
+            // The first parameter are the coordinates of the center of the map
+            // The second parameter is the zoom level
+           
+                            
+            L.marker([43.35235054304456, -8.402286665327859]).addTo(map)
+
+            jQuery('mimodal').on('shown.bs.modal', function(){
+                setTimeout(function() {
+                  map.invalidateSize();
+                  print('sale por aqui')
+                }, 1);
+               });
+        </script>     
+    -->          
+</div>
+
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+              
+
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

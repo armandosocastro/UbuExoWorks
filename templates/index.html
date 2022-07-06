@@ -24,14 +24,16 @@
                        </thead>  
                        <tbody>
                         {% for usuario in usuarios %}
-                           <tr data-href="{{ url_for("usuarios_blueprint.usuarioFichajes", idUsuario=usuario.idUsuario) }}">
+                           <tr>
                                <td>{{usuario.nombre}}</td>
                                <td>{{usuario.apellidos}}</td>
                                <td>{{usuario.login}}</td>
                                <td>{{usuario.nif}}</td>
                                <td>{{usuario.estado}}</td>
                                <td><a href="{{ url_for("usuarios_blueprint.usuarioFichajes", idUsuario=usuario.idUsuario) }}"
-                                            class="btn btn-success">ver</a>
+                                            class="btn btn-success">Fichajes</a>
+                                <td><a href="{{ url_for("usuarios_blueprint.modifica_usuario", idUsuario=usuario.idUsuario) }}"
+                                            class="btn btn-sucess">Modificar</a>
                            </tr>
                         {% endfor %}   
                         </tbody>

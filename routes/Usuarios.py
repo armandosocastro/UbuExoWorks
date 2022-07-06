@@ -16,7 +16,7 @@ from flask_login import current_user, login_required
 # Modelos
 from models.Usuarios import Fichaje, Usuario, Empresa
 
-from formularios import FormAlta
+from formularios import FormAlta, FormModifica
 
 #from app import csrf
 
@@ -65,7 +65,7 @@ def login():
     
     if usuario is not None:
         if Usuario.check_password(usuario, password):        
-            return jsonify(token="OK"),200
+            return jsonify(token=usuario.idUsuario),200
         return jsonify(error="contraseña incorrecta"),300
     return jsonify(error="No existe usuario"),300
 
@@ -197,4 +197,62 @@ def alta_usuario():
 
             return redirect(url_for('home'))
     return render_template("alta.html", form=form, error=error)    
+        
+
+        
+@main.route('/usuario/modifica<idUsuario>', methods=['get', 'post'])
+@login_required
+def modifica_usuario(idUsuario):
+    print("en modificaciones")
+    form = FormModifica()
+    error = None
+    user = Usuario.get_by_id(idUsuario)
+    
+    if request.method =='GET':
+        form.nombre.data = user.nombre
+        form.apellidos.data = user.apellidos
+        form.nif.data = user.nif
+        form.email.data = user.login
+        form.estado.data = user.estado
+        
+        
+    
+    if form.validate_on_submit():
+        user.nombre = form.nombre.data
+        user.apellidos = form.apellidos.data
+        user.nif = form.nif.data
+        user.email = form.email.data
+        #password = form.password.data
+        #idempresa=current_user.
+        idempresa = session['idEmpresa']
+        #estado = True
+        user.estado = form.estado.data
+        idRol = 1
+        idJornadaLaboral = 1
+        #numEmpleados = 1
+
+        #print('email y pass: ', email, password)
+        #user = Usuario.get_by_login(email)
+        #user = Usuario.get_by_id(idUsuario)
+        #empresa = Usuarios.Empresa.get_by_cif(cif)
+
+        #if user is not None:
+        #    error = 'El usuario ya esta registrado en el sistema'
+        #else:
+            #user = Usuario(nombre=nombre, apellidos=apellidos,nif=nif,login=email,estado=estado,idEmpresa=idempresa,idRol=idRol,idJornadaLaboral=idJornadaLaboral)
+        user.save()
+        
+            #password = Usuario.generate_password()
+            #user.set_password(password)
+            #user
+            #user.save()
+        print("Modificado usuario")
+            #enviamos el correo confirmando
+
+            #msg = Message("Registro UbuExoWorks", sender='ubuexoworks@gmail.com' ,recipients=[email])
+            #msg.html = '<p>Se ha completado el registro correctamente</p>' + '<p>Usuario: '+email+'</p>' + '<p>Contraseña: '+password+'</p>'
+            #mail.send(msg)
+
+        return redirect(url_for('home'))
+    return render_template("modifica.html", form=form, error=error)    
         

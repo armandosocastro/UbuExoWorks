@@ -55,6 +55,9 @@ class Usuario(UserMixin, db.Model):
     def save(self):
         if not self.idUsuario:
             db.session.add(self)
+            print('añadido en modif')
+        else:
+            print('actualizado en modif')
         db.session.commit()
         
     def get_by_empresa(idEmpresa):

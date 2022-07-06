@@ -1,0 +1,65 @@
+
+
+{% extends "base_template.html" %}
+
+{% block title %}PAgina inicio logueado{% endblock %}
+
+{% block content2 %}
+
+
+        <div class="col py-3">
+            <h2>Listado de fichajes</h2>
+            <p class="lead">
+
+                <div class="table-responsive">
+                    <table class="table table-striped table-sm">
+                      <thead>
+                        <tr>
+                            <th scope="col">Fecha</th>
+                            <th scope="col">Hora</th>
+                            <th scope="col">Longitud</th>
+                            <th scope="col">Latitud</th>
+                            <th scope="col">Incidencia</th>
+                        </tr>
+                       </thead>  
+                       <tbody>
+                        {% for fichaje in listaFichajes %}
+                           <tr>
+                               <td>{{fichaje.fecha}}</td>
+                               <td>{{fichaje.hora_entrada}}</td>
+                               <td>{{fichaje.entrada_longitud}}</td>
+                               <td>{{fichaje.entrada_latitud}}</td>
+                               <td>{{fichaje.incidencia}}</td>
+                               <td><a href="{{ url_for("usuarios_blueprint.mapa", longitud=fichaje.entrada_longitud, latitud=fichaje.entrada_latitud) }}"
+                                class="btn btn-success">Mapa</a></td>
+                                <td><button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#mimodal"
+                                        data-bs-longitud={{fichaje.entrada_longitud}} data-bs-latitud={{fichaje.entrada_latitud}}>
+                                    Launch demo modal
+                                  </button></td>
+
+                                  <div id="mimodal" class="modal" role="dialog">
+                                    <div class="modal-dialog modal-lg" role="document" style="width:500px; height:500px">
+                                        <div id="contenido" class="modal-content" style="width:500px; height:500px">
+                                            contenido {{fichaje.entrada_latitud}}
+                                                        <iframe id="framemapa" width="500" height="500" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" 
+                                                        src="https://maps.google.com/maps?width=500&amp;height=500&amp;hl=en&amp;
+                                                        q={{fichaje.longitud}},%20{{fichaje.latitud}}+(a)&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed">
+                                                    </iframe>
+                                                                          
+                                        </div>
+                                    <div>
+                                </div>
+                           </tr
+                        {% endfor %}   
+                        </tbody>
+                    </ttable>
+                </div>
+
+            </p>
+        </div>
+
+
+
+    </div>
+
+{% endblock %}
