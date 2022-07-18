@@ -7,7 +7,16 @@
 {% block content2 %}
 
 
+
         <div class="col py-3">
+
+            <div id="map" class="modal-content" style="width:100%; height:600px">
+                Geo-Localizacion                                  
+            </div>
+            
+
+
+
             <h2>Listado de fichajes</h2>
             <p class="lead">
 
@@ -30,23 +39,11 @@
                                <td>{{fichaje.entrada_longitud}}</td>
                                <td>{{fichaje.entrada_latitud}}</td>
                                <td>{{fichaje.incidencia}}</td>
-                               <td><a href="{{ url_for("usuarios_blueprint.mapa", longitud=fichaje.entrada_longitud, latitud=fichaje.entrada_latitud) }}"
-                                class="btn btn-success">Mapa</a></td>
-                                <td><button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#mimodal"
-                                        data-bs-longitud={{fichaje.entrada_longitud}} data-bs-latitud={{fichaje.entrada_latitud}}>
-                                    Launch demo modal
-                                  </button></td>
+                               <td><button type="button" class="btn btn-primary" id="botonMapa" 
+                                    data-longitud={{fichaje.entrada_longitud}} data-latitud={{fichaje.entrada_latitud}}>
+                                    Mapa</button>
 
-                                  <div id="mimodal" class="modal" role="dialog">
-                                    <div class="modal-dialog modal-lg" role="document" style="width:500px; height:500px">
-                                        <div id="contenido" class="modal-content" style="width:500px; height:500px">
-                                            contenido {{fichaje.entrada_latitud}}
-                                                        <iframe id="framemapa" width="500" height="500" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" 
-                                                        src="https://maps.google.com/maps?width=500&amp;height=500&amp;hl=en&amp;
-                                                        q={{fichaje.longitud}},%20{{fichaje.latitud}}+(a)&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed">
-                                                    </iframe>
-                                                                          
-                                        </div>
+                                </td>                                                                     
                                     <div>
                                 </div>
                            </tr
@@ -55,11 +52,70 @@
                     </ttable>
                 </div>
 
+                <script type="text/javascript">
+                    var marker = null;
+                    // The first parameter are the coordinates of the center of the map
+                    // The second parameter is the zoom level
+                    var map = L.map('map').setView([40.712, -74.006], 11);
+                    
+                    // {s}, {z}, {x} and {y} are placeholders for map tiles
+                    // {x} and {y} are the x/y of where you are on the map
+                    // {z} is the zoom level
+                    // {s} is the subdomain of cartodb
+                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                        maxZoom: 19,
+                        attribution: '© OpenStreetMap'
+                    }).addTo(map);
+                    
+                  </script>
+                
+                <script type="text/javascript">
+                    const botones = document.querySelectorAll(".btn-primary");
+                    
+
+                    const haceClick = function (evento) {
+                        console.log("boton pulsado tiene: ", this.dataset.longitud, this.dataset.latitud);
+
+                        var longitud = this.dataset.longitud
+                        var latitud = this.dataset.latitud
+                        if (marker == null) {
+                            marker = L.marker([longitud,latitud]).addTo(map)
+                        }
+                        else {
+                            marker.setLatLng([longitud, latitud]).update()
+                        }
+                            map.flyTo([longitud,latitud], 18)
+                    }
+
+                    botones.forEach(boton => {
+                        boton.addEventListener("click", haceClick);
+                    });
+                </script>
+<!--
+                  <script type="text/javascript">
+                    btn = document.querySelector("#botonMapa");
+                    btn.addEventListener("click", function() 
+                            {
+                                console.log('aqui')
+                                var longitud = 23.0
+                                var latitud = 45.0
+                                map.flyTo([longitud,latitud], 10)
+                                
+                                //document.getElementById('map').innerHTML = "<div id='map' style='width:500px; height:500px'></div>"
+                            });
+                                //var map = L.map('map').setView([longitud, latitud], 11);
+                                
+                                //L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                                  //  maxZoom: 19,
+                                  //  attribution: '© OpenStreetMap'
+                                //}).addTo(map);
+                               
+                    </script>    
+                               
+                -->   
+
             </p>
         </div>
-
-
-
     </div>
 
 {% endblock %}
