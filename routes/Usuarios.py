@@ -158,13 +158,14 @@ def usuarioFichajes(idUsuario):
     print(fichajes)
     return render_template('fichajes.html', listaFichajes=fichajes)
 
+#Este metodo ya no lo utilizo
 @main.route('/mapa<longitud><latitud>')
 def mapa(longitud,latitud):
     #longitud=20.35235054304456
     #latitud=-8.402286665327859
     return render_template('mapa.html',longitud=longitud, latitud=latitud)
     
-    
+#Este metodo ya no lo utilizo    
 @main.route("/ubicacion", methods=['post'])
 @expects_json()
 def ubicacion():
@@ -237,8 +238,6 @@ def modifica_usuario(idUsuario):
         form.email.data = user.login
         form.estado.data = user.estado
         
-        
-    
     if form.validate_on_submit():
         user.nombre = form.nombre.data
         user.apellidos = form.apellidos.data

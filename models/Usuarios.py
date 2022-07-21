@@ -77,6 +77,9 @@ class Usuario(UserMixin, db.Model):
     def check_password(self, password):
         return check_password_hash(self.password, password)
     
+    def check_habilitado(self):
+        return self.estado
+    
     @staticmethod
     def generate_password():
         alfabeto = string.ascii_letters + string.digits
