@@ -41,7 +41,7 @@
                                <td>{{fichaje.incidencia}}</td>
                                <td><button type="button" class="btn btn-primary" id="botonMapa" 
                                     data-longitud={{fichaje.entrada_longitud}} data-latitud={{fichaje.entrada_latitud}}>
-                                    Mapa</button>
+                                    Geo-localizacion</button>
 
                                 </td>                                                                     
                                     <div>
@@ -52,11 +52,58 @@
                     </ttable>
                 </div>
 
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="calendar calendar-first" id="calendar_first">
+                        <div class="calendar_header">
+                            <button class="switch-month switch-left"> <i class="fa fa-chevron-left"></i></button>
+                             <h2></h2>
+                            <button class="switch-month switch-right"> <i class="fa fa-chevron-right"></i></button>
+                        </div>
+                        <div class="calendar_weekdays"></div>
+                        <div class="calendar_content"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>    
+<!--
+                <div class="container-fluid py-3">
+                    <h1 class="font-weight-light">Calendario fichajes</h1>
+                    <div class="row">
+                        <div id="holder" class="col-12">
+                            <div data-provide="calendar"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class='container' style='margin-top: 100px;'>
+                    <input type='text' class="form-control" id='datepicker' style='width: 300px;' > <br>
+                    <input type='text' class="form-control" data-provide="datepicker" style='width: 300px;' >
+
+                   </div>
+                
+                -->             
+
+                   <script type="text/javascript">
+                    $(document).ready(function(){
+                     $('#datepicker').datepicker(
+                         {
+                             "fornmat":"dd-mm-yy",
+                             "language":"es"
+                         }
+                     ); 
+                    });
+                    </script>
+
+
+
+
                 <script type="text/javascript">
                     var marker = null;
                     // The first parameter are the coordinates of the center of the map
                     // The second parameter is the zoom level
-                    var map = L.map('map').setView([40.712, -74.006], 11);
+                    var map = L.map('map').setView([40.4167, -3.70325], 5);
                     
                     // {s}, {z}, {x} and {y} are placeholders for map tiles
                     // {x} and {y} are the x/y of where you are on the map
