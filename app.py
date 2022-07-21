@@ -161,11 +161,13 @@ def create_app():
             password = form.password.data
             user = Usuarios.Usuario.get_by_login(email)
             if user is not None and user.check_password(password):
-                login_user(user)
-                session['idEmpresa'] = user.get_id_empresa()
-                session['username'] = user.get_login()
-                print('idempresa: ', session['idEmpresa'])
-                return redirect(url_for("home"))
+                if user.check_habilitado():
+                    login_user(user)
+                    session['idEmpresa'] = user.get_id_empresa()
+                    session['username'] = user.get_login()
+                    print('idempresa: ', session['idEmpresa'])
+                    return redirect(url_for("home"))
+                form.email.errors.append("Usuario deshabiliado, contacte con su administrador.")
             form.email.errors.append("Usuario o contraseña incorrectos.")
         return render_template('login_form.html', form=form)
         #return render_template('login_register.html', form=form)
