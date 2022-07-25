@@ -1,8 +1,42 @@
 {% extends "base_template.html" %}
 
-{% block title %}Modificaciion usuarios empresa{% endblock %}
+{% block title %}Modificacion usuarios empresa{% endblock %}
+
 
 {% block content2 %}
+
+<!--
+<script type="text/javascript">
+    $(document).ready( function() {
+        $("input[value=Borrado]").click( function() {
+
+            var ok = confirm('!Atencion si elimina el usuario perderá el historico de fichajes. Se recomienda hacer una exportacion antes','Sin titulo')
+            if (ok)
+                {
+                    console.log('OK')
+                    $('#idAccion').val('Borrado');
+                    $('form').submit();
+                }
+            });
+    });
+</script>
+-->
+
+<script type="text/javascript">
+    $(document).ready( function() {
+    $("button[name=BorrarOK]").click( function(e) {
+        $('#idAccion').val('Borrado');
+        $('form').submit();
+    
+    })
+
+    $("button[name=cancelar]").click( function() {
+        $('#mimodal').modal("hide");
+    });
+}); 
+
+
+</script>
 
 <body class="m-0 vh-100 row justify-content-center align-items-center ">
     <div class="mx-auto">
@@ -11,8 +45,9 @@
         <p style="color: red;"><strong>Error:</strong> {{ error }}
         {% endif %}
 
-        <form action="" method="post" novalidate>
+        <form action="" method="post" novalidate id="form">
             {{ form.hidden_tag() }}
+            <input type="hidden" name="accion" value="Modificar" id="idAccion" />
             <div class="col">
                 {{ form.nombre.label }}<span class="tab"></span>
                 {{ form.nombre }}<br>
@@ -49,9 +84,45 @@
                 {% endfor %}
             </div>
             <div>
-                {{ form.submit() }}
-            </div>
+                <input type="submit" value="Modificar" name="modif">
+         <!--       <input type="button" value="Borrado" class="btn btn-danger btn-xs" name="modif" id="btnBorrado">               
+         -->
+                <button type="button" class="btn btn-danger btn-xs" data-bs-toggle="modal" data-bs-target="#mimodal">
+                    Borrado
+                  </button>
+
         </form>
     </div>
+
+    <div id="mimodal" class="modal" id="exampleModal" role="dialog">
+        <div class="modal-dialog modal-lg" role="document">
+            <div id="contenido" class="modal-content" >
+                <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="exampleModalLongTitle">¿Esta seguro de borrar el usuario?</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                        !Atencion si elimina el usuario perderá el historico de fichajes!. 
+                        Se recomienda hacer una exportacion antes.
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-primary btnCrear" name="BorrarOK" >Borrar Usuario</button>
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal" name="cancelar">Cancelar</button>
+                    </div>
+                  </div>              
+            </div>
+        <div>
+    </div>
+   
 </body>
 {% endblock %}
+
+
+
+
+
+
+

@@ -143,7 +143,7 @@ def create_app():
     @app.route("/" )
     @login_required
     def home():
-        
+        print('En home...')
        #return "Hello, Flask!"
         listadoUsuarios = Usuarios.Usuario.get_by_empresa(session['idEmpresa'])
         return render_template("index.html", usuarios=listadoUsuarios)

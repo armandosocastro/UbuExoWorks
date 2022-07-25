@@ -226,11 +226,9 @@ def alta_usuario():
 @main.route('/usuario/modifica<idUsuario>', methods=['get', 'post'])
 @login_required
 def modifica_usuario(idUsuario):
-    print("en modificaciones")
     form = FormModifica()
     error = None
     user = Usuario.get_by_id(idUsuario)
-    
     if request.method =='GET':
         form.nombre.data = user.nombre
         form.apellidos.data = user.apellidos
@@ -239,41 +237,24 @@ def modifica_usuario(idUsuario):
         form.estado.data = user.estado
         
     if form.validate_on_submit():
-        user.nombre = form.nombre.data
-        user.apellidos = form.apellidos.data
-        user.nif = form.nif.data
-        user.email = form.email.data
-        #password = form.password.data
-        #idempresa=current_user.
-        idempresa = session['idEmpresa']
-        #estado = True
-        user.estado = form.estado.data
-        idRol = 1
-        idJornadaLaboral = 1
-        #numEmpleados = 1
-
-        #print('email y pass: ', email, password)
-        #user = Usuario.get_by_login(email)
-        #user = Usuario.get_by_id(idUsuario)
-        #empresa = Usuarios.Empresa.get_by_cif(cif)
-
-        #if user is not None:
-        #    error = 'El usuario ya esta registrado en el sistema'
-        #else:
-            #user = Usuario(nombre=nombre, apellidos=apellidos,nif=nif,login=email,estado=estado,idEmpresa=idempresa,idRol=idRol,idJornadaLaboral=idJornadaLaboral)
-        user.save()
+        print(request.form)
         
-            #password = Usuario.generate_password()
-            #user.set_password(password)
-            #user
-            #user.save()
-        print("Modificado usuario")
-            #enviamos el correo confirmando
-
-            #msg = Message("Registro UbuExoWorks", sender='ubuexoworks@gmail.com' ,recipients=[email])
-            #msg.html = '<p>Se ha completado el registro correctamente</p>' + '<p>Usuario: '+email+'</p>' + '<p>Contraseña: '+password+'</p>'
-            #mail.send(msg)
-
+        if request.form['accion'] == 'Borrado':
+            user.delete()
+        else:
+            if request.form['accion'] == 'Modificar':
+                user.nombre = form.nombre.data
+                user.apellidos = form.apellidos.data
+                user.nif = form.nif.data
+                user.email = form.email.data
+                #password = form.password.data
+                #idempresa=current_user.
+                idempresa = session['idEmpresa']
+                #estado = True
+                user.estado = form.estado.data
+                idRol = 1
+                idJornadaLaboral = 1
+                user.save()  
         return redirect(url_for('home'))
     return render_template("modifica.html", form=form, error=error)    
         

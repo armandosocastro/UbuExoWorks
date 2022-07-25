@@ -40,7 +40,8 @@ class FormModifica(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()])
     estado = BooleanField('Habilitado')
     
-    submit = SubmitField('Modifica') 
+    submit_modifica = SubmitField('Modifica') 
+    submit_baja = SubmitField('Baja')
 
  
  

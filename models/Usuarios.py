@@ -60,6 +60,10 @@ class Usuario(UserMixin, db.Model):
             print('actualizado en modif')
         db.session.commit()
         
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()
+        
     def get_by_empresa(idEmpresa):
         return Usuario.query.filter_by(idEmpresa=idEmpresa).all()
         
