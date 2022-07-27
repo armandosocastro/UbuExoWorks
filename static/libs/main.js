@@ -46,82 +46,45 @@
         var clicked = false;
         selectDates(selected);
 
+        //Esta parte la edito para que solo responda a un click de un solo dia sin seleccionar varios.
         clickedElement = calendar.datesBody.find('div');
         clickedElement.on("click", function () {
             clicked = $(this);
             var whichCalendar = calendar.name;
 
-            if (firstClick && secondClick) {
-                thirdClicked = getClickedInfo(clicked, calendar);
-                var firstClickDateObj = new Date(firstClicked.year,
-                firstClicked.month,
-                firstClicked.date);
-                var secondClickDateObj = new Date(secondClicked.year,
-                secondClicked.month,
-                secondClicked.date);
-                var thirdClickDateObj = new Date(thirdClicked.year,
-                thirdClicked.month,
-                thirdClicked.date);
-                if (secondClickDateObj > thirdClickDateObj && thirdClickDateObj > firstClickDateObj) {
-                    secondClicked = thirdClicked;
-                    // then choose dates again from the start :)
-                    bothCals.find(".calendar_content").find("div").each(function () {
-                        $(this).removeClass("selected");
-                    });
-                    selected = {};
-                    selected[firstClicked.year] = {};
-                    selected[firstClicked.year][firstClicked.month] = [firstClicked.date];
-                    selected = addChosenDates(firstClicked, secondClicked, selected);
-                } else { // reset clicks
-                    selected = {};
-                    firstClicked = [];
-                    secondClicked = [];
-                    firstClick = false;
-                    secondClick = false;
-                    bothCals.find(".calendar_content").find("div").each(function () {
-                        $(this).removeClass("selected");
-                    });
-                }
-            }
+            firstClick = false;
+            selected = {};
+            firstClicked = [];
+            //Con esto desmarcamos los dias que estuvieran marcados
+            bothCals.find(".calendar_content").find("div").each(function () {
+                $(this).removeClass("selected");
+            });
+
+            //Marcamos el dia pulsado y extraemos la informacion
+            firstClicked = getClickedInfo(clicked,calendar);
+            selected[firstClicked.year] = {};
+            selected[firstClicked.year][firstClicked.month] = [firstClicked.date];
+            //Los meses van del 0 al 11 por eso sumamos 1
+            console.log('dia pulsado', firstClicked.date, firstClicked.month+1, 'año:',firstClicked.year);
+            //document.location.reload(true);
+            $("#map").load(document.location.href + " #map");
+/*
             if (!firstClick) {
                 firstClick = true;
-                firstClicked = getClickedInfo(clicked, calendar);
+                firstClicked = getClickedInfo(clicked,calendar);
                 selected[firstClicked.year] = {};
                 selected[firstClicked.year][firstClicked.month] = [firstClicked.date];
+                console.log('dia pulsado', firstClicked.date, firstClicked.month+1, 'año:',firstClicked.year);
             } else {
-                secondClick = true;
-                secondClicked = getClickedInfo(clicked, calendar);
-
-                // what if second clicked date is before the first clicked?
-                var firstClickDateObj = new Date(firstClicked.year,
-                firstClicked.month,
-                firstClicked.date);
-                var secondClickDateObj = new Date(secondClicked.year,
-                secondClicked.month,
-                secondClicked.date);
-
-                if (firstClickDateObj > secondClickDateObj) {
-
-                    var cachedClickedInfo = secondClicked;
-                    secondClicked = firstClicked;
-                    firstClicked = cachedClickedInfo;
-                    selected = {};
-                    selected[firstClicked.year] = {};
-                    selected[firstClicked.year][firstClicked.month] = [firstClicked.date];
-
-                } else if (firstClickDateObj.getTime() == secondClickDateObj.getTime()) {
-                    selected = {};
-                    firstClicked = [];
-                    secondClicked = [];
-                    firstClick = false;
-                    secondClick = false;
+                firstClick = false;
+                selected = {};
+                firstClicked = [];
+                //Con esto desmarcamos los dias
+                bothCals.find(".calendar_content").find("div").each(function () {
                     $(this).removeClass("selected");
-                }
-
-
-                // add between dates to [selected]
-                selected = addChosenDates(firstClicked, secondClicked, selected);
-            }
+                });
+            }         
+*/
             selectDates(selected);
         });
 
@@ -150,6 +113,14 @@
             highlightDates(nextYear, nextMonth, dateElements2);
         }
     }
+
+    //Añadir una funcion para que devuelva el dia clickado
+
+    function diaSeleccionado(selected) {
+
+    }
+    //Añadir una funciona que devuelva el rango de dias marcados
+
 
     function makeMonthArray(passed_month, passed_year) { // creates Array specifying dates and weekdays
         var e = [];
@@ -217,26 +188,26 @@
 
     var r = [];
     var i = [
-        "January",
-        "Feburary",
-        "March",
-        "April",
-        "May",
-        "June",
-        "July",
-        "August",
-        "September",
-        "October",
-        "November",
-        "December"];
+        "Enero",
+        "Febrero",
+        "Marzo",
+        "Abril",
+        "Mayo",
+        "Junio",
+        "Julio",
+        "Agosto",
+        "Septiembre",
+        "Octubre",
+        "Noviembre",
+        "Diciembre"];
     var daysArray = [
-        "Sunday",
-        "Monday",
-        "Tuesday",
-        "Wednesday",
-        "Thursday",
-        "Friday",
-        "Saturday"];
+        "Domingo",
+        "Lunes",
+        "Martes",
+        "Miercoles",
+        "Jueves",
+        "Viernes",
+        "Sabado"];
 
     var cal1 = $("#calendar_first");
     var calHeader1 = cal1.find(".calendar_header");
