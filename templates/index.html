@@ -30,7 +30,16 @@
                                <td>{{usuario.login}}</td>
                                <td>{{usuario.nif}}</td>
                                <td>{{usuario.estado}}</td>
-                               <td><a href="{{ url_for("usuarios_blueprint.usuarioFichajes", idUsuario=usuario.idUsuario) }}"
+                               <script>
+                                    date = new Date();
+                                    year = date.getFullYear();
+                                    month = date.getMonth() + 1;
+                                    day = date.getDate();
+                                    fecha_actual = month + "/" + day + "/" + year;
+                                    console.log('fecha: ', fecha_actual);
+                                </script>
+                               <!-- {% set fecha_pasada = fecha_actual() %} -->
+                               <td><a href="{{ url_for("usuarios_blueprint.usuarioFichajes", idUsuario=usuario.idUsuario, fecha=fecha_pasada) }}"
                                             class="btn btn-success">Fichajes</a>
                                 <td><a href="{{ url_for("usuarios_blueprint.modifica_usuario", idUsuario=usuario.idUsuario) }}"
                                             class="btn btn-sucess">Modificar</a>

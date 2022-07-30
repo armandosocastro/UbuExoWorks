@@ -1,6 +1,7 @@
 
 #from crypt import methods
 
+from datetime import datetime
 from lib2to3.pgen2 import token
 from flask import Blueprint, jsonify, request, redirect, render_template, session, url_for
 from flask_expects_json import expects_json
@@ -145,18 +146,22 @@ def getFichajeFecha():
         print('fecha fichaje: ',fecha)
         
         fichajes = Fichaje.get_by_idEmpleadoFecha(idUsuario,fecha)
-        print(fichajes)
         
         return jsonify([fichaje.to_JSON() for fichaje in fichajes])
     except Exception as ex:
         return jsonify({'mensaje': str(ex)}), 500        
     
-@main.route('/usuario/fichajes<idUsuario>', methods=['get'])
-def usuarioFichajes(idUsuario):
+@main.route('/usuario/fichajes', methods=['get'])
+def usuarioFichajes():
+    #datos = request.get_data()
+    idUsuario = request.args.get('idUsuario')
+    fecha = request.args.get('fecha')
     print('usuario: ',idUsuario)
-    fichajes = Fichaje.get_by_idEmpleado(idUsuario)
+    print('fehcha actual pasada: ',fecha)
+    #fichajes = Fichaje.get_by_idEmpleado(idUsuario)
+    fichajes = Fichaje.get_by_idEmpleadoFecha(idUsuario, fecha)
     print(fichajes)
-    return render_template('fichajes.html', listaFichajes=fichajes)
+    return render_template('fichajes.html', listaFichajes=fichajes, fechaHoy=fecha)
 
 #Este metodo ya no lo utilizo
 @main.route('/mapa<longitud><latitud>')
@@ -257,4 +262,4 @@ def modifica_usuario(idUsuario):
                 user.save()  
         return redirect(url_for('home'))
     return render_template("modifica.html", form=form, error=error)    
-        
+

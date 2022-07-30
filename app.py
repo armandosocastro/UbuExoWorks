@@ -4,6 +4,7 @@
 
 import os
 import re
+from datetime import datetime
 
 from flask_sqlalchemy import SQLAlchemy
 from flask import Flask, redirect, render_template, url_for, session, jsonify, request
@@ -27,9 +28,21 @@ from dotenv import load_dotenv
 mail = Mail()
 
 
+def fecha_actual():
+    now = datetime.now()
+    año = now.year
+    mes = now.month
+    dia = now.day
+    print("En fecha actual: ",mes,dia,año)
+    return str(mes)+'/'+str(dia)+'/'+str(año)
+   
+
 #def create_app(settings_module='config.DevelopmentConfig'):
 def create_app():
     app = Flask(__name__)
+    
+    app.jinja_env.globals.update(fecha_actual=fecha_actual)
+    
     load_dotenv()
     
     #app.config.from_object(settings_module)
@@ -178,6 +191,17 @@ def create_app():
     @app.route("/logout")
     def logout():
         logout_user()
-        return redirect(url_for("login"))            
+        return redirect(url_for("login"))    
+    
+
+   
    
     return app    
+
+
+
+
+
+
+
+

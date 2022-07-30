@@ -30,7 +30,13 @@
                 (shownDate != today.getDate() && passed_month == today.getMonth()) || passed_month != today.getMonth()) && iter_date < today) {
                     var m = '<div class="past-date">';
                 } else {
-                    var m = checkToday(iter_date) ? '<div class="today">' : "<div>";
+                    var urlParams = new URLSearchParams(document.location.search);
+                    var fecha = urlParams.get('fecha');
+                    //Hay que pasar ese String a un tipo Date
+                    
+                    var m = checkToday(diapasado) ? '<div class="today">' : "<div>";
+                    //Aqui se comprueba si es el dia actual y se resalta
+                    //var m = checkToday(iter_date) ? '<div class="today">' : "<div>";
                 }
                 calendar.datesBody.append(m + shownDate + "</div>");
             }
@@ -67,7 +73,29 @@
             //Los meses van del 0 al 11 por eso sumamos 1
             console.log('dia pulsado', firstClicked.date, firstClicked.month+1, 'año:',firstClicked.year);
             //document.location.reload(true);
-            $("#map").load(document.location.href + " #map");
+
+            //$("#map").load(document.location.href + " #map");
+            var urlParams = new URLSearchParams(document.location.search);
+            var idUsuario = urlParams.get('idUsuario');
+            var fecha = urlParams.get('fecha')
+            console.log('idUsuario: ', idUsuario);
+            console.log('dia:',fecha);
+            console.log('url:',document.location.href);
+
+            //$("#listaFichajes").load(document.location.href + "#listaFichajes")
+            //document.location.reload(true);
+            var diapulsado = (firstClicked.month+1)+'/'+firstClicked.date+'/'+firstClicked.year;
+            console.log('dia pulsa:',diapulsado);
+
+            //cambiar parametros
+            urlParams.set('fecha', diapulsado);
+
+            history.pushState(null,null,"?"+urlParams.toString());
+            //document.location.href = "http://127.0.0.1:5000/api/usuario/fichajes?" + "idUsuario="+idUsuario+"&fecha="+diapulsado;
+            console.log("url nueva: ",document.location.href);
+            document.location.reload(true);
+            //$.post(url_for("usuarios_blueprint.usuarioFichajes", idUsuario=usuario.idUsuario, fecha="7%27%2022"));
+
 /*
             if (!firstClick) {
                 firstClick = true;
