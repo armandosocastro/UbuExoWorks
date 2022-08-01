@@ -261,3 +261,49 @@ class Fichaje(db.Model):
         if not self.idFichaje:
             db.session.add(self)
         db.session.commit()    
+        
+        
+class Gasto(db.Model):
+    __tablename__ = "GASTO"
+    
+    idGasto = db.Column(db.Integer, primary_key=True)
+    fecha = db.Column(db.Date, nullable=False)
+    tipo = db.Column(db.String, nullable=False)
+    descripcion = db.Column(db.String, nullable=False)
+    importe = db.Column(db.Float, nullable=False)
+    iva = db.Column(db.Float, nullable=False)
+    cif = db.Column(db.String, nullable=False)
+    razonSocial = db.Column(db.String, nullable=False)
+    numeroTicket = db.Column(db.Bigint, nullable=False)
+    fotoTicket = db.Column(db.LargeBinary, nullable=False)
+    idUsuario =  db.Column(db.Integer, ForeignKey('USUARIO.idUsuario'))
+    usuario = db.relationship('Usuario')
+   
+        
+    def to_JSON(self):
+        return {
+            'idGasto': self.idGasto,
+            'fecha': self.fecha,
+            'tipo': self.tipo,
+            'descripcion': self.descripcion,
+            'importe': self.importe,
+            'iva': self.iva,
+            'cif': self.cif,
+            'razonSocial': self.razonSocial,
+            'numeroTicket': self.numeroTicket,
+            'fotoTicket': self.fotoTicket,
+            'idUsuario': self.idUsuario
+        }
+        
+    @staticmethod
+    def get_by_idEmpleado(idEmpleado):    
+        return Gasto.query.filter_by(idUsuario=idEmpleado).all()
+    
+    @staticmethod
+    def get_by_idEmpleadoFecha(idEmpleado,fecha):
+        return Gasto.query.filter_by(idUsuario=idEmpleado, fecha=fecha).all()       
+    
+    def save(self):
+        if not self.idGasto:
+            db.session.add(self)
+        db.session.commit()            
