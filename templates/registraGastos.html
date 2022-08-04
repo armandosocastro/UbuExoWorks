@@ -10,21 +10,16 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
 
-
-
-
-<div class='container' style='margin-top: 100px;'>
-    <input type='text' class="form-control" id='datepicker' style='width: 300px;' > <br>
-    <input type='text' class="form-control" data-provide="datepicker" style='width: 300px;' >
-   </div>
-
-   <script type="text/javascript">
-    $(document).ready(function(){
-     $('#datepicker').datepicker(
-         {
-             "fornmat":"dd-mm-yy",
-             "language":"es"
-         }
-     ); 
-    });
-    </script>
+<form action="http://127.0.0.1:5000/api/gasto/registraGasto" method="POST" enctype="multipart/form-data">
+    <input type="file" name="ticket">
+    <input type="hidden" name="idUsuario" value="76" />
+    <input type="hidden" name="fecha" value="8/1/2022" />
+    <input type="hidden" name="tipo" value="ticket" />
+    <input type="hidden" name="descripcion" value="comida" />
+    <input type="hidden" name="importe" value=2999.99 />
+    <input type="hidden" name="iva" value=113.20 />
+    <input type="hidden" name="cif" value="123245X" />
+    <input type="hidden" name="razonSocial" value="Repsol" />
+    <input type="hidden" name="numeroTicket" value="00123" />
+    <input type="submit">
+   </form>

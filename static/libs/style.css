@@ -8230,6 +8230,9 @@ h1, h2, h3, h4, h5,
 .calendar_content div.past-date {
   color: #d5d5d5; }
 
+.calendar_content div.fichaje-date {
+  color: #008000; }
+
 .calendar_content div.today {
   font-weight: bold;
   font-size: 16px;

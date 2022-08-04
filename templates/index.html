@@ -39,6 +39,8 @@
                                     console.log('fecha: ', fecha_actual);
                                 </script>
                                <!-- {% set fecha_pasada = fecha_actual() %} -->
+                               <td><a href="{{ url_for("usuarios_blueprint.usuarioGastos", idUsuario=usuario.idUsuario) }}"
+                                class="btn btn-success">Gastos</a>
                                <td><a href="{{ url_for("usuarios_blueprint.usuarioFichajes", idUsuario=usuario.idUsuario, fecha=fecha_pasada) }}"
                                             class="btn btn-success">Fichajes</a>
                                 <td><a href="{{ url_for("usuarios_blueprint.modifica_usuario", idUsuario=usuario.idUsuario) }}"

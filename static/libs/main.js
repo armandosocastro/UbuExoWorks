@@ -2,8 +2,11 @@
 
 	"use strict";
 
+    
 
 	$(document).ready(function () {
+
+
     function c(passed_month, passed_year, calNum) {
         var calendar = calNum == 0 ? calendars.cal1 : calendars.cal2;
         makeWeek(calendar.weekline);
@@ -19,24 +22,31 @@
                 r++;
             }
         }
-        for (var cell = 0; cell < 42 - r; cell++) { // 42 date-cells in calendar
+        for (var cell = 0; cell < 42 - r; cell++) { // 42 date-cells in calendar, son los huecos para los dias, incluyendo Dom,Lun,etc..
             if (cell >= calMonthArray.length) {
                 calendar.datesBody.append('<div class="blank"></div>');
             } else {
                 var shownDate = calMonthArray[cell].day;
                 var iter_date = new Date(passed_year, passed_month, shownDate);
+
+                var urlParams = new URLSearchParams(document.location.search);
+                var fecha = urlParams.get('fecha');
+                //Hay que pasar ese String a un tipo Date
+
+                var [mes, dia, año] = fecha.split('/');
+                var diaURL = new Date(año, mes-1, dia); //Los meses van del 0-11
+
                 if (
                 (
                 (shownDate != today.getDate() && passed_month == today.getMonth()) || passed_month != today.getMonth()) && iter_date < today) {
                     var m = '<div class="past-date">';
+                  //Aqui voy a controlar si hay fichajes ese dia y lo pinto del color verde
                 } else {
-                    var urlParams = new URLSearchParams(document.location.search);
-                    var fecha = urlParams.get('fecha');
-                    //Hay que pasar ese String a un tipo Date
-                    
-                    var m = checkToday(diapasado) ? '<div class="today">' : "<div>";
+                                      
+
+                    //var m = checkDiaFichaje(iter_date,diapasado) ? '<div class="fichaje_date">' : "<div>";
                     //Aqui se comprueba si es el dia actual y se resalta
-                    //var m = checkToday(iter_date) ? '<div class="today">' : "<div>";
+                    var m = checkToday(iter_date) ? '<div class="today">' : "<div>";
                 }
                 calendar.datesBody.append(m + shownDate + "</div>");
             }
@@ -93,7 +103,8 @@
             history.pushState(null,null,"?"+urlParams.toString());
             //document.location.href = "http://127.0.0.1:5000/api/usuario/fichajes?" + "idUsuario="+idUsuario+"&fecha="+diapulsado;
             console.log("url nueva: ",document.location.href);
-            document.location.reload(true);
+            //document.location.reload(true);
+            $("#listaFichajes").load(window.location.href);
             //$.post(url_for("usuarios_blueprint.usuarioFichajes", idUsuario=usuario.idUsuario, fecha="7%27%2022"));
 
 /*
@@ -182,6 +193,12 @@
         var checkingDate = e.getFullYear() + '/' + (e.getMonth() + 1) + '/' + e.getDate();
         return todayDate == checkingDate;
 
+    }
+
+    function checkDiaFichaje(e,diaPasado) {
+        var diaFichaje = diaPasado.getFullYear() + '/' + (diaPasado.getMonth() + 1) + '/' + diaPasado.getDate();
+        var checkingDate = e.getFullYear() + '/' + (e.getMonth() + 1) + '/' + e.getDate();
+        return diaFichaje == checkingDate;
     }
 
     function getAdjacentMonth(curr_month, curr_year, direction) {

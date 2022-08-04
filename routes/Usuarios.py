@@ -2,10 +2,12 @@
 #from crypt import methods
 
 from datetime import datetime
+from fileinput import filename
 from lib2to3.pgen2 import token
 from flask import Blueprint, jsonify, request, redirect, render_template, session, url_for
 from flask_expects_json import expects_json
 from werkzeug.security import check_password_hash
+from werkzeug.utils import secure_filename
 from flask_wtf import CSRFProtect
 
 from flask_mail import Mail, Message
@@ -15,9 +17,13 @@ from flask_login import current_user, login_required
 #from models.Usuarios import db
 #from app import db
 # Modelos
-from models.Usuarios import Fichaje, Usuario, Empresa
+from models.Usuarios import Fichaje, Gasto, Usuario, Empresa
 
 from formularios import FormAlta, FormModifica
+import os #Quitar despues de las prubeas con los tickets
+
+import base64 #Para codificar/descodificar las imagenes
+
 
 #from app import csrf
 
@@ -184,7 +190,63 @@ def ubicacion():
         return jsonify(token="OK"),200
     except Exception as ex:
         return jsonify({'mensaje': str(ex)}), 500     
+
+#Metodo para obtener los gastos de un usuario en la aplicacion Web
+@main.route('/usuario/gastos', methods=['get'])
+def usuarioGastos():
+    idUsuario = request.args.get('idUsuario')
+    
+    gastos = Gasto.get_by_idEmpleado(idUsuario)
+    print('Gastos: ', gastos)
+    return render_template('gastos.html', listaGastos=gastos)
+    
+        
+@main.route("/gasto/registraGasto", methods=['post'])
+def registraGasto():
+    if request.method == 'POST':
+        
+        idUsuario = request.form['idUsuario']
+        fecha = request.form['fecha']
+        tipo = request.form['tipo']
+        importe = request.form['importe']
+        iva = request.form['iva']
+        cif = request.form['cif']
+        razonSocial = request.form['razonSocial']
+        descripcion = request.form['descripcion']
+        numeroTicket = request.form['numeroTicket']
+        
+        imagen = request.files['ticket']
+        #filename = secure_filename(imagen.filename)
+        #imagen.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        imagen_string = base64.b64encode(imagen.read())
+
+        print(idUsuario)
+        print(fecha)
+        print(tipo)
+        print(importe)
+        print(iva)
+        print(cif)
+        print(razonSocial)
+        print(descripcion)
+        print(numeroTicket)
+        
+        gasto = Gasto(fecha=fecha, tipo=tipo, descripcion=descripcion, importe=importe, iva=iva, cif=cif,fotoTicket=imagen_string,idUsuario=idUsuario,razonSocial=razonSocial,numeroTicket=numeroTicket)
+        gasto.save()
+        
+        return "Recibido ticket"
+        
    
+@main.route("/cargaTicket", methods=['get'])
+def cargaTicket():
+    idGasto = request.args.get('idGasto')
+    
+    gasto = Gasto.get_by_idGasto(idGasto)
+    
+    print('idGasto: ',idGasto, gasto.importe)
+    imagen = base64.b64decode(gasto.fotoTicket)
+    
+    return imagen   
+
 @main.route('/alta', methods=['get', 'post'])
 @login_required
 def alta_usuario():

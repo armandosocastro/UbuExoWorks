@@ -274,7 +274,7 @@ class Gasto(db.Model):
     iva = db.Column(db.Float, nullable=False)
     cif = db.Column(db.String, nullable=False)
     razonSocial = db.Column(db.String, nullable=False)
-    numeroTicket = db.Column(db.Bigint, nullable=False)
+    numeroTicket = db.Column(db.BIGINT, nullable=False)
     fotoTicket = db.Column(db.LargeBinary, nullable=False)
     idUsuario =  db.Column(db.Integer, ForeignKey('USUARIO.idUsuario'))
     usuario = db.relationship('Usuario')
@@ -301,7 +301,11 @@ class Gasto(db.Model):
     
     @staticmethod
     def get_by_idEmpleadoFecha(idEmpleado,fecha):
-        return Gasto.query.filter_by(idUsuario=idEmpleado, fecha=fecha).all()       
+        return Gasto.query.filter_by(idUsuario=idEmpleado, fecha=fecha).all()    
+    
+    @staticmethod
+    def get_by_idGasto(idGasto):
+        return Gasto.query.filter_by(idGasto=idGasto).first()   
     
     def save(self):
         if not self.idGasto:
