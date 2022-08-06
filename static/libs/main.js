@@ -103,8 +103,8 @@
             history.pushState(null,null,"?"+urlParams.toString());
             //document.location.href = "http://127.0.0.1:5000/api/usuario/fichajes?" + "idUsuario="+idUsuario+"&fecha="+diapulsado;
             console.log("url nueva: ",document.location.href);
-            //document.location.reload(true);
-            $("#listaFichajes").load(window.location.href);
+            document.location.reload(true);
+            //$("#listaFichajes").load(window.location.href);
             //$.post(url_for("usuarios_blueprint.usuarioFichajes", idUsuario=usuario.idUsuario, fecha="7%27%2022"));
 
 /*

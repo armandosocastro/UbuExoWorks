@@ -22,6 +22,8 @@
                             <th scope="col">IVA</th>
                             <th scope="col">Cif</th>
                             <th scope="col">numeroTicket</th>
+                            <th scope="col">Foto</th>
+                            <th scope="col">Validado</th>
                         </tr>
                        </thead>  
                        <tbody>                                    
@@ -36,7 +38,16 @@
                                <!--<td><img id="image-modal" src="{{ url_for("usuarios_blueprint.cargaTicket", idGasto=ticket.idGasto) }}"
                                     style="max-width:50px" data-target="#myModal" data-toggle="modal"></td> -->
                                 <td><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal"
-                                        data-gasto={{ ticket.idGasto }}>Ticket</button></td>
+                                        data-gasto={{ ticket.idGasto }}><i class="bi-file-earmark-text"></i></button></td>
+                                {% if ticket.validado == True %}
+                                    <td><button type="button" class="btn btn-primary" id="valida" data-gasto={{ ticket.idGasto }}
+                                        onclick="window.location.href='{{ url_for('usuarios_blueprint.validaTicket', idGasto=ticket.idGasto) }}';">
+                                        <i class="bi-check"></i></button></td>
+                                {% else %}
+                                    <td><button type="button" class="btn btn-secondary" id="valida" data-gasto={{ ticket.idGasto }}
+                                        onclick="window.location.href='{{ url_for('usuarios_blueprint.validaTicket', idGasto=ticket.idGasto) }}';">
+                                        <i class="bi-x"></i></button></td>
+                                {% endif %}
                             </tr>
                         {% endfor %}   
                         </tbody>
@@ -58,8 +69,33 @@
                         </div>
                     </div>
                 
-                
+            <!-- Esta parte no la necesito porque estoy haciendo la validacion en el evento onclick del boton     
+                    <script type="text/javascript">
+                        const btnValida = document.querySelectorAll("#valida");
 
+                        const validaClick = function (evento) {
+                            
+                            //console.log("boton pulsado tiene: ", this.dataset.gasto );
+                            
+                            var idGastoTabla = this.dataset.gasto;
+                            //jQuery('myModal').on('show.bs.modal', function(e) {
+                                //var img = $(e.relatedTarget).attr('src');
+                                console.log('idGastoParametroValida:', idGastoTabla);
+                                "{{ url_for('usuarios_blueprint.validaTicket', idGasto='var') }}".replace("var", idGastoTabla)
+                               
+                                console.log('url:', img);
+                                //No coge el idGastoTabla y se lo tengo que añadir aqui.
+                                //jQuery('#showing').attr('src', img+idGastoTabla);
+                            //});
+                            //jQuery('myModal').modal("show");
+                        }
+                        btnValida.forEach(valida => {    
+                            valida.addEventListener("click", validaClick);
+                        });
+                    </script>
+                -->
+
+                <!-- Este script muestra en una modal el ticket -->
                     <script type="text/javascript">
                         const botones = document.querySelectorAll(".btn-primary");
 
@@ -77,6 +113,7 @@
                             //});
                             jQuery('myModal').modal("show");
                         }
+                        //añadimos un controlador de eventos por cada boton
                         botones.forEach(boton => {    
                             boton.addEventListener("click", haceClick);
                         });

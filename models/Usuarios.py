@@ -276,6 +276,7 @@ class Gasto(db.Model):
     razonSocial = db.Column(db.String, nullable=False)
     numeroTicket = db.Column(db.BIGINT, nullable=False)
     fotoTicket = db.Column(db.LargeBinary, nullable=False)
+    validado = db.Column(db.Boolean, nullable=False)
     idUsuario =  db.Column(db.Integer, ForeignKey('USUARIO.idUsuario'))
     usuario = db.relationship('Usuario')
    
@@ -292,7 +293,8 @@ class Gasto(db.Model):
             'razonSocial': self.razonSocial,
             'numeroTicket': self.numeroTicket,
             'fotoTicket': self.fotoTicket,
-            'idUsuario': self.idUsuario
+            'idUsuario': self.idUsuario,
+            'validado': self.validado
         }
         
     @staticmethod

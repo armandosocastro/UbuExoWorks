@@ -247,6 +247,22 @@ def cargaTicket():
     
     return imagen   
 
+@main.route("/validaTicket", methods=['post','get'])
+def validaTicket():
+    idGasto = request.args.get('idGasto')
+    
+    gasto = Gasto.get_by_idGasto(idGasto)
+    
+    print('idGasto a validar: ',idGasto)
+    
+    if gasto.validado == False:
+        gasto.validado = True
+    else:
+        gasto.validado = False
+    
+    gasto.save()
+    return redirect(url_for('usuarios_blueprint.usuarioGastos', idUsuario = gasto.idUsuario))
+
 @main.route('/alta', methods=['get', 'post'])
 @login_required
 def alta_usuario():
