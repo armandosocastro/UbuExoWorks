@@ -198,9 +198,21 @@ def usuarioGastos():
     
     gastos = Gasto.get_by_idEmpleado(idUsuario)
     print('Gastos: ', gastos)
-    return render_template('gastos.html', listaGastos=gastos)
+    return render_template('gastosAjax.html', listaGastos=gastos)
+
+#metodo para devolver los tickets para peticion AJAX
+@main.route('/ajax/cargatickets', methods=['get','post'])
+def ajaxCargaTickets():
+    parametro = request.form
+    idUsuario = parametro['idUsuario']
+    print('id: ',idUsuario, parametro)
     
-        
+    gastos = Gasto.get_by_idEmpleado(idUsuario)
+    print('Gastos para ajax: ', gastos)
+    data_json = {'data':[{"ID":g.idGasto, "idUsuario":g.idUsuario, "fecha":g.fecha, "tipo":g.tipo, "razonsocial":g.razonSocial, "importe":g.importe,
+                          "iva":g.iva, "cif":g.cif, "numeroticket":g.numeroTicket, "validado":g.validado} for g in gastos]} 
+    return jsonify(data_json)
+
 @main.route("/gasto/registraGasto", methods=['post'])
 def registraGasto():
     if request.method == 'POST':
@@ -247,21 +259,35 @@ def cargaTicket():
     
     return imagen   
 
-@main.route("/validaTicket", methods=['post','get'])
+
+@main.route("/validaTicket", methods=['POST'])
+@login_required
 def validaTicket():
-    idGasto = request.args.get('idGasto')
     
+    idGasto = request.form['idGasto']
+    #idGasto = request.args.get('idGasto')
+
     gasto = Gasto.get_by_idGasto(idGasto)
     
-    print('idGasto a validar: ',idGasto)
-    
+    print('idGasto a validar: ', idGasto)
+     
+    #print(request.form)
     if gasto.validado == False:
         gasto.validado = True
     else:
         gasto.validado = False
     
     gasto.save()
-    return redirect(url_for('usuarios_blueprint.usuarioGastos', idUsuario = gasto.idUsuario))
+    return "ok"
+    #return redirect(url_for('usuarios_blueprint.usuarioGastos', idUsuario = gasto.idUsuario))
+
+@main.route("/validaTickets", methods=['post','get'])
+def validaTickets():
+
+    print('tickets validados:', request.form);
+    for i in request.form:
+        print(request.form['aprobar'])
+    return "true"
 
 @main.route('/alta', methods=['get', 'post'])
 @login_required

@@ -1,0 +1,254 @@
+
+{% extends "base_template_sincal.html" %}
+
+{% block title %}PAgina inicio logueado{% endblock %}
+
+{% block content2 %}
+
+<!-- <link type="text/css" rel="stylesheet" href="https://cdn.datatables.net/1.10.13/css/jquery.dataTables.min.css" /> -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css"/>
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.10.0/bootstrap-table.min.css">
+<link rel="stylesheet" href="https://rawgit.com/vitalets/x-editable/master/dist/bootstrap3-editable/css/bootstrap-editable.css">
+
+        <div class="col py-3">
+
+
+            <h2>Listado de gastos</h2>
+            <p class="lead">
+
+        <form name="formulario" id="form-prueba" method="POST" action="aprobar();">        
+                <input type="submit" value="Aprobar gastos" id="aprobar"/>
+                <table id="table" 
+                data-sortable="true"
+                data-toggle="table"
+                data-filter-control="true" 
+                data-show-export="true"
+                data-click-to-select="false"
+                class="table-responsive hover">   
+          
+<!--
+                <div class="table-responsive" id="listaGastos">
+                    <table class="table table-striped table-sm">  -->
+                      <thead>
+                        <tr>
+                            <th data-field="id" >id</th>
+                            <th data-field="idUsuario" >idUsuario</th>
+                            <th data-field="tipo"  data-sortable="true">Tipo</th>
+                            <th data-field="fecha" ddata-sortable="true">Fecha</th>
+                            <th data-field="razon" data-sortable="true">Razon social</th>
+                            <th data-field="importe" data-sortable="true">Importe</th>
+                            <th data-field="iva" data-sortable="true">IVA</th>
+                            <th data-field="cif" data-sortable="true">Cif</th>
+                            <th data-field="numeroticket" data-sortable="true">numeroTicket</th>
+                            <th data-field="foto">Foto</th>
+                            <th data-field="validado" data-sortable="true">Aprobado</th>
+                        </tr>
+                       </thead>  
+
+                    </table>
+                </form>
+                </div>                
+
+                    <div id="myModal" class="modal fade" role="dialog" >
+                        <div class="modal-dialog" role="document" >
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                </div>
+                                <div class="modal-body" style="width:500px; height:500px">
+                                    <img src="" id="showing" style="width:100%; height:480px"/>
+                                </div>
+                                <div class="modal-footer">
+                                    
+                                    <button type="button" class="btn btn-secondary" id="botonValida" data-gasto=''>
+                                        Aprobar
+                                    </button>
+                                </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+             </p>
+        </div>
+
+    </div>
+
+{% endblock %}
+
+{% block scripts %}
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.js" integrity="sha512-n/4gHW3atM3QqRcbCn6ewmpxcLAHGaDjpEBu4xZd47N0W2oQ+6q7oc3PXstrJYXcbNU1OHdQ1T7pAP+gi5Yu8g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js"></script>
+<!--<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>-->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js" integrity="sha384-q2kxQ16AaE6UbzuKqyBE9/u/KzioAlnx2maXQHiDX9d4/zp8Ok3f+M7DPm+Ib6IU" crossorigin="anonymous"></script>
+
+<script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.10.0/bootstrap-table.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.9.1/extensions/editable/bootstrap-table-editable.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.9.1/extensions/export/bootstrap-table-export.js"></script>
+<script type="text/javascript" src="https://rawgit.com/hhurz/tableExport.jquery.plugin/master/tableExport.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.9.1/extensions/filter-control/bootstrap-table-filter-control.js"></script>
+
+
+<script type="text/javascript">
+
+    $(function () {
+        var idUsuario = "{{listaGastos[0].idUsuario}}";
+        console.log('idUsuario cargado: ',idUsuario);
+        
+        //Funcion Ajax para renderizar el checkbox en funcion del valor del dato almacenado en la BBDD    
+        var checkValidado = function( data, type, row, meta ) {
+            var is_checked = data == true ? "checked" : "";
+            return '<input type="checkbox" class="checkbox" ' + is_checked + ' data-gasto=' + row[0] + '/>';
+        }
+
+        //Funcion Ajax para renderizar el checkbox en funcion del valor del dato almacenado en la BBDD    
+        var foto = function( data, type, row, meta ) {
+            //console.log('data-gasto:', row['ID']);
+
+            return "<button type='button' class='btn btn-primary' data-toggle='modal' data-target= '#myModal' data-gasto=" + row['ID'] + "><i class='bi bi-image'></i></button>";
+        }
+
+
+        var table = $('#table').DataTable
+        ({
+
+            buttons: ['Aprobar gastos'],
+
+            language: {
+                "decimal": "",
+                "emptyTable": "No hay información",
+                "info": "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
+                "infoEmpty": "Mostrando 0 to 0 of 0 Entradas",
+                "infoFiltered": "(Filtrado de _MAX_ total entradas)",
+                "infoPostFix": "",
+                "thousands": ",",
+                "lengthMenu": "Mostrar _MENU_ Entradas",
+                "loadingRecords": "Cargando...",
+                "processing": "Procesando...",
+                "search": "Buscar:",
+                "zeroRecords": "Sin resultados encontrados",
+                "paginate": {
+                    "first": "Primero",
+                    "last": "Ultimo",
+                    "next": "Siguiente",
+                    "previous": "Anterior"
+                }
+            },
+
+            "responsive": true,
+            "sPaginationType": "full_numbers",
+            "order": [[3, 'desc']],
+            "columnDefs": [{ 
+                "targets": [9], 
+                "data": null,
+                "defaultContent": 
+                    "<button type='button' class='btn btn-primary' data-toggle='modal' data-target= '#myModal'><i class='bi bi-image'></i></button>"
+            },{
+                "targets": [10], 
+                "data": null,
+                "defaultContent": 
+                    "<input type='checkbox' checked />"
+            }
+            ],
+            "ajax": {
+                "method": "POST",
+                "url": 'http://127.0.0.1:5000/api/ajax/cargatickets',
+                "data": {'idUsuario':idUsuario},
+            },
+            "columns": [
+               
+                {"data":"ID"},
+                {"data":"idUsuario"},
+                {"data":"tipo"},
+                {"data":"fecha"},
+                {"data":"razonsocial"},
+                {"data":"importe"},
+                {"data":"iva"},
+                {"data":"cif"},
+                {"data":"numeroticket"},
+                {"data":"foto", "render":foto},
+                {"data":"validado", "render":checkValidado}],
+        });
+
+        //Controlamos el evento 'click' del boton de Aprobacion de gasto dentro de la ventana modal
+        $('#botonValida').on('click', function(e) {
+            console.log('estoy en valida boton');
+            //extraemos el idGasto del atributo data-gasto del boton
+            var idGastoParametro = jQuery('#botonValida').attr('data-gasto');
+            console.log('Y el id es: ', idGastoParametro);
+                $.ajax({
+                    type:"POST",
+                    data: { idGasto: idGastoParametro},
+                    url:url_valida,
+                    success: function(resultado) {
+                        console.log(resultado);
+                        table.ajax.reload(false);  
+                    }
+                });
+                console.log('VALIDADO');
+                //cerramos la modal cuando hemos apribado el gasto
+                jQuery('#myModal').modal('hide');
+        });
+
+        //Controlamos el evento de apertura de la ventana modal
+        //Y cargamos en ella la imagen del ticket desde la BBDD
+        $('#myModal').on('show.bs.modal', function(e) {
+
+            //Esta parte detecta correctamente el boton que dispara el evento
+            var triggerButton = $(e.relatedTarget);
+            //sacamos el idGasto del boton pulsado, esta guardado en el atributo data-gasto
+            //Para acceder a los datos data- se accede solo por lo que esta despues del -
+            datosBoton = triggerButton.data('gasto');
+            console.log('disparador:', datosBoton);
+            let idGastoParametro = datosBoton; //guardamos el id del Gasto
+            console.log("id:", idGastoParametro);
+
+            var img = $('#showing').attr('src');     
+            //Guardamos en data-gasto el idGasto para que podamos usarlo luego en el controlador 'click' del botonValida
+            jQuery('#botonValida').attr('data-gasto', idGastoParametro);
+            //Generamos la url para llamar al metodo de validacion del ticket
+            url_valida = '{{ url_for('usuarios_blueprint.validaTicket') }}';
+            url_valida = url_valida + "?idGasto="+idGastoParametro;
+            console.log('url_valida:',url_valida);
+                
+            img = "{{ url_for('usuarios_blueprint.cargaTicket', idGasto=id) }}";
+                //console.log('ruta:', img);
+            console.log('modal mostrada....');
+                //No coge el idGastoTabla y se lo tengo que añadir aqui.
+            jQuery('#showing').attr('src', img+idGastoParametro);
+           
+            });
+
+/*
+        jQuery('#myModal').on('hidden.bs.modal', function(e) {
+            
+            var triggerButton = $(e.relatedTarget);
+            datosBoton = triggerButton.data('gasto modal cerrada');
+            console.log('boton ',datosBoton);
+            console.log('borrado modal');
+            //jQuery('#myModal').off('show.bs.modal', controlaModal);
+            jQuery(triggerButton).off('click');
+            //e.relatedTarget.off('click', valida);
+            
+        })
+*/
+    });
+</script>
+
+{% endblock %}
+
+
+
+
+
+
+
