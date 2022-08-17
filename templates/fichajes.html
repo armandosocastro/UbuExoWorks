@@ -4,6 +4,7 @@
 
 {% block title %}PAgina inicio logueado{% endblock %}
 
+
 {% block content2 %}
 
         <div class="col py-3">
@@ -16,19 +17,27 @@
             <p class="lead">
 
                 <div class="table-responsive" id="listaFichajes">
-                    <table class="table table-striped table-sm">
+                    <table class="table table-striped table-sm" id="tablaFichajes"
+                        data-togle="table"
+                        data-search="true"
+                        data-filter-control="true"
+                        data-show-export="true"
+                        data-click-to-select="true"
+                        data-toolbar="#toolbar">
                       <thead>
                         <tr>
-                            <th scope="col">Fecha</th>
-                            <th scope="col">Hora</th>
-                            <th scope="col">Longitud</th>
-                            <th scope="col">Latitud</th>
-                            <th scope="col">Incidencia</th>
+                            <th data-field="state" data-checkbox="true"></th>
+                            <th data-field="fecha" data-filter-control="input" data-sortable="true">Fecha</th>
+                            <th data-field="hora" data-filter-control="input" data-sortable="true">Hora</th>
+                            <th data-field="longitud" data-filter-control="input" data-sortable="true">Longitud</th>
+                            <th data-field="latitud" data-filter-control="input" data-sortable="true">LAtitud</th>
+                            <th data-field="incidencia" data-sortable="true">Incidencia</th>
                         </tr>
                        </thead>  
                        <tbody>                                    
                         {% for fichaje in listaFichajes %}
                            <tr>
+                                <td class="bs-checkbox "><input data-index="0" name="btSelectItem" type="checkbox"></td>
                                <td>{{fichaje.fecha}}</td>
                                <td>{{fichaje.hora_entrada}}</td>
                                <td>{{fichaje.entrada_longitud}}</td>
@@ -79,10 +88,8 @@
 
                    </div>
                 
-                -->             
-
-
-
+                -->      
+                
                 <script type="text/javascript">
                     var marker = null;
                     // The first parameter are the coordinates of the center of the map
@@ -150,3 +157,13 @@
     </div>
 
 {% endblock %}
+
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        console.log('Inicializo tabla');
+        $('#tablaFichajes').DataTable({
+        });
+      });
+    </script> 
