@@ -1,12 +1,14 @@
 
 
 from datetime import datetime
+from calendar import monthrange
+from operator import and_
 import string
 import secrets
 import os
 from time import timezone
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import Boolean, Column, ForeignKey, DateTime, Integer, Text, Float, Time, false
+from sqlalchemy import Boolean, Column, ForeignKey, DateTime, Integer, Text, Float, Time, false, extract
 from sqlalchemy.orm import relationship
 from database.database import db
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -255,7 +257,45 @@ class Fichaje(db.Model):
     
     @staticmethod
     def get_by_idEmpleadoFecha(idEmpleado,fecha):
-        return Fichaje.query.filter_by(idUsuario=idEmpleado, fecha=fecha).all()       
+        return Fichaje.query.filter_by(idUsuario=idEmpleado, fecha=fecha).all()   
+    
+    @staticmethod
+    def get_by_idEmpleadoMes(idEmpleado,fecha):
+        fecha_formateada = datetime.strptime(fecha, "%Y/%m/%d")
+        year = fecha_formateada.year
+        month = fecha_formateada.month
+        #print('año:',year, 'mes:', month)
+        fechaini = str(year) + '/' + str(month) + '/' + '1'
+        #fechafin = str(year) + '/' + str(month) + '/' + '30'
+        fecha_dada = datetime(year=year, month=month, day=fecha_formateada.day).date()
+        
+        lastDayOfMonth = fecha_dada.replace(day = monthrange(fecha_dada.year, fecha_dada.month)[1])
+        fechafin = str(lastDayOfMonth.year) + '/' + str(lastDayOfMonth.month) + '/' + str(lastDayOfMonth.day)
+        #print(fechaini,':',fechafin)
+        fechaini_format = datetime.strptime(fechaini, "%Y/%m/%d")
+        fechafin_format = datetime.strptime(fechafin, "%Y/%m/%d")
+        #print('fecha fin: ',lastDayOfMonth)
+        return db.session.query(Fichaje).filter(and_( Fichaje.idUsuario == idEmpleado, and_(Fichaje.fecha <= fechafin_format, Fichaje.fecha>=fechaini_format))).all()
+        #return Fichaje.query.filter_by(idUsuario=idEmpleado, fecha=fecha).all()     
+    
+    @staticmethod
+    def get_by_idEmpleadoAno(idEmpleado,fecha):
+        fecha_formateada = datetime.strptime(fecha, "%Y/%m/%d")
+        year = fecha_formateada.year
+        month = fecha_formateada.month
+        #print('año:',year, 'mes:', month)
+        fechaini = str(year) + '/' + str(1) + '/' + '1'
+        fechafin = str(year) + '/' + str(12) + '/' + '31'
+        fecha_dada = datetime(year=year, month=month, day=fecha_formateada.day).date()
+        
+        #lastDayOfMonth = fecha_dada.replace(day = monthrange(fecha_dada.year, fecha_dada.month)[1])
+        #fechafin = str(lastDayOfMonth.year) + '/' + str(lastDayOfMonth.month) + '/' + str(lastDayOfMonth.day)
+        #print(fechaini,':',fechafin)
+        fechaini_format = datetime.strptime(fechaini, "%Y/%m/%d")
+        fechafin_format = datetime.strptime(fechafin, "%Y/%m/%d")
+        #print('fecha fin: ',lastDayOfMonth)
+        return db.session.query(Fichaje).filter(and_( Fichaje.idUsuario == idEmpleado, and_(Fichaje.fecha <= fechafin_format, Fichaje.fecha>=fechaini_format))).all()
+        #return Fichaje.query.filter_by(idUsuario=idEmpleado, fecha=fecha).all()     
     
     def save(self):
         if not self.idFichaje:
