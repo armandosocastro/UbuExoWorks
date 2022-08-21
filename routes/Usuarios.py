@@ -120,6 +120,29 @@ def getFichaje():
     except Exception as ex:
         return jsonify({'mensaje': str(ex)}), 500    
     
+    
+#Metodo API para obtener los fichajes de un usuario formateado para el Fullcalendar   
+@main.route('/get/fichajesCalendario', methods=['get'])
+#@expects_json()
+def getFichajeCalendario():
+    try:
+        list_fichajes = []
+        idUsuario = request.args.get('idUsuario')
+        fecha = request.args.get('fecha')
+        print('usuario: ',idUsuario, 'fecha:',fecha)
+        
+        
+        fichajes = Fichaje.get_by_idEmpleadoAno(idUsuario,fecha)
+        #print(fichajes)
+        for fichaje in fichajes:
+            fecha = fichaje.fecha.strftime('%Y-%m-%d')
+            #print("fecha: ", fecha)
+            dict_fichajes = {'title': 'Dia fichado', 'start': fecha , 'end': fecha }
+            list_fichajes.append(dict_fichajes)
+        return jsonify(list_fichajes)
+    except Exception as ex:
+        return jsonify({'mensaje': str(ex)}), 500        
+    
 @main.route('/get/fichaje/fecha', methods=['get'])
 #@expects_json()
 def getFichajePorFecha():
@@ -169,6 +192,32 @@ def usuarioFichajes():
     print(fichajes)
     return render_template('fichajes.html', listaFichajes=fichajes, fechaHoy=fecha)
 
+@main.route('/usuario/fichajesAjax', methods=['get','post'])
+def usuarioFichajesAjax():
+    #datos = request.get_data()
+    parametro = request.form
+    idUsuario = parametro['idUsuario']
+    fecha = parametro['fecha']
+    print('id: ',idUsuario, parametro)
+    
+    #idUsuario = request.args.get('idUsuario')
+    #fecha = request.args.get('fecha')
+    print('usuario ajax: ',idUsuario)
+    print('fehcha actual pasada ajax: ',fecha)
+    #fichajes = Fichaje.get_by_idEmpleado(idUsuario)
+    fichajes = Fichaje.get_by_idEmpleadoFecha(idUsuario, fecha)
+    #print('fichajes ajax:',fichajes)
+    
+    if fichajes == []:
+        #Devolvemos un diccionario vacio si no hay datos de gastos para enviar.
+        return jsonify({'data':[]})
+    else:
+        data_json = {'data':[{"fecha":f.fecha, "hora":str(f.hora_entrada), "longitud":f.entrada_longitud, "latitud":f.entrada_latitud,
+                              "incidencia":f.incidencia} for f in fichajes]} 
+        return jsonify(data_json)
+    
+    #return render_template('fichajes.html', listaFichajes=fichajes, fechaHoy=fecha)
+
 #Este metodo ya no lo utilizo
 @main.route('/mapa<longitud><latitud>')
 def mapa(longitud,latitud):
@@ -198,7 +247,7 @@ def usuarioGastos():
     
     gastos = Gasto.get_by_idEmpleado(idUsuario)
     print('Gastos: ', gastos)
-    return render_template('gastosAjax.html', listaGastos=gastos)
+    return render_template('gastosAjax.html', listaGastos=gastos, idUsuario=idUsuario)
 
 #metodo para devolver los tickets para peticion AJAX
 @main.route('/ajax/cargatickets', methods=['get','post'])
@@ -209,9 +258,13 @@ def ajaxCargaTickets():
     
     gastos = Gasto.get_by_idEmpleado(idUsuario)
     print('Gastos para ajax: ', gastos)
-    data_json = {'data':[{"ID":g.idGasto, "idUsuario":g.idUsuario, "fecha":g.fecha, "tipo":g.tipo, "razonsocial":g.razonSocial, "importe":g.importe,
+    if gastos == []:
+        #Devolvemos un diccionario vacio si no hay datos de gastos para enviar.
+        return jsonify({'data':[]})
+    else:
+        data_json = {'data':[{"ID":g.idGasto, "idUsuario":g.idUsuario, "fecha":g.fecha, "tipo":g.tipo, "razonsocial":g.razonSocial, "importe":g.importe,
                           "iva":g.iva, "cif":g.cif, "numeroticket":g.numeroTicket, "validado":g.validado} for g in gastos]} 
-    return jsonify(data_json)
+        return jsonify(data_json)
 
 @main.route("/gasto/registraGasto", methods=['post'])
 def registraGasto():
