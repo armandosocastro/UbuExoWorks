@@ -40,11 +40,11 @@
                                 </script>
                                <!-- {% set fecha_pasada = fecha_actual() %} -->
                                <td><a href="{{ url_for("usuarios_blueprint.usuarioGastos", idUsuario=usuario.idUsuario) }}"
-                                class="btn btn-success">Gastos</a></td>
+                                class="btn btn-primary">Gastos</a></td>
                                <td><a href="{{ url_for("usuarios_blueprint.usuarioFichajes", idUsuario=usuario.idUsuario, fecha=fecha_pasada) }}"
-                                            class="btn btn-success">Fichajes</a></td>
+                                            class="btn btn-primary">Fichajes</a></td>
                                 <td><a href="{{ url_for("usuarios_blueprint.modifica_usuario", idUsuario=usuario.idUsuario) }}"
-                                            class="btn btn-sucess">Modificar</a></td>
+                                            class="btn btn-primary">Modificar</a></td>
                            </tr>
                         {% endfor %}   
                         </tbody>
@@ -58,7 +58,7 @@
 
 {% endblock %}
 
-
+<!--
 <script type="text/javascript">
     jQuery(document).ready(function () {
         jQuery(document).on("click", "tr[data-href]", function() {
@@ -66,3 +66,4 @@
         });
     });
 </script>
+-->
