@@ -25,6 +25,8 @@ from models.Usuarios import Usuario, Empresa
 from os import environ as env
 from dotenv import load_dotenv
 
+from auth import admin_required
+
 mail = Mail()
 
 
@@ -107,7 +109,9 @@ def create_app():
     def load_user(user_id):
         #return Usuarios.Usuario.query.get(int(user_id))
         print ("Usuario que se intenta logear: ", user_id)
-        return Usuarios.Usuario.get_by_id(user_id)
+        
+        usuario = Usuarios.Usuario.get_by_id(user_id)
+        return usuario
     
     @app.route('/registro', methods=['GET', 'POST'])
     def registro():
@@ -156,10 +160,28 @@ def create_app():
     @app.route("/" )
     @login_required
     def home():
-        print('En home...')
-       #return "Hello, Flask!"
-        listadoUsuarios = Usuarios.Usuario.get_by_empresa(session['idEmpresa'])
-        return render_template("index.html", usuarios=listadoUsuarios)
+        print('En home...con el usuario:', session['username'], session['idUsuario'])
+        #En el caso de que lleguemos aqui con un id de Empresa en la url actualizamos la variable de session.
+        if request.args.get('idEmpresa') != None:
+            session['idEmpresa']=request.args.get('idEmpresa')
+        #print('empresa id: ',session['idEmpresa'])
+        #return "Hello, Flask!"
+        #listadoUsuarios = Usuarios.Usuario.get_by_empresa(session['idEmpresa'])
+        empresa = Usuarios.Empresa.get_nombre_by_id(session['idEmpresa'])
+        #return render_template("index.html", usuarios=listadoUsuarios)
+        return render_template("index.html", idUsuario = session['idUsuario'], idEmpresa = session['idEmpresa'], empresa = empresa)
+    
+    @app.route("/admin" )
+    @login_required
+    @admin_required
+    def admin():
+        print('En panel de Administracion...con el usuario:', session['username'], session['idUsuario'])
+      
+        #empresa = Usuarios.Empresa.get_nombre_by_id(session['idEmpresa'])
+        empresas = Usuarios.Empresa.get_all()
+        print('Listado de enmpresas: ', empresas)
+        #return render_template("index.html", usuarios=listadoUsuarios)
+        return render_template("admin.html", idUsuario = session['idUsuario'], is_Admin = True)
           
     @app.route("/login", methods=['get', 'post'])
     def login():
@@ -174,28 +196,33 @@ def create_app():
             password = form.password.data
             user = Usuarios.Usuario.get_by_login(email)
             if user is not None and user.check_password(password):
-                if user.check_habilitado():
+                if user.is_admin():
+                    print('Es un ADMINISTRADOR')
                     login_user(user)
+                    session['idUsuario'] = user.idUsuario
+                    #session['idEmpresa'] = user.get_id_empresa()
+                    session['username'] = user.get_login()
+                    session['rol'] = user.idRol
+                    return redirect(url_for("admin"))
+                if user.check_habilitado():
+                    print('por aqui no......')
+                    login_user(user)
+                    session['idUsuario'] = user.idUsuario
                     session['idEmpresa'] = user.get_id_empresa()
                     session['username'] = user.get_login()
-                    print('idempresa: ', session['idEmpresa'])
+                    session['rol'] = user.idRol
+                    print('idempresa: ', session['idEmpresa'], session['username'], 'rol:', session['rol'])
                     return redirect(url_for("home"))
                 form.email.errors.append("Usuario deshabiliado, contacte con su administrador.")
             form.email.errors.append("Usuario o contraseña incorrectos.")
         return render_template('login_form.html', form=form)
         #return render_template('login_register.html', form=form)
-        
-
-
 
     @app.route("/logout")
     def logout():
         logout_user()
         return redirect(url_for("login"))    
-    
 
-   
-   
     return app    
 
 

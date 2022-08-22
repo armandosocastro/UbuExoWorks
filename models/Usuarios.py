@@ -31,7 +31,7 @@ class Usuario(UserMixin, db.Model):
     empresa = db.relationship('Empresa')
     idJornadaLaboral = db.Column(db.Integer, ForeignKey('JORNADA_LABORAL.idJornadaLAboral'))
     jornada = db.relationship('Jornada_Laboral')                                
-    idRol = db.Column(db.Integer, nullable=False)
+    idRol = db.Column(db.Integer, ForeignKey('ROL.idRol'))
     
     """def __init__(self, idUsuario=None, nombre=None, apellidos=None, login=None, password=None, 
         estado=None, idEmpresa=None,idJornadaLaboral=None, idRol=None) -> None:
@@ -50,6 +50,16 @@ class Usuario(UserMixin, db.Model):
     
     def get_id(self):
         return self.idUsuario
+    
+    def get_rol(self):
+        return self.idRol
+    
+    def is_admin(self):
+        if self.get_rol() == 0:
+            print('Admin en modelo')
+            return True
+        return False
+            
     
     def get_login(self):
         return self.login
@@ -123,6 +133,7 @@ class Empresa(db.Model):
     cif = db.Column(db.String(20), nullable=False)
     planContratado = db.Column(db.Integer, nullable=False)
     numEmpleados = db.Column(db.Integer, nullable=False)
+    empleados = db.relationship('Usuario', lazy='dynamic')
     
     """
     def __init__(self, idEmpresa, nombre=None, cif=None, planContratado=None, numEmpleados=1) -> None:
@@ -134,8 +145,16 @@ class Empresa(db.Model):
     """        
                  
     @staticmethod
+    def get_all():    
+        return Empresa.query.all()              
+                 
+    @staticmethod
     def get_by_id(idEmpresa):    
         return Empresa.query.filter_by(idEmpresa=idEmpresa).first()
+    
+    @staticmethod
+    def get_nombre_by_id(idEmpresa):    
+        return Empresa.query.filter_by(idEmpresa=idEmpresa).first().nombre
     
     @staticmethod
     def get_by_cif(cif):    
@@ -301,7 +320,22 @@ class Fichaje(db.Model):
         if not self.idFichaje:
             db.session.add(self)
         db.session.commit()    
-        
+  
+class Rol(db.Model):
+    __tablename__ ="ROL"
+    
+    idRol = db.Column(db.Integer, primary_key=True)
+    nombreRol = db.Column(db.String, nullable=False)
+    
+    @staticmethod
+    def get_by_Rol():
+        roles = Rol.query.all()
+        print("roles: ", roles, roles[0].nombreRol)
+        return roles     
+    
+    @staticmethod
+    def get_by_idRol(id):
+        return db.session.query(Rol).filter(Rol.idRol==id).first().nombreRol
         
 class Gasto(db.Model):
     __tablename__ = "GASTO"

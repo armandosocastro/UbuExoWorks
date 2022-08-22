@@ -17,13 +17,14 @@ from flask_login import current_user, login_required
 #from models.Usuarios import db
 #from app import db
 # Modelos
-from models.Usuarios import Fichaje, Gasto, Usuario, Empresa
+from models.Usuarios import Fichaje, Gasto, Usuario, Empresa, Rol
 
 from formularios import FormAlta, FormModifica
 import os #Quitar despues de las prubeas con los tickets
 
 import base64 #Para codificar/descodificar las imagenes
 
+from auth import admin_required, gestor_required
 
 #from app import csrf
 
@@ -54,6 +55,42 @@ def get_usuarios():
         return jsonify(usuarios.to_JSON())
     except Exception as ex:
         return jsonify({'mensaje': str(ex)}), 500
+
+@main.route('/empresasAjax', methods=['get','post'])
+def empresasAjax():
+    #datos = request.get_data()
+    #parametro = request.form
+    #idUsuario = parametro['idUsuario']
+    listadoEmpresas = Empresa.get_all()
+    #roles = Rol.get_by_Rol()
+    #fecha = parametro['fecha']
+    print('listado empresas: ',listadoEmpresas)
+    
+    if listadoEmpresas == []:
+        #Devolvemos un diccionario vacio si no hay empresas.
+        return jsonify({'data':[]})
+    else:
+        data_json = {'data':[{"id":e.idEmpresa, "nombre":e.nombre, "cif":e.cif, "plancontratado":e.planContratado} for e in listadoEmpresas]} 
+        return jsonify(data_json)
+    
+@main.route('/usuariosEmpresaAjax', methods=['get','post'])
+def usuariosEmpresaAjax():
+    #datos = request.get_data()
+    #parametro = request.form
+    #idUsuario = parametro['idUsuario']
+    listadoUsuarios = Usuario.get_by_empresa(session['idEmpresa'])
+    roles = Rol.get_by_Rol()
+    #fecha = parametro['fecha']
+    print('listado usuarios empresa: ',listadoUsuarios)
+    
+    if listadoUsuarios == []:
+        #Devolvemos un diccionario vacio si no hay datos de gastos para enviar.
+        return jsonify({'data':[]})
+    else:
+        data_json = {'data':[{"id":u.idUsuario, "nombre":u.nombre, "apellidos":u.apellidos, "email":u.login, "nif":u.nif, "rol":Rol.get_by_idRol(u.idRol),
+                              "estado":u.estado} for u in listadoUsuarios]} 
+        return jsonify(data_json)
+    
 
 @main.route('/login', methods=['POST'])
 @expects_json()
@@ -344,9 +381,12 @@ def validaTickets():
 
 @main.route('/alta', methods=['get', 'post'])
 @login_required
+@gestor_required
 def alta_usuario():
     print("en altas")
     form = FormAlta()
+    form.rol.choices = [(rol.idRol, rol.nombreRol) for rol in Rol.query.all()]
+    print('roles select: ', form.rol.choices)
     error = None
     
     if form.validate_on_submit():
@@ -358,7 +398,7 @@ def alta_usuario():
         #idempresa=current_user.
         idempresa = session['idEmpresa']
         estado = True
-        idRol = 1
+        idRol = form.rol.data
         idJornadaLaboral = 1
         #numEmpleados = 1
 
@@ -385,17 +425,23 @@ def alta_usuario():
         
 
         
-@main.route('/usuario/modifica<idUsuario>', methods=['get', 'post'])
+@main.route('/usuario/modifica', methods=['get', 'post'])
 @login_required
-def modifica_usuario(idUsuario):
+@gestor_required
+def modifica_usuario():
     form = FormModifica()
+    form.rol.choices = [(rol.idRol, rol.nombreRol) for rol in Rol.query.all()]
     error = None
+    idUsuario = request.args.get('idUsuario')
+    idEmpresa = session['idEmpresa']
+    print('EMPRESAID:', idEmpresa)
     user = Usuario.get_by_id(idUsuario)
     if request.method =='GET':
         form.nombre.data = user.nombre
         form.apellidos.data = user.apellidos
         form.nif.data = user.nif
         form.email.data = user.login
+        form.rol.data = user.idRol
         form.estado.data = user.estado
         
     if form.validate_on_submit():
@@ -414,9 +460,9 @@ def modifica_usuario(idUsuario):
                 idempresa = session['idEmpresa']
                 #estado = True
                 user.estado = form.estado.data
-                idRol = 1
+                user.idRol = form.rol.data
                 idJornadaLaboral = 1
                 user.save()  
-        return redirect(url_for('home'))
+        return redirect(url_for('home', idEmpresa=idEmpresa))
     return render_template("modifica.html", form=form, error=error)    
 
