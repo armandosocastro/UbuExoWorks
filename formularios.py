@@ -29,6 +29,15 @@ class FormLogin(FlaskForm):
     
     submit = SubmitField('Login')
 
+class FormCambioPassword(FlaskForm):
+    email = StringField('Email', validators=[DataRequired(), Email()])
+    passwordActual = PasswordField('Contraseña actual', validators=[DataRequired()])
+    password = PasswordField('Contraseña nueva', validators=[DataRequired()])
+    password2 = PasswordField('Repita su contraseña', validators=[DataRequired(), EqualTo('password', 'Las contraseñas no coinciden')])
+    
+    submit = SubmitField('CambioPass')
+    
+    
 #Obtenemos los Roles disponibles
 def roles_opcion():
     roles = Rol.get_by_Rol()
