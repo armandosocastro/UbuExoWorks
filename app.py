@@ -168,11 +168,13 @@ def create_app():
         #return "Hello, Flask!"
         #listadoUsuarios = Usuarios.Usuario.get_by_empresa(session['idEmpresa'])
         empresa = Usuarios.Empresa.get_nombre_by_id(session['idEmpresa'])
+        user = Usuarios.Usuario.get_by_id(session['idUsuario'])
+        print('Usuario completo: ', user)
         #return render_template("index.html", usuarios=listadoUsuarios)
         if session['rol'] == 1:
             return render_template("index.html", idUsuario = session['idUsuario'], idEmpresa = session['idEmpresa'], empresa = empresa)
         else:
-            return render_template("empleado.html", idUsuario = session['idUsuario'], idEmpresa = session['idEmpresa'], empresa = empresa)
+            return render_template("empleado.html", usuario = user, idUsuario = session['idUsuario'], idEmpresa = session['idEmpresa'], empresa = empresa)
     
     @app.route("/admin" )
     @login_required

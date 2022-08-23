@@ -33,6 +33,8 @@ class Usuario(UserMixin, db.Model):
     jornada = db.relationship('Jornada_Laboral')                                
     idRol = db.Column(db.Integer, ForeignKey('ROL.idRol'))
     emailRecuperacion = db.Column(db.String(45))
+    tlf = db.Column(db.String(12))
+    imei = db.Column(db.String(15))
     
     """def __init__(self, idUsuario=None, nombre=None, apellidos=None, login=None, password=None, 
         estado=None, idEmpresa=None,idJornadaLaboral=None, idRol=None) -> None:

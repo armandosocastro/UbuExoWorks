@@ -198,7 +198,9 @@
                 });
                 console.log('VALIDADO');
                 //cerramos la modal cuando hemos apribado el gasto
-                jQuery('#myModal').modal('hide');
+                //El hide no funciona en esta version de bootstrap
+                //jQuery('#myModal').modal('hide');
+                //Para cerrar la modal hacemos una llamada al boton close de la modal por medio de su clase '.close'
                 jQuery('.close').click();
         });
 
