@@ -32,6 +32,7 @@ class Usuario(UserMixin, db.Model):
     idJornadaLaboral = db.Column(db.Integer, ForeignKey('JORNADA_LABORAL.idJornadaLAboral'))
     jornada = db.relationship('Jornada_Laboral')                                
     idRol = db.Column(db.Integer, ForeignKey('ROL.idRol'))
+    emailRecuperacion = db.Column(db.String(45))
     
     """def __init__(self, idUsuario=None, nombre=None, apellidos=None, login=None, password=None, 
         estado=None, idEmpresa=None,idJornadaLaboral=None, idRol=None) -> None:
@@ -57,6 +58,12 @@ class Usuario(UserMixin, db.Model):
     def is_admin(self):
         if self.get_rol() == 0:
             print('Admin en modelo')
+            return True
+        return False
+    
+    def is_gestor(self):
+        if self.get_rol() == 1:
+            print('Gestor en modelo')
             return True
         return False
             
@@ -91,6 +98,7 @@ class Usuario(UserMixin, db.Model):
         self.password = generate_password_hash(password)
         
     def check_password(self, password):
+        print(self.password, '==', password)
         return check_password_hash(self.password, password)
     
     def check_habilitado(self):

@@ -19,7 +19,7 @@ from flask_wtf import CSRFProtect
 #Importamos la configuracion del fichero config.py
 #from config import config
 
-from formularios import FormRegistro, FormLogin
+from formularios import FormCambioPassword, FormRegistro, FormLogin
 #from models.Usuarios import Usuario, Empresa
 from models.Usuarios import Usuario, Empresa
 from os import environ as env
@@ -160,7 +160,7 @@ def create_app():
     @app.route("/" )
     @login_required
     def home():
-        print('En home...con el usuario:', session['username'], session['idUsuario'])
+        print('En home...con el usuario:', session['username'], session['idUsuario'], 'rol session:', session['rol'])
         #En el caso de que lleguemos aqui con un id de Empresa en la url actualizamos la variable de session.
         if request.args.get('idEmpresa') != None:
             session['idEmpresa']=request.args.get('idEmpresa')
@@ -169,7 +169,10 @@ def create_app():
         #listadoUsuarios = Usuarios.Usuario.get_by_empresa(session['idEmpresa'])
         empresa = Usuarios.Empresa.get_nombre_by_id(session['idEmpresa'])
         #return render_template("index.html", usuarios=listadoUsuarios)
-        return render_template("index.html", idUsuario = session['idUsuario'], idEmpresa = session['idEmpresa'], empresa = empresa)
+        if session['rol'] == 1:
+            return render_template("index.html", idUsuario = session['idUsuario'], idEmpresa = session['idEmpresa'], empresa = empresa)
+        else:
+            return render_template("empleado.html", idUsuario = session['idUsuario'], idEmpresa = session['idEmpresa'], empresa = empresa)
     
     @app.route("/admin" )
     @login_required
@@ -182,6 +185,30 @@ def create_app():
         print('Listado de enmpresas: ', empresas)
         #return render_template("index.html", usuarios=listadoUsuarios)
         return render_template("admin.html", idUsuario = session['idUsuario'], is_Admin = True)
+    
+    @app.route('/cambiaPass', methods=['POST','GET'])
+    @login_required
+    def cambiaPass():
+        form = FormCambioPassword()
+        error = None
+        #user = Usuarios.Usuario.get_by_login(email)
+        user = current_user
+        if request.method =='GET':
+            form.email.data = user.login
+            
+        if form.validate_on_submit():
+            email = form.email.data
+            password_actual = form.passwordActual.data
+            password = form.password.data
+            password2 = form.password2.data
+            
+            if user.check_password(password_actual):
+                print('La contraseña actual coincide..')
+                user.set_password(password)
+                user.save()
+                return redirect(url_for('home'))
+            form.passwordActual.errors.append("Contraseña actual incorrecta.")
+        return render_template('cambiapass_form.html', form=form)
           
     @app.route("/login", methods=['get', 'post'])
     def login():

@@ -113,6 +113,8 @@ def login():
         return jsonify(error="contraseña incorrecta"),300
     return jsonify(error="No existe usuario"),300
 
+
+
 @main.route('/fichaje', methods=['POST','GET'])
 @expects_json()
 def fichar():
@@ -227,7 +229,7 @@ def usuarioFichajes():
     #fichajes = Fichaje.get_by_idEmpleado(idUsuario)
     fichajes = Fichaje.get_by_idEmpleadoFecha(idUsuario, fecha)
     print(fichajes)
-    return render_template('fichajes.html', listaFichajes=fichajes, fechaHoy=fecha)
+    return render_template('fichajes.html', listaFichajes=fichajes, fechaHoy=fecha, idUsuario=idUsuario)
 
 @main.route('/usuario/fichajesAjax', methods=['get','post'])
 def usuarioFichajesAjax():
@@ -423,7 +425,29 @@ def alta_usuario():
             return redirect(url_for('home'))
     return render_template("alta.html", form=form, error=error)    
         
+@main.route('usuario/recuperaPassword', methods=['get'])
+def recoveryPass():
+    idUsuario = request.args.get('idUsuario')
+    print('El usuario: ', idUsuario, ' esta intentando recuperar la pass.')
+    user = Usuario.get_by_id(idUsuario)
+    if user is None:
+        return "Error: el usuario no existe."
+    else: 
+        email = user.emailRecuperacion
+        if email is None:
+            return "Error: no hay email de recuperacion."
+        else:
+            passnueva = Usuario.generate_password()
+            user.set_password(passnueva)
+            user.save()
+            print("Password regenerada enviada al correo ", email)
+            #enviamos el correo confirmando
 
+            msg = Message("Recuperacion contraseña UbuExoWorks", sender='ubuexoworks@gmail.com' ,recipients=[email])
+            msg.html = '<p>Se ha generado una nueva contraseña de acceso</p>' + '<p>Usuario: '+email+'</p>' + '<p>Contraseña: '+passnueva+'</p>'
+            mail.send(msg)            
+            return "OK"
+    
         
 @main.route('/usuario/modifica', methods=['get', 'post'])
 @login_required

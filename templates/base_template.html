@@ -32,7 +32,7 @@
 
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-
+<!-- Esto no hace falta en la ventana de gasytos -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css"
     integrity="sha512-hoalWLoI8r4UszCkZ5kL8vayOGVae1oxXe/2A4AO6J9+580uKHDO3JdHb7NzwwzK5xr/Fs0W40kiNHxM9vyTtQ=="
     crossorigin=""/>
@@ -88,20 +88,44 @@
                         <img src="/static/icons/logoUbuExoWorks.png" alt="" width="182" height="52">
                     </a>
                     <hr>
-    
-                    <ul class="nav nav-pills flex-column mb-sm-auto" id="menu">
-                        <li class="active">
-                            <a class="nav-link" href="/">
-                                Empleados
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/api/alta">
-                                Alta empleados
-                            </a>
-    
-                        </li>  
-                    </ul>
+                    {%if (current_user.is_admin() == True) or (current_user.is_gestor() == True) %}
+                        <ul class="nav nav-pills flex-column mb-sm-auto" id="menu">
+                            <li class="nav-link">
+                                <a class="nav-link" href="/">
+                                    Empleados
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/api/alta">
+                                    Alta empleados
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="">
+                                    Gestor o Admin
+                                </a>
+                            </li>  
+                        </ul>
+                    {% else %}
+                        
+                        <ul class="nav nav-pills flex-column mb-sm-auto" id="menu">
+                            <li class="nav-link">
+                                <a class="nav-link" href="{{ url_for('usuarios_blueprint.usuarioFichajes') }}?idUsuario={{ idUsuario }}">
+                                    Fichajes
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('usuarios_blueprint.usuarioGastos') }}?idUsuario={{ idUsuario }}">
+                                    Gastos
+                                </a>
+                            </li>  
+                            <li class="nav-item">
+                                <a class="nav-link" href="">
+                                    Empleado
+                                </a>
+                            </li>
+                        </ul>
+                    {% endif %}
                     <hr>                          
                       
                     <div class="dropdown">
@@ -114,7 +138,7 @@
                             <strong>{{ session["username"] }}</strong>
                         </a>
                         <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdownUser1">
-                            <li><a class="dropdown-item" href="#">Configuracion</a></li>
+                            <li><a class="dropdown-item" href="/cambiaPass">Cambiar contraseña</a></li>
                             <li><a class="dropdown-item" href="#">Perfil</a></li>
                             <li>
                                 <hr class="dropdown-divider">

@@ -48,8 +48,8 @@
                        </thead>  
 
                     </table>
-                </form>
-                </div>                
+            </form>
+            </div>                
 
                     <div id="myModal" class="modal fade" role="dialog" >
                         <div class="modal-dialog" role="document" >
@@ -71,7 +71,6 @@
                     </div>
              </p>
         </div>
-
     </div>
 
 {% endblock %}
@@ -200,6 +199,7 @@
                 console.log('VALIDADO');
                 //cerramos la modal cuando hemos apribado el gasto
                 jQuery('#myModal').modal('hide');
+                jQuery('.close').click();
         });
 
         //Controlamos el evento de apertura de la ventana modal
@@ -230,20 +230,6 @@
             jQuery('#showing').attr('src', img+idGastoParametro);
            
             });
-
-/*
-        jQuery('#myModal').on('hidden.bs.modal', function(e) {
-            
-            var triggerButton = $(e.relatedTarget);
-            datosBoton = triggerButton.data('gasto modal cerrada');
-            console.log('boton ',datosBoton);
-            console.log('borrado modal');
-            //jQuery('#myModal').off('show.bs.modal', controlaModal);
-            jQuery(triggerButton).off('click');
-            //e.relatedTarget.off('click', valida);
-            
-        })
-*/
     });
 </script>
 
