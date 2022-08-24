@@ -103,6 +103,15 @@ class Usuario(UserMixin, db.Model):
         print(self.password, '==', password)
         return check_password_hash(self.password, password)
     
+    @staticmethod
+    def check_imei(self, imei):
+        return self.imei == imei
+    
+    @staticmethod
+    def registra_imei(self, imei):
+        print("imei", imei)
+        self.imei = imei
+        
     def check_habilitado(self):
         return self.estado
     
