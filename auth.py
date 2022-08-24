@@ -25,7 +25,8 @@ def gestor_required(f):
         return f(*args, **kws)
     return decorated_function
 
-def token_required(f):
+
+"""def token_required(f):
     @wraps(f)
     def decorated_function(*args, **kws):
         token = None
@@ -44,4 +45,4 @@ def token_required(f):
             return jsonify({'message': 'token is invalid'})
         return f(*args, **kws)
     return decorated_function
- 
+ """

@@ -4,7 +4,7 @@
 
 import os
 import re
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from flask_sqlalchemy import SQLAlchemy
 from flask import Flask, redirect, render_template, url_for, session, jsonify, request
@@ -60,7 +60,9 @@ def create_app():
     app.config ['MAIL_USE_TLS'] = True
     app.config['SECRET_KEY'] = 'pASSW0Rd'
     app.config['JWT_SECRET_KEY'] = "pASSW0Rd"
-    
+    #Establecemos 10 minutos como tiempo de validez de los tokens de acceso a la API
+    app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(minutes=10)
+
     jwt = JWTManager(app)
     
    #csrf = CSRFProtect()   

@@ -4,6 +4,7 @@
 from datetime import datetime
 from fileinput import filename
 from lib2to3.pgen2 import token
+from time import process_time_ns
 from flask import Blueprint, jsonify, request, redirect, render_template, session, url_for
 from flask_expects_json import expects_json
 from werkzeug.security import check_password_hash
@@ -24,7 +25,7 @@ import os #Quitar despues de las prubeas con los tickets
 
 import base64 #Para codificar/descodificar las imagenes
 
-from auth import admin_required, gestor_required, token_required
+from auth import admin_required, gestor_required
 import jwt
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 
@@ -146,7 +147,7 @@ def login():
     if usuario is not None:
         if Usuario.check_password(usuario, password):  
             if Usuario.check_imei(usuario, imei):      
-                #token = jwt.encode({"idUsuario":usuario.idUsuario}, secret)
+                #Generamos el token a partir del id del usuario
                 token = create_access_token(identity=usuario.idUsuario)
                 #return jsonify(token=usuario.idUsuario),200
                 return jsonify(token),200
@@ -156,12 +157,16 @@ def login():
     return jsonify(error="No existe usuario"),300
 
 
+#Metodo API para registrar un fichaje
 @main.route('/fichaje', methods=['POST','GET'])
+@jwt_required()
 @expects_json()
 def fichar():
     try:
+        current_user_id = get_jwt_identity()
         datos = request.get_json()
         print(datos)
+        print('curren id fichaje:', current_user_id)
 
         idUsuario= datos.get('idUsuario','')
         fecha = datos.get('fecha','')
@@ -171,12 +176,15 @@ def fichar():
         
         print('Longitud recibida: ', longitud)
         print('latitud recibida: ', latitud)
-        
-        fichaje = Fichaje(fecha=fecha, hora_entrada=hora, entrada_longitud=longitud, entrada_latitud=latitud,
+        print('usuario recibido: ',idUsuario)
+        if str(current_user_id) == str(idUsuario):
+            fichaje = Fichaje(fecha=fecha, hora_entrada=hora, entrada_longitud=longitud, entrada_latitud=latitud,
                           incidencia=None,idUsuario=idUsuario)
-        fichaje.save()
-        
-        return jsonify(token="OK"),200
+            fichaje.save()
+            return jsonify(token="OK"),200   
+        else:
+            return jsonify({'mensaje': "token incorrecto"}), 500
+           
     except Exception as ex:
         print(ex)
         return 'JSON incorrecto'
@@ -189,18 +197,15 @@ def getFichaje():
     try:
         current_user_id = get_jwt_identity()
         print('current id:', current_user_id)
-        #datos = request.get_json()
-        #print(datos)
-        
-        
-        #idUsuario = datos.get('idUsuario','')
-        idUsuario = current_user_id
+    
         idUsuario = request.args.get('idUsuario')
         print('usuario: ',idUsuario)
-        fichajes = Fichaje.get_by_idEmpleado(idUsuario)
-        print(fichajes)
-        
-        return jsonify([fichaje.to_JSON() for fichaje in fichajes])
+        if str(current_user_id) == str(idUsuario):
+            fichajes = Fichaje.get_by_idEmpleado(idUsuario)
+            print(fichajes)
+            return jsonify([fichaje.to_JSON() for fichaje in fichajes])
+        else:
+            return jsonify({'mensaje': "token incorrecto"}), 500
     except Exception as ex:
         return jsonify({'mensaje': str(ex)}), 500    
     
@@ -226,11 +231,15 @@ def getFichajeCalendario():
         return jsonify(list_fichajes)
     except Exception as ex:
         return jsonify({'mensaje': str(ex)}), 500        
-    
+ 
+#Este creo que no lo estoy usando por ahora...    
 @main.route('/get/fichaje/fecha', methods=['get'])
+@jwt_required()
 #@expects_json()
 def getFichajePorFecha():
     try:
+        current_user_id = get_jwt_identity()
+        print('current id:', current_user_id)
         #datos = request.get_json()
         #print(datos)
 
@@ -239,14 +248,17 @@ def getFichajePorFecha():
         print('usuario: ',idUsuario)
         print('fecha fichaje: ',fecha)
         
-        fichajes = Fichaje.get_by_idEmpleadoFecha(idUsuario,fecha)
-        print(fichajes)
-        
-        return jsonify([fichaje.to_JSON() for fichaje in fichajes])
+        if str(current_user_id) == str(idUsuario):
+            fichajes = Fichaje.get_by_idEmpleadoFecha(idUsuario,fecha)
+            print(fichajes)
+            return jsonify([fichaje.to_JSON() for fichaje in fichajes])
+        else:
+            return jsonify({'mensaje': "token incorrecto"}), 500   
     except Exception as ex:
         return jsonify({'mensaje': str(ex)}), 500        
     
 @main.route('/get/fichaje', methods=['get'])
+@jwt_required()
 @expects_json()
 def getFichajeFecha():
     try:
@@ -351,6 +363,7 @@ def ajaxCargaTickets():
         return jsonify(data_json)
 
 @main.route("/gasto/registraGasto", methods=['post'])
+@jwt_required()
 def registraGasto():
     if request.method == 'POST':
         
