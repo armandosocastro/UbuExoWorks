@@ -24,7 +24,9 @@ import os #Quitar despues de las prubeas con los tickets
 
 import base64 #Para codificar/descodificar las imagenes
 
-from auth import admin_required, gestor_required
+from auth import admin_required, gestor_required, token_required
+import jwt
+from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 
 #from app import csrf
 
@@ -90,8 +92,35 @@ def usuariosEmpresaAjax():
         data_json = {'data':[{"id":u.idUsuario, "nombre":u.nombre, "apellidos":u.apellidos, "email":u.login, "nif":u.nif, "rol":Rol.get_by_idRol(u.idRol),
                               "estado":u.estado} for u in listadoUsuarios]} 
         return jsonify(data_json)
-    
 
+@main.route('/registraDispositivo', methods=['POST'])
+@expects_json()
+def registraDispositivo():
+    datos = request.get_json()
+    
+    password=datos.get('password','')
+    if password == "":
+        return jsonify(error = "password vacio"),400
+    
+    username=datos.get('login', '')
+    if username == "":
+        return jsonify(error = "login vacio"),400
+    
+    imei=datos.get('imei', '')
+    if imei == "":
+        return jsonify(error = "imei vacio"),400
+    
+    usuario = Usuario.get_by_login(username)
+    
+    if usuario is not None:
+        if Usuario.check_password(usuario, password):  
+            Usuario.registra_imei(usuario,imei)
+            usuario.save()
+            return jsonify(token="OK"),200
+        return jsonify(error="contraseña incorrecta"),300
+    return jsonify(error="No existe usuario"),300
+
+#Login para la API, se comprueba que tambien tenga registrado el dispositivo
 @main.route('/login', methods=['POST'])
 @expects_json()
 def login():
@@ -105,14 +134,26 @@ def login():
     if username == "":
         return jsonify(error = "login vacio"),400
     
+    imei=datos.get('imei', '')
+    if imei == "":
+        return jsonify(error = "imei vacio"),400
+    
     usuario = Usuario.get_by_login(username)
     
+    secret = os.environ.get('SECRET_KEY') #sale del fichero .env
+    print('secreto', secret)
+    
     if usuario is not None:
-        if Usuario.check_password(usuario, password):        
-            return jsonify(token=usuario.idUsuario),200
+        if Usuario.check_password(usuario, password):  
+            if Usuario.check_imei(usuario, imei):      
+                #token = jwt.encode({"idUsuario":usuario.idUsuario}, secret)
+                token = create_access_token(identity=usuario.idUsuario)
+                #return jsonify(token=usuario.idUsuario),200
+                return jsonify(token),200
+            else:
+                return jsonify(error="dispositivo no registrado"), 300
         return jsonify(error="contraseña incorrecta"),300
     return jsonify(error="No existe usuario"),300
-
 
 
 @main.route('/fichaje', methods=['POST','GET'])
@@ -142,14 +183,18 @@ def fichar():
     
 #Metodo API para obtener los fichajes de un usuario    
 @main.route('/get/fichajes', methods=['get'])
+@jwt_required()
 #@expects_json()
 def getFichaje():
     try:
+        current_user_id = get_jwt_identity()
+        print('current id:', current_user_id)
         #datos = request.get_json()
         #print(datos)
         
         
         #idUsuario = datos.get('idUsuario','')
+        idUsuario = current_user_id
         idUsuario = request.args.get('idUsuario')
         print('usuario: ',idUsuario)
         fichajes = Fichaje.get_by_idEmpleado(idUsuario)

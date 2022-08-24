@@ -26,6 +26,7 @@ from os import environ as env
 from dotenv import load_dotenv
 
 from auth import admin_required
+from flask_jwt_extended import JWTManager
 
 mail = Mail()
 
@@ -58,6 +59,10 @@ def create_app():
     app.config ['MAIL_USE_SSL'] = False
     app.config ['MAIL_USE_TLS'] = True
     app.config['SECRET_KEY'] = 'pASSW0Rd'
+    app.config['JWT_SECRET_KEY'] = "pASSW0Rd"
+    
+    jwt = JWTManager(app)
+    
    #csrf = CSRFProtect()   
    
     #Session(app)
@@ -253,11 +258,3 @@ def create_app():
         return redirect(url_for("login"))    
 
     return app    
-
-
-
-
-
-
-
-
