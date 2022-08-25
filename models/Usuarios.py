@@ -316,6 +316,7 @@ class Fichaje(db.Model):
         return db.session.query(Fichaje).filter(and_( Fichaje.idUsuario == idEmpleado, and_(Fichaje.fecha <= fechafin_format, Fichaje.fecha>=fechaini_format))).all()
         #return Fichaje.query.filter_by(idUsuario=idEmpleado, fecha=fecha).all()     
     
+    #Obtenemos todos los fichajes del año actual
     @staticmethod
     def get_by_idEmpleadoAno(idEmpleado,fecha):
         fecha_formateada = datetime.strptime(fecha, "%Y/%m/%d")
@@ -334,6 +335,28 @@ class Fichaje(db.Model):
         #print('fecha fin: ',lastDayOfMonth)
         return db.session.query(Fichaje).filter(and_( Fichaje.idUsuario == idEmpleado, and_(Fichaje.fecha <= fechafin_format, Fichaje.fecha>=fechaini_format))).all()
         #return Fichaje.query.filter_by(idUsuario=idEmpleado, fecha=fecha).all()     
+        
+    #Obtenemos todos los fichajes entre rango de fechas
+    def get_by_idEmpleadoRango(idEmpleado,fecha_ini, fecha_fin):
+        fecha_formateada_ini = datetime.strptime(fecha_ini, "%Y/%m/%d")
+        fecha_formateada_fin = datetime.strptime(fecha_fin, "%Y/%m/%d")
+        
+        year_ini = fecha_formateada_ini.year
+        month_ini = fecha_formateada_ini.month
+        day_ini = fecha_formateada_ini.day
+        
+        year_fin = fecha_formateada_fin.year
+        month_fin = fecha_formateada_fin.month
+        day_fin = fecha_formateada_fin.day
+
+        fechaini = str(year_ini) + '/' + str(month_ini) + '/' + str(day_ini)
+        fechafin = str(year_fin) + '/' + str(month_fin) + '/' + str(day_fin)
+        
+        fechaini_format = datetime.strptime(fechaini, "%Y/%m/%d")
+        fechafin_format = datetime.strptime(fechafin, "%Y/%m/%d")
+
+        return db.session.query(Fichaje).filter(and_( Fichaje.idUsuario == idEmpleado, and_(Fichaje.fecha <= fechafin_format, Fichaje.fecha>=fechaini_format))).all()
+   
     
     def save(self):
         if not self.idFichaje:

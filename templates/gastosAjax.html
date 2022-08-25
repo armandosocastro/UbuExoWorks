@@ -60,10 +60,12 @@
                                 <div class="modal-body" style="width:500px; height:500px">
                                     <img src="" id="showing" style="width:100%; height:480px"/>
                                 </div>
-                                <div class="modal-footer">              
-                                    <button type="button" class="btn btn-secondary" id="botonValida" data-gasto=''>
-                                        Aprobar
-                                    </button>
+                                <div class="modal-footer">        
+                                    {%if (current_user.is_admin() == True) or (current_user.is_gestor() == True) %}      
+                                        <button type="button" class="btn btn-secondary" id="botonValida" data-gasto=''>
+                                            Aprobar
+                                        </button>
+                                    {% endif %}
                                 </form>
                                 </div>
                             </div>
@@ -108,10 +110,10 @@
         //Funcion Ajax para renderizar el checkbox en funcion del valor del dato almacenado en la BBDD    
         var checkValidado = function( data, type, row, meta ) {
             var is_checked = data == true ? "checked" : "";
-            return '<input type="checkbox" class="checkbox" ' + is_checked + ' data-gasto=' + row[0] + '/>';
+            return '<input type="checkbox" onclick="javascript: return false;" id="checkgasto" class="checkbox" ' + is_checked + ' data-gasto=' + row[0] + '/>';
         }
 
-        //Funcion Ajax para renderizar el checkbox en funcion del valor del dato almacenado en la BBDD    
+        //Funcion Ajax para renderizar el boton para mostrar el ticket en funcion del valor del dato almacenado en la BBDD    
         var foto = function( data, type, row, meta ) {
             //console.log('data-gasto:', row['ID']);
 
@@ -180,6 +182,12 @@
                 {"data":"foto", "render":foto},
                 {"data":"validado", "render":checkValidado}],
         });
+
+            $('#checkgasto').on ('click', function(){
+                console.log('check cambio');
+                return false;        
+            });
+
 
         //Controlamos el evento 'click' del boton de Aprobacion de gasto dentro de la ventana modal
         $('#botonValida').on('click', function(e) {

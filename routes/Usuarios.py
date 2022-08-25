@@ -3,6 +3,7 @@
 
 from datetime import datetime
 from fileinput import filename
+from itertools import count
 from lib2to3.pgen2 import token
 from time import process_time_ns
 from flask import Blueprint, jsonify, request, redirect, render_template, session, url_for
@@ -177,6 +178,9 @@ def fichar():
         print('Longitud recibida: ', longitud)
         print('latitud recibida: ', latitud)
         print('usuario recibido: ',idUsuario)
+        fichajes_hoy = Fichaje.get_by_idEmpleadoFecha(current_user_id, fecha)
+        print('Numero fichajes hoy: ', len(fichajes_hoy))
+        
         if str(current_user_id) == str(idUsuario):
             fichaje = Fichaje(fecha=fecha, hora_entrada=hora, entrada_longitud=longitud, entrada_latitud=latitud,
                           incidencia=None,idUsuario=idUsuario)
@@ -211,6 +215,7 @@ def getFichaje():
     
     
 #Metodo API para obtener los fichajes de un usuario formateado para el Fullcalendar   
+#Rellenamos todos los fichajes del año actual
 @main.route('/get/fichajesCalendario', methods=['get'])
 #@expects_json()
 def getFichajeCalendario():
@@ -232,8 +237,8 @@ def getFichajeCalendario():
     except Exception as ex:
         return jsonify({'mensaje': str(ex)}), 500        
  
-#Este creo que no lo estoy usando por ahora...    
-@main.route('/get/fichaje/fecha', methods=['get'])
+#Metodo para la API devuelve los fichajes de una fecha concreta  
+@main.route('/get/fichaje', methods=['get'])
 @jwt_required()
 #@expects_json()
 def getFichajePorFecha():
@@ -256,25 +261,7 @@ def getFichajePorFecha():
             return jsonify({'mensaje': "token incorrecto"}), 500   
     except Exception as ex:
         return jsonify({'mensaje': str(ex)}), 500        
-    
-@main.route('/get/fichaje', methods=['get'])
-@jwt_required()
-@expects_json()
-def getFichajeFecha():
-    try:
-        datos = request.get_json()
-        print(datos)
-
-        idUsuario = datos.get('idUsuario','')
-        fecha = datos.get('fecha','')
-        print('usuario: ',idUsuario)
-        print('fecha fichaje: ',fecha)
-        
-        fichajes = Fichaje.get_by_idEmpleadoFecha(idUsuario,fecha)
-        
-        return jsonify([fichaje.to_JSON() for fichaje in fichajes])
-    except Exception as ex:
-        return jsonify({'mensaje': str(ex)}), 500        
+ 
     
 @main.route('/usuario/fichajes', methods=['get'])
 def usuarioFichajes():
@@ -313,6 +300,24 @@ def usuarioFichajesAjax():
         return jsonify(data_json)
     
     #return render_template('fichajes.html', listaFichajes=fichajes, fechaHoy=fecha)
+    
+@main.route('/usuario/fichajesRangoAjax', methods=['get','post'])
+def usuarioFichajesRangoAjax():
+    parametro = request.form
+    idUsuario = parametro['idUsuario']
+    fecha_ini = parametro['fecha_ini']
+    fecha_fin = parametro['fecha_fin']
+  
+    fichajes = Fichaje.get_by_idEmpleadoRango(idUsuario, fecha_ini, fecha_fin)
+    
+    if fichajes == []:
+        #Devolvemos un diccionario vacio si no hay datos de gastos para enviar.
+        return jsonify({'data':[]})
+    else:
+        data_json = {'data':[{"fecha":f.fecha, "hora":str(f.hora_entrada), "longitud":f.entrada_longitud, "latitud":f.entrada_latitud,
+                              "incidencia":f.incidencia} for f in fichajes]} 
+        return jsonify(data_json)
+        
 
 #Este metodo ya no lo utilizo
 @main.route('/mapa<longitud><latitud>')
