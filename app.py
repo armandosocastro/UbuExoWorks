@@ -28,6 +28,8 @@ from dotenv import load_dotenv
 from auth import admin_required
 from flask_jwt_extended import JWTManager
 
+from flask_talisman import Talisman
+
 mail = Mail()
 
 
@@ -43,6 +45,7 @@ def fecha_actual():
 #def create_app(settings_module='config.DevelopmentConfig'):
 def create_app():
     app = Flask(__name__)
+    Talisman
     
     app.jinja_env.globals.update(fecha_actual=fecha_actual)
     
