@@ -45,10 +45,8 @@ def fecha_actual():
 #def create_app(settings_module='config.DevelopmentConfig'):
 def create_app():
     app = Flask(__name__)
-    feature_policy = {
-        'force_https': True
-    }
-    Talisman(app, feature_policy=feature_policy)
+    
+    Talisman(app)
     
     app.jinja_env.globals.update(fecha_actual=fecha_actual)
     
