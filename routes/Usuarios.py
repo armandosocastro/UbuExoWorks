@@ -174,16 +174,23 @@ def fichar():
         hora = datos.get('hora','')
         longitud = datos.get('longitud','')
         latitud = datos.get('latitud','')
+        tipo = datos.get('tipo','')
         
         print('Longitud recibida: ', longitud)
         print('latitud recibida: ', latitud)
         print('usuario recibido: ',idUsuario)
         fichajes_hoy = Fichaje.get_by_idEmpleadoFecha(current_user_id, fecha)
+        for fichaje in fichajes_hoy:
+            print('fichajes horas: ',(fichaje.hora_entrada).strftime("%H:%M"),' : ', hora)
+            #No permitimos fichajes a la misma hora, debe transcurrir un minuto entre ellos
+            if (fichaje.hora_entrada).strftime("%H:%M") == hora:
+                return jsonify(token="solapado"), 500
+
         print('Numero fichajes hoy: ', len(fichajes_hoy))
         
         if str(current_user_id) == str(idUsuario):
             fichaje = Fichaje(fecha=fecha, hora_entrada=hora, entrada_longitud=longitud, entrada_latitud=latitud,
-                          incidencia=None,idUsuario=idUsuario)
+                          incidencia=None,idUsuario=idUsuario, tipo=tipo)
             fichaje.save()
             return jsonify(token="OK"),200   
         else:
@@ -295,7 +302,7 @@ def usuarioFichajesAjax():
         #Devolvemos un diccionario vacio si no hay datos de gastos para enviar.
         return jsonify({'data':[]})
     else:
-        data_json = {'data':[{"fecha":f.fecha, "hora":str(f.hora_entrada), "longitud":f.entrada_longitud, "latitud":f.entrada_latitud,
+        data_json = {'data':[{"fecha":f.fecha, "hora":str(f.hora_entrada), "tipo":f.tipo, "longitud":f.entrada_longitud, "latitud":f.entrada_latitud,
                               "incidencia":f.incidencia} for f in fichajes]} 
         return jsonify(data_json)
     
@@ -314,7 +321,7 @@ def usuarioFichajesRangoAjax():
         #Devolvemos un diccionario vacio si no hay datos de gastos para enviar.
         return jsonify({'data':[]})
     else:
-        data_json = {'data':[{"fecha":f.fecha, "hora":str(f.hora_entrada), "longitud":f.entrada_longitud, "latitud":f.entrada_latitud,
+        data_json = {'data':[{"fecha":f.fecha, "hora":str(f.hora_entrada), "tipo":f.tipo, "longitud":f.entrada_longitud, "latitud":f.entrada_latitud,
                               "incidencia":f.incidencia} for f in fichajes]} 
         return jsonify(data_json)
         

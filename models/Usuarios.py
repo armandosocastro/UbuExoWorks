@@ -253,6 +253,7 @@ class Fichaje(db.Model):
     incidencia = db.Column(db.String, nullable=False)
     idUsuario =  db.Column(db.Integer, ForeignKey('USUARIO.idUsuario'))
     usuario = db.relationship('Usuario')
+    tipo = db.Column(db.String, nullable=False)
    
     """ 
     def __init__(self, idFichaje, fecha=None, hora_entrada=None, entrada_latitud=None, entrada_longitud=None,
@@ -286,7 +287,8 @@ class Fichaje(db.Model):
             #'salida_latitud':self.entrada_latitud,
             #'salida_longitud':self.entrada_longitud,
             'incidencia':self.incidencia,
-            'idUsuario':self.idUsuario
+            'idUsuario':self.idUsuario,
+            'tipo': self.tipo
         }
         
     @staticmethod
