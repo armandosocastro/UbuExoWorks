@@ -30,12 +30,16 @@ from auth import admin_required, gestor_required
 import jwt
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 
+from app import mail
+
 #from app import csrf
 
 
 #from models.UsuariosModel import UsuarioModel
 
-mail = Mail()
+#mail = Mail()
+
+
 
 main = Blueprint('usuarios_blueprint', __name__)
 

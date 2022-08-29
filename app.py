@@ -46,7 +46,15 @@ def fecha_actual():
 def create_app():
     app = Flask(__name__)
     
-    Talisman(app)
+    csp = {
+        'default-src': ['*', 'unsafe-inline', 'strict-dynamic', 'unsafe-hashes', "'sha256-yVhOaSpFYsHuy4vwNVCVxs7R7CGIk8isIDt57LTu9Fo='"],
+        'script-src': ['*', '\'self\'', "'nonce-2726c7f26c'", 'strict-dynamic', 'unsafe-inline'],
+        'font-src': ['*', 'strict-dynamic', 'data:'],
+        'img-src': ['*', 'data:', '\'self\'']
+    }
+    
+    Talisman(app, content_security_policy=csp)
+    #Talisman(app, content_security_policy=[])
     
     app.jinja_env.globals.update(fecha_actual=fecha_actual)
     
@@ -182,7 +190,7 @@ def create_app():
         user = Usuarios.Usuario.get_by_id(session['idUsuario'])
         print('Usuario completo: ', user)
         #return render_template("index.html", usuarios=listadoUsuarios)
-        if session['rol'] == 1:
+        if session['rol'] == 1 or session['rol'] == 0:
             return render_template("index.html", idUsuario = session['idUsuario'], idEmpresa = session['idEmpresa'], empresa = empresa)
         else:
             return render_template("empleado.html", usuario = user, idUsuario = session['idUsuario'], idEmpresa = session['idEmpresa'], empresa = empresa)

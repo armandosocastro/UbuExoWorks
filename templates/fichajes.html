@@ -22,13 +22,13 @@
 
         <div class="col py-3">
 
-            <div id="map" class="modal-content" style="width:100%; height:500px">
+            <div id="map" class="modal-content-mapa" >
                 Geo-Localizacion                                  
             </div>
 
             <div class="row">
                 <div class="col-md-12">
-                    <div id="calendar" style='width: 350px;'></div>
+                    <div id="calendar" class="mi-calendario"></div>
                 </div>
             </div> 
        
@@ -46,8 +46,8 @@
                     </div>
                     <div class="col-lg-3 col-sm-3">
                         <br>
-                        <button id="btnBuscaRango" onclick="busquedaPorRango();">Buscar</button>
-                        <span id="fechasSelected" style="color:red"></span>
+                        <button id="btnBuscaRango" >Buscar</button>
+                        <span id="fechasSelected" class="span-fechas"></span>
                     </div>
 
                 </div>
@@ -99,7 +99,7 @@
                 
                 
 
-                <script type="text/javascript">
+                <script type="text/javascript" nonce="2726c7f26c">
 
                     
                     var parametros = new window.URLSearchParams(window.location.search);    
@@ -221,7 +221,7 @@
                         calendar.render();
                 </script>
 
-                <script type="text/javascript">
+                <script type="text/javascript" nonce="2726c7f26c">
                     let startDate = document.getElementById('startDate')
                     let endDate = document.getElementById('endDate')
 
@@ -235,8 +235,9 @@
                     document.getElementById('endDateSelected').innerText = endDateVal
                     })  
 
-                    function busquedaPorRango() {
-                        
+                    document.getElementById('btnBuscaRango').addEventListener('click', 
+                        function busquedaPorRango() {
+
                         var url_rangoFechas = "{{ url_for('usuarios_blueprint.usuarioFichajesRangoAjax') }}";
                         var startDateVal = startDate.value;
                         var endDateVal = endDate.value;
@@ -260,11 +261,11 @@
                         //extraemos el idGasto del atributo data-gasto del boton
                         table.ajax.url(url_rangoFechas).load();  
                             }
-                    }
+                    });
      
                 </script>
 
-                <script type="text/javascript">
+                <script type="text/javascript" nonce="2726c7f26c">
                     var marker = null;
                     // The first parameter are the coordinates of the center of the map
                     // The second parameter is the zoom level
@@ -281,7 +282,7 @@
                     
                   </script>
                 
-                <script type="text/javascript">
+                <script type="text/javascript" nonce="2726c7f26c">
                     console.log('cargado....');
                     const botones = document.querySelectorAll(".btn-primary");
 
