@@ -183,18 +183,46 @@ def fichar():
         print('Longitud recibida: ', longitud)
         print('latitud recibida: ', latitud)
         print('usuario recibido: ',idUsuario)
+        print('tipo recibido: ',tipo)
+        
+        entradas = 0
+        pausas = 0
+
         fichajes_hoy = Fichaje.get_by_idEmpleadoFecha(current_user_id, fecha)
         for fichaje in fichajes_hoy:
             print('fichajes horas: ',(fichaje.hora_entrada).strftime("%H:%M"),' : ', hora)
             #No permitimos fichajes a la misma hora, debe transcurrir un minuto entre ellos
             if (fichaje.hora_entrada).strftime("%H:%M") == hora:
                 return jsonify(token="solapado"), 500
-
+            if fichaje.tipo == 'entrada':
+                entradas = entradas + 1
+            elif fichaje.tipo == 'salida':
+                    entradas = entradas -1
+            elif fichaje.tipo == 'pausa entrada':
+                pausas = pausas + 1
+            else:
+                pausas = pausas - 1
+                
+        print('Entradas:', entradas)
+        print('Pausas:', pausas)
+                
         print('Numero fichajes hoy: ', len(fichajes_hoy))
+        if tipo == 'fichaje':
+            print('es un fichaje')
+            if entradas % 2 == 0:
+                tipo_fichaje = 'entrada'
+            else:
+                tipo_fichaje = 'salida'
+        else:
+            print('es una pausa')
+            if pausas % 2 == 0:
+                tipo_fichaje = 'pausa entrada'
+            else:
+                tipo_fichaje = 'pausa salida' 
         
         if str(current_user_id) == str(idUsuario):
             fichaje = Fichaje(fecha=fecha, hora_entrada=hora, entrada_longitud=longitud, entrada_latitud=latitud,
-                          incidencia=None,idUsuario=idUsuario, tipo=tipo)
+                          incidencia=None,idUsuario=idUsuario, tipo=tipo_fichaje)
             fichaje.save()
             return jsonify(token="OK"),200   
         else:
@@ -301,13 +329,17 @@ def usuarioFichajesAjax():
     #fichajes = Fichaje.get_by_idEmpleado(idUsuario)
     fichajes = Fichaje.get_by_idEmpleadoFecha(idUsuario, fecha)
     #print('fichajes ajax:',fichajes)
-    
+    entrada = False
     if fichajes == []:
         #Devolvemos un diccionario vacio si no hay datos de gastos para enviar.
         return jsonify({'data':[]})
     else:
-        data_json = {'data':[{"fecha":f.fecha, "hora":str(f.hora_entrada), "tipo":f.tipo, "longitud":f.entrada_longitud, "latitud":f.entrada_latitud,
-                              "incidencia":f.incidencia} for f in fichajes]} 
+        data = []
+        for f in fichajes:
+            data.append({"fecha":f.fecha, "hora":str(f.hora_entrada), "tipo":f.tipo, "longitud":f.entrada_longitud, "latitud":f.entrada_latitud,
+                              "incidencia":f.incidencia})
+            print('fichaje ajax:',data)
+        data_json = {'data': data}
         return jsonify(data_json)
     
     #return render_template('fichajes.html', listaFichajes=fichajes, fechaHoy=fecha)
