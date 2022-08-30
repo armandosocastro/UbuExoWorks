@@ -70,11 +70,6 @@
                                     Alta empleados
                                 </a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="">
-                                    Gestor o Admin
-                                </a>
-                            </li>  
                         </ul>
                     {% else %}
                         
@@ -89,11 +84,6 @@
                                     Gastos
                                 </a>
                             </li>  
-                            <li class="nav-item">
-                                <a class="nav-link" href="">
-                                    Empleado
-                                </a>
-                            </li>
                         </ul>
                     {% endif %}           
                     <hr>                          
@@ -108,28 +98,29 @@
 
 {% endblock %}
 
-        <div class="col py-3">
-            <nav class="navbar navbar-expand navbar-light bg-white topbar"> 
-                <ul class="navbar-nav ml-auto"> </ul>
-                <ul class="navbar-nav ml-auto">
-                <div class="dropdown">
-                    
-                    <a href="#" class="d-flex align-items-center link-dark text-decoration-none dropdown-toggle" 
-                        id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">                           
-                        <strong>{{ session["username"] }}</strong>
-                        <i class="bi bi-person-fill"></i>
-                    </a>
-                    <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdownUser1">
-                        <li><a class="dropdown-item" href="/cambiaPass">Cambiar contraseña</a></li>
-                        <li><a class="dropdown-item" href="#">Perfil</a></li>
-                        <li>
-                            <hr class="dropdown-divider">
-                        </li>
-                        <li><a class="dropdown-item" href="/logout">Sign out</a></li>
-                    </ul>
-                </div>
+<div class="col py-3">
+    <nav class="navbar navbar-expand navbar-light bg-light topbar"> 
+        <ul class="navbar-nav ml-auto"> </ul>
+        <ul class="navbar-nav ml-auto">
+        <div class="dropdown">
+            
+            <a href="#" class="d-flex align-items-center link-dark text-gray-600 dropdown-toggle" 
+                id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">                           
+                <strong>{{ session["username"] }} </strong>
+                    <img class="img-icono-perfil" src="{{ url_for('static', filename='/libs/bootstrap-icons-1.8.3/person-fill.svg') }}">
+            </a>
+            <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdownUser1">
+                <li><a class="dropdown-item" href="/cambiaPass">Cambiar contraseña</a></li>
+                <li><a class="dropdown-item" href="#">Perfil</a></li>
+                <li>
+                    <hr class="dropdown-divider">
+                </li>
+                <li><a class="dropdown-item" href="/logout">Sign out</a></li>
             </ul>
-            </nav>
+        </div>
+    </ul>
+    </nav>
+
         {% block content2 %}
 
         {% endblock %}

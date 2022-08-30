@@ -8334,3 +8334,8 @@ button.switch-month:hover {
 .span-fechas {
   color:red
 }
+
+.img-icono-perfil{
+  height: 32px;
+  width: 32px;
+}

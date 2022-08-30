@@ -3,7 +3,7 @@ import email
 from flask_wtf import FlaskForm
 import sqlalchemy
 from wtforms import StringField, PasswordField, BooleanField, SubmitField, SelectField
-from wtforms.validators import DataRequired, ValidationError, Email, EqualTo, email_validator
+from wtforms.validators import DataRequired, ValidationError, Email, EqualTo, email_validator, Regexp
 from wtforms_sqlalchemy.fields import QuerySelectField
 from models.Usuarios import Rol
 
@@ -46,8 +46,8 @@ def roles_opcion():
 class FormAlta(FlaskForm):
     nombre = StringField('Nombre', validators=[DataRequired()])
     apellidos = StringField('Apellidos', validators=[DataRequired()])
-    nif = StringField('Nif', validators=[DataRequired()])
-    email = StringField('Email', validators=[DataRequired(), Email()])
+    nif = StringField('Nif', validators=[Regexp('[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][A-Z]', message="NIF incorrecto")])
+    email = StringField('Email', validators=[DataRequired(message="Formato correo incorrecto"), Email()])
     #Ponemos en una lista los roles disponibles sacandolos de la tabla ROL
     #rol = QuerySelectField(query_factory=lambda: roles_opcion(), get_label='idRol')
     rol = SelectField('Rol', choices=[])
@@ -57,8 +57,8 @@ class FormAlta(FlaskForm):
 class FormModifica(FlaskForm):
     nombre = StringField('Nombre', validators=[DataRequired()])
     apellidos = StringField('Apellidos', validators=[DataRequired()])
-    nif = StringField('Nif', validators=[DataRequired()])
-    email = StringField('Email', validators=[DataRequired(), Email()])
+    nif = StringField('Nif', validators=[Regexp('[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][A-Z]', message="NIF incorrecto")])
+    email = StringField('Email', validators=[DataRequired(message="Formato correo incorrecto"), Email()])
     #rol = QuerySelectField(query_factory=lambda: roles_opcion(), get_label='idRol')
     rol = SelectField('Rol', choices=[], coerce=int)
     estado = BooleanField('Habilitado')

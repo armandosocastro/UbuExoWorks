@@ -130,11 +130,6 @@ integrity="sha512-T/tUfKSV1bihCnd+MxKD0Hm1uBBroVYBOYSk1knyvQ9VyZJpc/ALb4P0r6ubwV
                                     Alta empleados
                                 </a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="">
-                                    Gestor o Admin
-                                </a>
-                            </li>  
                         </ul>
                     {% else %}
                         
@@ -149,11 +144,6 @@ integrity="sha512-T/tUfKSV1bihCnd+MxKD0Hm1uBBroVYBOYSk1knyvQ9VyZJpc/ALb4P0r6ubwV
                                     Gastos
                                 </a>
                             </li>  
-                            <li class="nav-item">
-                                <a class="nav-link" href="">
-                                    Empleado
-                                </a>
-                            </li>
                         </ul>
                     {% endif %}
                     <hr>                          
@@ -174,14 +164,16 @@ integrity="sha512-T/tUfKSV1bihCnd+MxKD0Hm1uBBroVYBOYSk1knyvQ9VyZJpc/ALb4P0r6ubwV
             <ul class="navbar-nav ml-auto">
             <div class="dropdown">
                 
-                <a href="#" class="d-flex align-items-center link-dark text-decoration-none dropdown-toggle" 
+                <a href="#" class="d-flex align-items-center link-dark text-gray-600 dropdown-toggle" 
                     id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">                           
-                    <strong>{{ session["username"] }}</strong>
-                    <i class="bi bi-person-fill"></i>
+                    <strong>{{ session["username"] }} </strong>
+
+                        <img class="img-icono-perfil" src="{{ url_for('static', filename='/libs/bootstrap-icons-1.8.3/person-fill.svg') }}">
+
                 </a>
                 <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdownUser1">
                     <li><a class="dropdown-item" href="/cambiaPass">Cambiar contraseña</a></li>
-                    <li><a class="dropdown-item" href="#">Perfil</a></li>
+                    <li><a class="dropdown-item" href="{{ url_for('home') }}">Perfil</a></li>
                     <li>
                         <hr class="dropdown-divider">
                     </li>
