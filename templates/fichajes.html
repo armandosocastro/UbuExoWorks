@@ -55,7 +55,7 @@
             <div class="row">
                 <h2>Listado de fichajes</h2>
                 <p class="lead">
-                    
+                    <button id="btnAddFichaje" data-toggle='modal' data-target= '#myModal'>Grabar fichaje</button>
                     <table id="tablaFichajes" 
                         data-sortable="true"
                         data-toggle="table"
@@ -72,14 +72,38 @@
                             <th data-field="longitud" data-sortable="true">Longitud</th>
                             <th data-field="latitud" data-sortable="true">Latitud</th>
                             <th data-field="incidencia" data-sortable="true">Incidencia</th>
-                            <th data-field="geolocalizacion">Geolocalizacion</th>
+                            <th data-field="geolocalizacion"></th>
+                            <th data-field="borrado"></th>
                         </tr>
                        </thead>  
                     </table>
     
             </div>  
         
-
+            <div id="myModal" class="modal fade" role="dialog" >
+                <div class="modal-dialog" role="document" >
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <span id="fichajeSolapado" class="span-fechas"></span>
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        </div>
+                        <div class="mi-modal-body" >
+                            <label>Fecha <input type="text" id="txtFecha" class="form-control" placeholder="Fecha"></label>
+                            <label>Hora <input type="text" id="txtHora" class="form-control" placeholder="Hora"></label>
+                            <label>Tipo <input type="text" id="txtTipo" class="form-control" placeholder="Tipo"></label>
+                            <label>Incidencia <input type="text" id="txtIncidencia" class="form-control" placeholder="Incidencia"></label>
+                        </div>
+                        <div class="modal-footer">        
+                            {%if (current_user.is_admin() == True) or (current_user.is_gestor() == True) %}      
+                                <button type="button" class="btn btn-secondary" id="botonGrabaFichaje" data-fichaje=''>
+                                    Grabar fichaje
+                                </button>
+                            {% endif %}
+                        </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
 <!--
                 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
                 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.js" integrity="sha512-n/4gHW3atM3QqRcbCn6ewmpxcLAHGaDjpEBu4xZd47N0W2oQ+6q7oc3PXstrJYXcbNU1OHdQ1T7pAP+gi5Yu8g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -125,6 +149,12 @@
                             //icono = '/libs/bootstrap-icons-1.8.3/caret-left.svg';
                             return "<img class='img-icono-perfil' src='{{ url_for('static', filename='/libs/bootstrap-icons-1.8.3/caret-left.svg') }}'>";
                     }
+                   
+                    //Funcion Ajax para renderizar el boton para eliminar un fichaje   
+                    var eliminarFichaje = function( data, type, row, meta ) {
+                        //console.log('data-fichaje:', row['ID'],'::');
+                         return "<button type='button' id='eliminarFichaje' class='btn btn-primary' data-fichaje=" + row['ID'] + "><i class='bi bi-x-lg'></i></button>";
+                    }
 
                     var table = $('#tablaFichajes').DataTable
                     ({
@@ -154,7 +184,6 @@
                          "order": [[1, 'desc']],
                         "ajax": {
                             "method": "POST",
-                            //"url": 'http://127.0.0.1:5000/api/ajax/cargatickets',
                             "url": url_home,
                             "data": function () {
                                 return peticionData;
@@ -162,7 +191,7 @@
                         },
                         "columns": [
                             {"data":"entrada",
-                                "render":entrada}, 
+                                "render":entrada},
                             {"data":"fecha"},
                             {"data":"hora"},
                             {"data":"tipo"},
@@ -171,13 +200,58 @@
                             {"data":"incidencia"},
                             {"data": "geolocalizacion",
                              "render": function(data, type, row) {
-                                return "<button type='button' class='btn btn-primary' id='botonMapa' data-longitud="+row['longitud']+" data-latitud="+row['latitud']+"> Geo-localizacion</button>"
+                                return "<button type='button' class='btn btn-primary' id='botonMapa' data-longitud="+row['longitud']+" data-latitud="+row['latitud']+"><i class='bi bi-geo-alt'></i></button>"
                                 }
+                            },
+                            {"data":"borrado", "render":eliminarFichaje}
+                        ],
+                        "rowCallback": function( row, data) {
+                            //console.log('renderizaco');
+                            //console.log('* ', data);
+                            
+                            if (data['borrado'] === true) {
+                                console.log('este esta borrado');
+                                for (var i = 0; i < 8; i++) {
+                                    celda = row.cells[i].innerHTML;
+                                    $('td:eq('+i+')', row).html('<del>'+celda+'</del>');
+                                };
+                                $('td:eq(7)', row).html('');
+                                $('td:eq(8)', row).html('');
                             }
-                        ]
+                        }
+                            
                     });
 
-                    $('#tablaFichajes tbody').on('click', '.btn-primary', function () {
+                    $('#tablaFichajes tbody').on('click', '#eliminarFichaje', function () {
+                        console.log("boton pulsado fichaje tiene: ", this.dataset.fichaje);
+                        var idFichaje = this.dataset.fichaje;
+                        //var url_anterior = table.ajax.url();
+                        //var params_tabla = table.ajax;
+                        //console.log('table:', params_tabla);
+                        //console.log('url guardada: ', url_anterior, 'params:', params_tabla);
+                        //var parametros_anteriores = new window.URLSearchParams(window.location.search);    
+                        //var idUsuario_parametros = parametros.get('idUsuario');
+                       
+                        //console.log('parametros guardados:',parametros_anteriores);
+                        console.log('url_borrar:',url_borraFichaje);
+                        var url_borraFichaje = '{{ url_for('usuarios_blueprint.borrarFichajeGestor') }}';
+                        url_borraFichaje = url_borraFichaje + "?idFichaje="+idFichaje;
+                        console.log('url_borrar:',url_borraFichaje);
+                        $.ajax({
+                            type:"POST",
+                            url:url_borraFichaje,
+                            success: function(resultado) {
+                                console.log('resultado:', resultado);
+                            },
+                            error: function(resultado) {
+                                console.log('error resultado: ', resultado);
+                            },
+                        });
+                        table.ajax.reload();
+                    });
+
+
+                    $('#tablaFichajes tbody').on('click', '#botonMapa', function () {
                         
                         console.log("boton pulsado tiene: ", this.dataset.longitud, this.dataset.latitud);
 
@@ -271,6 +345,45 @@
                                 }
                         });
 
+                        $('#myModal').on('show.bs.modal', function(e) {
+                            document.getElementById('fichajeSolapado').innerText = "";
+                            jQuery('#txtFecha').val('');
+                            jQuery('#txtHora').val('');
+                            jQuery('#txtIncidencia').val('');
+                            jQuery('#txtTipo').val('');
+                        });
+
+                        document.getElementById('botonGrabaFichaje').addEventListener('click',
+                            function addFichaje() {
+                                url_fichaje = '{{ url_for('usuarios_blueprint.fichajeGestor') }}';
+                                //url_fichaje = url_fichaje + "?idGasto="+idGastoParametro;
+                                console.log('url_fichaje:',url_fichaje);
+                                var fecha_fichaje = jQuery('#txtFecha').val();
+                                var hora_fichaje = jQuery('#txtHora').val();
+                                var tipo_fichaje = jQuery('#txtTipo').val();
+                                var incidencia_fichaje = jQuery('#txtIncidencia').val();
+                                console.log("Datos solicitud posrt: ", fecha_fichaje,':',hora_fichaje,':',tipo_fichaje,':',incidencia_fichaje)
+                                $.ajax({
+                                    type:"POST",
+                                    dataType: "json",
+                                    contentType: 'application/json',
+                                    data: JSON.stringify({ idUsuario:idUsuario, fecha:fecha_fichaje, hora:hora_fichaje, longitud:0, latitud:0, tipo:tipo_fichaje, 
+                                            incidencia:incidencia_fichaje}),
+                                    url:url_fichaje,
+                                    success: function(resultado) {
+                                        console.log('resultado:', resultado);
+                                        if (resultado === 'solapado') {
+                                            console.log('resultado:',resultado);
+                                            document.getElementById('fichajeSolapado').innerText = "Fichaje solapado";
+                                        }
+                                        else {
+                                            jQuery('.close').click();
+                                            table.ajax.reload(false);  
+                                        }
+                                    },
+                                });
+                            }
+                        );
                     });
                 </script>
 

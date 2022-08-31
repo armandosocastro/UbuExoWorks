@@ -7,6 +7,7 @@ import string
 import secrets
 import os
 from time import timezone
+from flask import session
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Boolean, Column, ForeignKey, DateTime, Integer, Text, Float, Time, false, extract
 from sqlalchemy.orm import relationship
@@ -254,6 +255,7 @@ class Fichaje(db.Model):
     idUsuario =  db.Column(db.Integer, ForeignKey('USUARIO.idUsuario'))
     usuario = db.relationship('Usuario')
     tipo = db.Column(db.String, nullable=False)
+    borrado = db.Column(db.Boolean, nullable=False)
    
     """ 
     def __init__(self, idFichaje, fecha=None, hora_entrada=None, entrada_latitud=None, entrada_longitud=None,
@@ -272,8 +274,7 @@ class Fichaje(db.Model):
     """
         
     def to_JSON(self):
-        
-        
+         
         hora = str(self.hora_entrada)
         print(hora)
         return {
@@ -288,8 +289,13 @@ class Fichaje(db.Model):
             #'salida_longitud':self.entrada_longitud,
             'incidencia':self.incidencia,
             'idUsuario':self.idUsuario,
-            'tipo': self.tipo
+            'tipo': self.tipo,
+            'borrado': self.borrado
         }
+    
+    @staticmethod
+    def get_by_idFichaje(idFichaje):    
+        return Fichaje.query.filter_by(idFichaje=idFichaje).first()
         
     @staticmethod
     def get_by_idEmpleado(idEmpleado):    
@@ -358,7 +364,6 @@ class Fichaje(db.Model):
         fechafin_format = datetime.strptime(fechafin, "%Y/%m/%d")
 
         return db.session.query(Fichaje).filter(and_( Fichaje.idUsuario == idEmpleado, and_(Fichaje.fecha <= fechafin_format, Fichaje.fecha>=fechaini_format))).all()
-   
     
     def save(self):
         if not self.idFichaje:

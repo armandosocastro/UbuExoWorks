@@ -161,6 +161,93 @@ def login():
         return jsonify(error="contraseña incorrecta"),300
     return jsonify(error="No existe usuario"),300
 
+#Metodo para registrar un fichaje por el Gestor sin necesidad de tokens de seguridad
+@main.route('/fichajeGestor', methods=['POST','GET'])
+#@jwt_required()
+@expects_json()
+def fichajeGestor():
+    try:
+        #current_user_id = get_jwt_identity()
+        datos = request.get_json()
+        print(datos)
+        #print('curren id fichaje:', current_user_id)
+
+        idUsuario= datos.get('idUsuario','')
+        fecha = datos.get('fecha','')
+        hora = datos.get('hora','')
+        longitud = datos.get('longitud','')
+        latitud = datos.get('latitud','')
+        tipo = datos.get('tipo','')
+        incidencia = datos.get('incidencia','')
+        
+        print('Longitud recibida: ', longitud)
+        print('latitud recibida: ', latitud)
+        print('usuario recibido: ',idUsuario)
+        print('tipo recibido: ',tipo)
+        print('incidencia recibida:', incidencia)
+        
+        entradas = 0
+        pausas = 0
+
+        fichajes_hoy = Fichaje.get_by_idEmpleadoFecha(idUsuario, fecha)
+        for fichaje in fichajes_hoy:
+            print('fichajes horas: ',(fichaje.hora_entrada).strftime("%H:%M"),' : ', hora)
+            #No permitimos fichajes a la misma hora, debe transcurrir un minuto entre ellos
+            if (fichaje.hora_entrada).strftime("%H:%M") == hora:
+                print("solapado")
+                return jsonify("solapado")
+            if fichaje.tipo == 'entrada':
+                entradas = entradas + 1
+            elif fichaje.tipo == 'salida':
+                    entradas = entradas -1
+            elif fichaje.tipo == 'pausa entrada':
+                pausas = pausas + 1
+            else:
+                pausas = pausas - 1
+                
+        print('Entradas:', entradas)
+        print('Pausas:', pausas)
+                
+        print('Numero fichajes hoy: ', len(fichajes_hoy))
+        if tipo == 'fichaje':
+            print('es un fichaje')
+            if entradas % 2 == 0:
+                tipo_fichaje = 'entrada'
+            else:
+                tipo_fichaje = 'salida'
+        else:
+            print('es una pausa')
+            if pausas % 2 == 0:
+                tipo_fichaje = 'pausa entrada'
+            else:
+                tipo_fichaje = 'pausa salida' 
+        
+        fichaje = Fichaje(fecha=fecha, hora_entrada=hora, entrada_longitud=longitud, entrada_latitud=latitud,
+                          incidencia=incidencia,idUsuario=idUsuario, tipo=tipo_fichaje)
+        fichaje.save()
+        return jsonify(token="OK"),200   
+           
+    except Exception as ex:
+        print(ex)
+        return 'JSON incorrecto'
+
+#Metodo para borrado de fichaje por perfil Gestor
+@main.route('/borrarFichaje', methods=['POST'])
+@login_required
+@gestor_required
+def borrarFichajeGestor():
+    try:
+        idFichaje = request.args.get('idFichaje')
+        print('fichaje a borrar: ',idFichaje)     
+
+        fichaje = Fichaje.get_by_idFichaje(idFichaje)
+        fichaje.borrado = True
+        fichaje.save()
+        
+        return "ok"
+    except Exception as ex:
+        print(ex)
+        return 'Peticion incorrecta'
 
 #Metodo API para registrar un fichaje
 @main.route('/fichaje', methods=['POST','GET'])
@@ -336,8 +423,8 @@ def usuarioFichajesAjax():
     else:
         data = []
         for f in fichajes:
-            data.append({"fecha":f.fecha, "hora":str(f.hora_entrada), "tipo":f.tipo, "longitud":f.entrada_longitud, "latitud":f.entrada_latitud,
-                              "incidencia":f.incidencia})
+            data.append({"ID":f.idFichaje, "fecha":f.fecha, "hora":str(f.hora_entrada), "tipo":f.tipo, "longitud":f.entrada_longitud, "latitud":f.entrada_latitud,
+                              "incidencia":f.incidencia, "borrado":f.borrado})
             print('fichaje ajax:',data)
         data_json = {'data': data}
         return jsonify(data_json)
@@ -357,8 +444,8 @@ def usuarioFichajesRangoAjax():
         #Devolvemos un diccionario vacio si no hay datos de gastos para enviar.
         return jsonify({'data':[]})
     else:
-        data_json = {'data':[{"fecha":f.fecha, "hora":str(f.hora_entrada), "tipo":f.tipo, "longitud":f.entrada_longitud, "latitud":f.entrada_latitud,
-                              "incidencia":f.incidencia} for f in fichajes]} 
+        data_json = {'data':[{"ID":f.idFichaje, "fecha":f.fecha, "hora":str(f.hora_entrada), "tipo":f.tipo, "longitud":f.entrada_longitud, "latitud":f.entrada_latitud,
+                              "incidencia":f.incidencia, "borrado":f.borrado} for f in fichajes]} 
         return jsonify(data_json)
         
 
