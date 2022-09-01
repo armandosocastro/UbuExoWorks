@@ -237,6 +237,7 @@
                         var url_borraFichaje = '{{ url_for('usuarios_blueprint.borrarFichajeGestor') }}';
                         url_borraFichaje = url_borraFichaje + "?idFichaje="+idFichaje;
                         console.log('url_borrar:',url_borraFichaje);
+                        //Como el parametro del idFichaje ya va concatenado en la url ya no lo ponemos en "data" de la peticion Ajax
                         $.ajax({
                             type:"POST",
                             url:url_borraFichaje,
