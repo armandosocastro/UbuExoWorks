@@ -154,8 +154,9 @@ def login():
             if Usuario.check_imei(usuario, imei):      
                 #Generamos el token a partir del id del usuario
                 token = create_access_token(identity=usuario.idUsuario)
+                idUsuario= usuario.idUsuario
                 #return jsonify(token=usuario.idUsuario),200
-                return jsonify(token),200
+                return jsonify(idUsuario=idUsuario,token=token),200
             else:
                 return jsonify(error="dispositivo no registrado"), 300
         return jsonify(error="contraseña incorrecta"),300

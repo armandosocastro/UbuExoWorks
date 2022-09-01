@@ -268,7 +268,7 @@
                         }
                             map.flyTo([longitud,latitud], 18)
                     });
-
+                    //Creamos el calendario con los eventos
                         url_eventos = "{{ url_for('usuarios_blueprint.getFichajeCalendario') }}";
                         url_eventos = url_eventos + '?idUsuario=' + idUsuario + '&fecha=' + strFecha_actual;
                         console.log('url peticion fichajes: ', url_eventos);
@@ -291,7 +291,9 @@
                                 url: url_eventos,
                                 dataType:'json',
                                 color: 'blue',
-                                textColor: 'white'
+                                textColor: 'white',
+                                eventDisplay: 'block',
+                                backgroundColor: 'blue',
                             
                             }
                           ],
