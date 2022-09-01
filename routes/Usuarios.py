@@ -279,16 +279,18 @@ def fichar():
         for fichaje in fichajes_hoy:
             print('fichajes horas: ',(fichaje.hora_entrada).strftime("%H:%M"),' : ', hora)
             #No permitimos fichajes a la misma hora, debe transcurrir un minuto entre ellos
-            if (fichaje.hora_entrada).strftime("%H:%M") == hora:
-                return jsonify(token="solapado"), 500
-            if fichaje.tipo == 'entrada':
-                entradas = entradas + 1
-            elif fichaje.tipo == 'salida':
-                    entradas = entradas -1
-            elif fichaje.tipo == 'pausa entrada':
-                pausas = pausas + 1
-            else:
-                pausas = pausas - 1
+            #En el caso de que este borrado no lo tenemos en cuenta
+            if fichaje.borrado == False:
+                if (fichaje.hora_entrada).strftime("%H:%M") == hora:
+                    return jsonify(token="solapado"), 500
+                if fichaje.tipo == 'entrada':
+                    entradas = entradas + 1
+                elif fichaje.tipo == 'salida':
+                        entradas = entradas -1
+                elif fichaje.tipo == 'pausa entrada':
+                    pausas = pausas + 1
+                else:
+                    pausas = pausas - 1
                 
         print('Entradas:', entradas)
         print('Pausas:', pausas)
@@ -309,7 +311,7 @@ def fichar():
         
         if str(current_user_id) == str(idUsuario):
             fichaje = Fichaje(fecha=fecha, hora_entrada=hora, entrada_longitud=longitud, entrada_latitud=latitud,
-                          incidencia=None,idUsuario=idUsuario, tipo=tipo_fichaje)
+                          incidencia=None,idUsuario=idUsuario, tipo=tipo_fichaje, borrado=False)
             fichaje.save()
             return jsonify(token="OK"),200   
         else:
@@ -589,6 +591,7 @@ def alta_usuario():
         apellidos = form.apellidos.data
         nif = form.nif.data
         email = form.email.data
+        emailRecuperacion = form.emailRecuperacion.datsa
         #password = form.password.data
         #idempresa=current_user.
         idempresa = session['idEmpresa']
@@ -604,7 +607,7 @@ def alta_usuario():
         if user is not None:
             error = 'El usuario ya esta registrado en el sistema'
         else:
-            user = Usuario(nombre=nombre, apellidos=apellidos,nif=nif,login=email,estado=estado,idEmpresa=idempresa,idRol=idRol,idJornadaLaboral=idJornadaLaboral)
+            user = Usuario(nombre=nombre, apellidos=apellidos,nif=nif,login=email,emailRecuperacion=emailRecuperacion, estado=estado,idEmpresa=idempresa,idRol=idRol,idJornadaLaboral=idJornadaLaboral)
             password = Usuario.generate_password()
             user.set_password(password)
             user.save()

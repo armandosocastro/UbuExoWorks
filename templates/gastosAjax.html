@@ -22,8 +22,10 @@
             <h2>Listado de gastos</h2>
             <p class="lead">
 
-        <form name="formulario" id="form-prueba" method="POST" action="aprobar();">        
-                <input type="submit" value="Aprobar gastos" id="aprobar"/>
+        <form name="formulario" id="form-prueba" method="POST" action=""> 
+            {%if (current_user.is_admin() == True) or (current_user.is_gestor() == True) %}       
+                <input type="button" value="Aprobar gastos" id="aprobar"/>
+            {% endif %}
                 <table id="table" 
                 data-sortable="true"
                 data-toggle="table"
@@ -134,7 +136,7 @@
         var table = $('#table').DataTable
         ({
 
-            buttons: ['Aprobar gastos'],
+            //buttons: ['Aprobar gastos'],
 
             language: {
                 "decimal": "",

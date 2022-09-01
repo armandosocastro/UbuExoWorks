@@ -55,7 +55,9 @@
             <div class="row">
                 <h2>Listado de fichajes</h2>
                 <p class="lead">
-                    <button id="btnAddFichaje" data-toggle='modal' data-target= '#myModal'>Grabar fichaje</button>
+                    {%if (current_user.is_admin() == True) or (current_user.is_gestor() == True) %}
+                        <button id="btnAddFichaje" data-toggle='modal' data-target= '#myModal'>Grabar fichaje</button>
+                    {% endif %}
                     <table id="tablaFichajes" 
                         data-sortable="true"
                         data-toggle="table"

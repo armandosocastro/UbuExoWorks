@@ -60,6 +60,13 @@
             {% endfor %}
           </p>
           <p>
+            {{ form.emailRecuperacion.label }}<br>
+            {{ form.emailRecuperacion(size=60) }}<br>
+            {% for error in form.email.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+          </p>
+          <p>
             {{ form.password.label }}<br>
                   {{ form.password(size=32) }}<br>
                   {% for error in form.password2.errors %}

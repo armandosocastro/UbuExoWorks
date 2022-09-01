@@ -13,10 +13,11 @@ class FormRegistro(FlaskForm):
     #username = StringField('Nombre de usuario', validators=[DataRequired()])
     empresa = StringField('Empresa', validators=[DataRequired()])
     cif = StringField('Cif', validators=[DataRequired()])
-    planContratado = StringField('Plan', validators=[DataRequired()])
+    planContratado = StringField('Plan', validators=[DataRequired()], default=1)
     nombre = StringField('Nombre', validators=[DataRequired()])
     apellidos = StringField('Apellidos', validators=[DataRequired()])
     email = StringField('Email', validators=[DataRequired(), Email()])
+    emailRecuperacion = StringField('Email recuperacion', validators=[DataRequired(), Email()])
     password = PasswordField('Contraseña', validators=[DataRequired()])
     password2 = PasswordField('Repita su contraseña', validators=[DataRequired(), EqualTo('password', 'Las contraseñas no coinciden')])
 
