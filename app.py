@@ -53,7 +53,7 @@ def create_app():
         'img-src': ['*', 'data:', '\'self\''],   
     }
     
-    #Talisman(app, content_security_policy=csp)
+    Talisman(app, content_security_policy=csp)
     
     
     #Talisman(app, content_security_policy=[])
