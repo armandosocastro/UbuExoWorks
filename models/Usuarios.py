@@ -48,7 +48,8 @@ class Usuario(UserMixin, db.Model):
         self.idEmpresa=idEmpresa
         self.idJornadaLaboral=idJornadaLaboral
         self.idRol=idRol """
-    
+        
+
     def get_id_empresa(self):
         return self.idEmpresa    
     
@@ -57,7 +58,10 @@ class Usuario(UserMixin, db.Model):
     
     def get_rol(self):
         return self.idRol
-    
+
+    def get_email(self):
+        return self.login
+        
     def is_admin(self):
         if self.get_rol() == 0:
             print('Admin en modelo')
@@ -70,7 +74,9 @@ class Usuario(UserMixin, db.Model):
             return True
         return False
             
-    
+    def get_gestor(idEmpresa):   
+        return db.session.query(Usuario).filter(and_( Usuario.idEmpresa == idEmpresa, Usuario.idRol == 1)).first()
+        
     def get_login(self):
         return self.login
     
@@ -183,7 +189,6 @@ class Empresa(db.Model):
     def get_id_empresa(self):
         return self.idEmpresa
      
-    
     def save(self):
         if not self.idEmpresa:
             db.session.add(self)

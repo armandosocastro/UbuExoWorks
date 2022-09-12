@@ -1,6 +1,4 @@
 
-#from crypt import methods
-
 from datetime import datetime
 from fileinput import filename
 from itertools import count
@@ -10,6 +8,7 @@ from flask import Blueprint, jsonify, request, redirect, render_template, sessio
 from flask_expects_json import expects_json
 from werkzeug.security import check_password_hash
 from werkzeug.utils import secure_filename
+
 from flask_wtf import CSRFProtect
 
 from flask_mail import Mail, Message
@@ -34,20 +33,12 @@ from app import mail
 
 #from app import csrf
 
-
-#from models.UsuariosModel import UsuarioModel
-
-#mail = Mail()
-
-
-
 main = Blueprint('usuarios_blueprint', __name__)
 
-prueba = Blueprint('prueba', __name__)
 
-@prueba.errorhandler(404)
+@main.errorhandler(404)
 def not_found(e):
-    return prueba.send_static_file('index.html')
+    return main.send_static_file('index.html')
 
 
 @main.route('/usuario', methods=('GET', 'POST'))
@@ -63,7 +54,43 @@ def get_usuarios():
         return jsonify(usuarios.to_JSON())
     except Exception as ex:
         return jsonify({'mensaje': str(ex)}), 500
-
+ 
+#Metodo API devuelve los datos del usuario solicitado    
+@main.route('/get/usuario', methods=['GET'])
+@jwt_required()
+def get_usuario():
+    try:
+        idUsuario = request.args.get('idUsuario')   
+        usuario = Usuario.get_by_id(idUsuario)
+        if usuario is not None:
+            return jsonify(usuario.to_JSON()), 200
+    except Exception as ex:
+        return jsonify({'mensaje': str(ex)}), 500
+    
+#Metodo API solicitud borrado fichaje
+@main.route('/usuario/solicitudBorrado', methods=['POST'])
+@jwt_required()
+def solicitud_borrar_fichaje():
+    try:
+        idUsuario = request.args.get('idUsuario')   
+        idFichaje = request.args.get('idFichaje')
+        fichaje = Fichaje.get_by_idFichaje(idFichaje)
+        
+        #Hay que localizar el email del gestor de la empres
+        usuario = Usuario.get_by_id(idUsuario)
+        idEmpresa = usuario.idEmpresa
+        gestor = Usuario.get_gestor(idEmpresa)
+        email= gestor.get_email()
+        
+        #enviamos el correo con la solicitud de borrado
+        msg = Message("UbuExoWorks: Solicitud borrado de fichaje", sender='ubuexoworks@gmail.com' ,recipients=[email])
+        msg.html = '<p>Se solicita el borrado del fichaje del dia ' + str(fichaje.fecha) + 'a las ' + str(fichaje.hora_entrada) + ' horas' + ' con el identificador ' + str(fichaje.idFichaje) + '</p>'
+        mail.send(msg)
+        return  jsonify('Ok'), 200
+        
+    except Exception as ex:
+        return jsonify({'mensaje': str(ex)}), 500   
+    
 @main.route('/empresasAjax', methods=['get','post'])
 def empresasAjax():
     #datos = request.get_data()
@@ -72,7 +99,6 @@ def empresasAjax():
     listadoEmpresas = Empresa.get_all()
     #roles = Rol.get_by_Rol()
     #fecha = parametro['fecha']
-    print('listado empresas: ',listadoEmpresas)
     
     if listadoEmpresas == []:
         #Devolvemos un diccionario vacio si no hay empresas.
@@ -99,6 +125,7 @@ def usuariosEmpresaAjax():
                               "estado":u.estado} for u in listadoUsuarios]} 
         return jsonify(data_json)
 
+#Metodo API para registro del imei del dispositivo
 @main.route('/registraDispositivo', methods=['POST'])
 @expects_json()
 def registraDispositivo():
@@ -122,9 +149,9 @@ def registraDispositivo():
         if Usuario.check_password(usuario, password):  
             Usuario.registra_imei(usuario,imei)
             usuario.save()
-            return jsonify(token="OK"),200
-        return jsonify(error="contraseña incorrecta"),300
-    return jsonify(error="No existe usuario"),300
+            return jsonify("Ok"),200
+        return jsonify("Contraseña incorrecta"),300
+    return jsonify("No existe usuario"),300
 
 #Login para la API, se comprueba que tambien tenga registrado el dispositivo
 @main.route('/login', methods=['POST'])
@@ -134,15 +161,15 @@ def login():
    
     password=datos.get('password','')
     if password == "":
-        return jsonify(error = "password vacio"),400
+        return jsonify("password vacio"),400
     
     username=datos.get('login', '')
     if username == "":
-        return jsonify(error = "login vacio"),400
+        return jsonify("login vacio"),400
     
     imei=datos.get('imei', '')
     if imei == "":
-        return jsonify(error = "imei vacio"),400
+        return jsonify("imei vacio"),400
     
     usuario = Usuario.get_by_login(username)
     
@@ -158,9 +185,9 @@ def login():
                 #return jsonify(token=usuario.idUsuario),200
                 return jsonify(idUsuario=idUsuario,token=token),200
             else:
-                return jsonify(error="dispositivo no registrado"), 300
-        return jsonify(error="contraseña incorrecta"),300
-    return jsonify(error="No existe usuario"),300
+                return jsonify("dispositivo no registrado"), 300
+        return jsonify("contraseña incorrecta"),300
+    return jsonify("No existe usuario"),300
 
 #Metodo para registrar un fichaje por el Gestor sin necesidad de tokens de seguridad
 @main.route('/fichajeGestor', methods=['POST','GET'])
@@ -181,12 +208,6 @@ def fichajeGestor():
         tipo = datos.get('tipo','')
         incidencia = datos.get('incidencia','')
         
-        print('Longitud recibida: ', longitud)
-        print('latitud recibida: ', latitud)
-        print('usuario recibido: ',idUsuario)
-        print('tipo recibido: ',tipo)
-        print('incidencia recibida:', incidencia)
-        
         entradas = 0
         pausas = 0
 
@@ -195,7 +216,6 @@ def fichajeGestor():
             print('fichajes horas: ',(fichaje.hora_entrada).strftime("%H:%M"),' : ', hora)
             #No permitimos fichajes a la misma hora, debe transcurrir un minuto entre ellos
             if (fichaje.hora_entrada).strftime("%H:%M") == hora:
-                print("solapado")
                 return jsonify("solapado")
             if fichaje.tipo == 'entrada':
                 entradas = entradas + 1
@@ -205,19 +225,15 @@ def fichajeGestor():
                 pausas = pausas + 1
             else:
                 pausas = pausas - 1
-                
-        print('Entradas:', entradas)
-        print('Pausas:', pausas)
-                
-        print('Numero fichajes hoy: ', len(fichajes_hoy))
+
         if tipo == 'fichaje':
-            print('es un fichaje')
+
             if entradas % 2 == 0:
                 tipo_fichaje = 'entrada'
             else:
                 tipo_fichaje = 'salida'
         else:
-            print('es una pausa')
+
             if pausas % 2 == 0:
                 tipo_fichaje = 'pausa entrada'
             else:
@@ -226,11 +242,11 @@ def fichajeGestor():
         fichaje = Fichaje(fecha=fecha, hora_entrada=hora, entrada_longitud=longitud, entrada_latitud=latitud,
                           incidencia=incidencia,idUsuario=idUsuario, tipo=tipo_fichaje)
         fichaje.save()
-        return jsonify(token="OK"),200   
+        return jsonify(token="Ok"),200   
            
     except Exception as ex:
         print(ex)
-        return 'JSON incorrecto'
+        return 'JSON incorrecto', 400
 
 #Metodo para borrado de fichaje por perfil Gestor
 @main.route('/borrarFichaje', methods=['POST'])
@@ -267,12 +283,7 @@ def fichar():
         longitud = datos.get('longitud','')
         latitud = datos.get('latitud','')
         tipo = datos.get('tipo','')
-        
-        print('Longitud recibida: ', longitud)
-        print('latitud recibida: ', latitud)
-        print('usuario recibido: ',idUsuario)
-        print('tipo recibido: ',tipo)
-        
+
         entradas = 0
         pausas = 0
 
@@ -283,7 +294,7 @@ def fichar():
             #En el caso de que este borrado no lo tenemos en cuenta
             if fichaje.borrado == False:
                 if (fichaje.hora_entrada).strftime("%H:%M") == hora:
-                    return jsonify(token="solapado"), 500
+                    return jsonify(token="solapado"), 400
                 if fichaje.tipo == 'entrada':
                     entradas = entradas + 1
                 elif fichaje.tipo == 'salida':
@@ -292,19 +303,16 @@ def fichar():
                     pausas = pausas + 1
                 else:
                     pausas = pausas - 1
-                
-        print('Entradas:', entradas)
-        print('Pausas:', pausas)
-                
-        print('Numero fichajes hoy: ', len(fichajes_hoy))
+
+
         if tipo == 'fichaje':
-            print('es un fichaje')
+
             if entradas % 2 == 0:
                 tipo_fichaje = 'entrada'
             else:
                 tipo_fichaje = 'salida'
         else:
-            print('es una pausa')
+  
             if pausas % 2 == 0:
                 tipo_fichaje = 'pausa entrada'
             else:
@@ -314,15 +322,15 @@ def fichar():
             fichaje = Fichaje(fecha=fecha, hora_entrada=hora, entrada_longitud=longitud, entrada_latitud=latitud,
                           incidencia=None,idUsuario=idUsuario, tipo=tipo_fichaje, borrado=False)
             fichaje.save()
-            return jsonify(token="OK"),200   
+            return jsonify(token="Ok"),200   
         else:
-            return jsonify({'mensaje': "token incorrecto"}), 500
+            return jsonify({"token incorrecto"}), 401
            
     except Exception as ex:
         print(ex)
-        return 'JSON incorrecto'
+        return 'JSON incorrecto', 400
     
-#Metodo API para obtener los fichajes de un usuario    
+#Metodo API para obtener todos los fichajes de un usuario    
 @main.route('/get/fichajes', methods=['get'])
 @jwt_required()
 #@expects_json()
@@ -338,7 +346,7 @@ def getFichaje():
             print(fichajes)
             return jsonify([fichaje.to_JSON() for fichaje in fichajes])
         else:
-            return jsonify({'mensaje': "token incorrecto"}), 500
+            return jsonify({"token incorrecto"}), 401
     except Exception as ex:
         return jsonify({'mensaje': str(ex)}), 500    
     
@@ -387,7 +395,7 @@ def getFichajePorFecha():
             print(fichajes)
             return jsonify([fichaje.to_JSON() for fichaje in fichajes])
         else:
-            return jsonify({'mensaje': "token incorrecto"}), 500   
+            return jsonify({"token incorrecto"}), 401   
     except Exception as ex:
         return jsonify({'mensaje': str(ex)}), 500        
  
@@ -450,29 +458,30 @@ def usuarioFichajesRangoAjax():
         data_json = {'data':[{"ID":f.idFichaje, "fecha":f.fecha, "hora":str(f.hora_entrada), "tipo":f.tipo, "longitud":f.entrada_longitud, "latitud":f.entrada_latitud,
                               "incidencia":f.incidencia, "borrado":f.borrado} for f in fichajes]} 
         return jsonify(data_json)
-        
-
-#Este metodo ya no lo utilizo
-@main.route('/mapa<longitud><latitud>')
-def mapa(longitud,latitud):
-    #longitud=20.35235054304456
-    #latitud=-8.402286665327859
-    return render_template('mapa.html',longitud=longitud, latitud=latitud)
-    
-#Este metodo ya no lo utilizo    
-@main.route("/ubicacion", methods=['post'])
-@expects_json()
-def ubicacion():
+  
+#Metodo API que devuelve los fichajes entre dos fechas       
+@main.route('/usuario/fichajesRango', methods=['get','post'])
+@jwt_required()
+def usuarioFichajesRango():
     try:
-        datos = request.get_json()
-        print(datos)
-        longitud = datos.get('longitud','')
-        latitud = datos.get('latitud','')
-        print('Longitud recibida: ', longitud)
-        print('latitud recibida: ', latitud)
-        return jsonify(token="OK"),200
+        current_user_id = get_jwt_identity()
+        idUsuario = request.args.get('idUsuario')
+        fecha_ini = request.args.get('fecha_ini')
+        fecha_fin = request.args.get('fecha_fin')
+        print('::', idUsuario, fecha_fin, fecha_ini)
+        if str(current_user_id) == str(idUsuario):
+            fichajes = Fichaje.get_by_idEmpleadoRango(idUsuario, fecha_ini, fecha_fin)
+            print('fichajes:', fichajes)
+            if fichajes == []:
+                #Devolvemos un diccionario vacio si no hay datos de gastos para enviar.
+                return jsonify([fichaje.to_JSON() for fichaje in fichajes])
+            else:
+                return jsonify([fichaje.to_JSON() for fichaje in fichajes])
+        else:
+            return jsonify({'token incorrecto'}), 401
     except Exception as ex:
-        return jsonify({'mensaje': str(ex)}), 500     
+        return jsonify({ 'error': str(ex)}), 500
+
 
 #Metodo para obtener los gastos de un usuario en la aplicacion Web
 @main.route('/usuario/gastos', methods=['get'])
@@ -500,40 +509,32 @@ def ajaxCargaTickets():
                           "iva":g.iva, "cif":g.cif, "numeroticket":g.numeroTicket, "validado":g.validado} for g in gastos]} 
         return jsonify(data_json)
 
+#Metodo API para registrar un gasto con su ticket
 @main.route("/gasto/registraGasto", methods=['post'])
 @jwt_required()
 def registraGasto():
-    if request.method == 'POST':
-        
-        idUsuario = request.form['idUsuario']
-        fecha = request.form['fecha']
-        tipo = request.form['tipo']
-        importe = request.form['importe']
-        iva = request.form['iva']
-        cif = request.form['cif']
-        razonSocial = request.form['razonSocial']
-        descripcion = request.form['descripcion']
-        numeroTicket = request.form['numeroTicket']
-        
-        imagen = request.files['ticket']
-        #filename = secure_filename(imagen.filename)
-        #imagen.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-        imagen_string = base64.b64encode(imagen.read())
-
-        print(idUsuario)
-        print(fecha)
-        print(tipo)
-        print(importe)
-        print(iva)
-        print(cif)
-        print(razonSocial)
-        print(descripcion)
-        print(numeroTicket)
-        
-        gasto = Gasto(fecha=fecha, tipo=tipo, descripcion=descripcion, importe=importe, iva=iva, cif=cif,fotoTicket=imagen_string,idUsuario=idUsuario,razonSocial=razonSocial,numeroTicket=numeroTicket)
-        gasto.save()
-        
-        return "Recibido ticket"
+    try:
+        if request.method == 'POST':
+            
+            idUsuario = request.form['idUsuario']
+            fecha = request.form['fecha']
+            tipo = request.form['tipo']
+            importe = request.form['importe']
+            iva = request.form['iva']
+            cif = request.form['cif']
+            razonSocial = request.form['razonSocial']
+            descripcion = request.form['descripcion']
+            numeroTicket = request.form['numeroTicket']
+            
+            imagen = request.files['ticket']
+            imagen_string = base64.b64encode(imagen.read())
+            
+            gasto = Gasto(fecha=fecha, tipo=tipo, descripcion=descripcion, importe=importe, iva=iva, cif=cif,fotoTicket=imagen_string,idUsuario=idUsuario,razonSocial=razonSocial,numeroTicket=numeroTicket)
+            gasto.save()
+            
+            return jsonify("Ok"), 200
+    except Exception as ex:
+        return jsonify({ 'error': str(ex)}), 500
         
    
 @main.route("/cargaTicket", methods=['get'])
@@ -556,10 +557,7 @@ def validaTicket():
     #idGasto = request.args.get('idGasto')
 
     gasto = Gasto.get_by_idGasto(idGasto)
-    
-    print('idGasto a validar: ', idGasto)
      
-    #print(request.form)
     if gasto.validado == False:
         gasto.validado = True
     else:
@@ -567,7 +565,7 @@ def validaTicket():
     
     gasto.save()
     return "ok"
-    #return redirect(url_for('usuarios_blueprint.usuarioGastos', idUsuario = gasto.idUsuario))
+
 
 @main.route("/validaTickets", methods=['post','get'])
 def validaTickets():

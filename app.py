@@ -50,12 +50,14 @@ def create_app():
         'default-src': ['*', 'unsafe-inline', 'strict-dynamic', 'unsafe-hashes', "'sha256-yVhOaSpFYsHuy4vwNVCVxs7R7CGIk8isIDt57LTu9Fo='"],
         'script-src': ['*', '\'self\'', "'nonce-2726c7f26c'", 'strict-dynamic', 'unsafe-inline'],
         'font-src': ['*', 'strict-dynamic', 'data:'],
-        'img-src': ['*', 'data:', '\'self\'']
+        'img-src': ['*', 'data:', '\'self\''],   
     }
     
     #Talisman(app, content_security_policy=csp)
-    #Talisman(app, content_security_policy=[])
     
+    
+    #Talisman(app, content_security_policy=[])
+       
     app.jinja_env.globals.update(fecha_actual=fecha_actual)
     
     load_dotenv()
@@ -111,8 +113,9 @@ def create_app():
        # Blueprints
        # Cuando accedamos a localhost/api/usuarios nos enlace con la ruta / del blueprint usuarios
        #app.register_blueprint(Usuarios.main, url_prefix='/api/usuarios')
-    app.register_blueprint(Usuarios.prueba, url_prefix='/prueba')
+    
     app.register_blueprint(Usuarios.main, url_prefix='/api')
+           
            #Manejador de errores
     app.register_error_handler(404, page_not_found)
            #app.run(host='0.0.0.0', port=_port)
