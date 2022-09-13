@@ -9,7 +9,10 @@
 <link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css"/>
 
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.10.0/bootstrap-table.min.css">
+<!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.10.0/bootstrap-table.min.css">-->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.10.0/bootstrap-table.min.css" 
+    integrity="sha512-63GnyqfeNhRXT6e2IHxrE9pCY+1ruclRMhzsWk7U5NKBlV/dOdioucXKvDoMrAAIpdKUzqhBYSB2eLnogoWP4g==" 
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
 <link rel="stylesheet" href="https://rawgit.com/vitalets/x-editable/master/dist/bootstrap3-editable/css/bootstrap-editable.css">
 
 <link rel='stylesheet' type='text/css' href='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.2/main.min.css'/>
@@ -63,11 +66,19 @@
                 
                 
                 
-                <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.10.0/bootstrap-table.js"></script>
-                <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.9.1/extensions/editable/bootstrap-table-editable.js"></script>
-                <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.9.1/extensions/export/bootstrap-table-export.js"></script>
-                <script type="text/javascript" src="https://rawgit.com/hhurz/tableExport.jquery.plugin/master/tableExport.js"></script>
-                <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.9.1/extensions/filter-control/bootstrap-table-filter-control.js"></script>
+                <!--<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.10.0/bootstrap-table.js"></script>-->
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.10.0/bootstrap-table.js" 
+                    integrity="sha512-8uxY/YCNhC7O+ZXitcFjbt1FFC4g7LCGE6uCSxR5MYl2TA9qUKdNUUMoINpBb7O0/Bc8590O8n9zktib1fMiHA==" 
+                    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+                <!--<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.9.1/extensions/editable/bootstrap-table-editable.js"></script>-->
+                <!--<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.9.1/extensions/export/bootstrap-table-export.js"></script>-->
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.9.1/extensions/export/bootstrap-table-export.min.js" 
+                    integrity="sha512-B10O3fjdFvKIH2+I1HoNRzhU3PG5lttxH0twDC5/5DpuFesgVEoSOrlPHX7HomSnPhmeO10GXJj6rLmqlejE0w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+               <!-- <script type="text/javascript" src="https://rawgit.com/hhurz/tableExport.jquery.plugin/master/tableExport.js"></script>-->
+                <!--<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.9.1/extensions/filter-control/bootstrap-table-filter-control.js"></script>-->
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.9.1/extensions/filter-control/bootstrap-table-filter-control.js" 
+                    integrity="sha512-T1Eqdlhk26VUvNaUxFAnoIoLZXNKq1w92qGhp+6Xx/glOAMRSIihOPz00+779RBZrecpx49PFSfRgK0C+9upwQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
                 
                 
 
@@ -81,7 +92,7 @@
                     
                     url_home = "{{ url_for('usuarios_blueprint.usuariosEmpresaAjax') }}";
                     console.log('url carga:', url_home);
-                    //var peticionData = {null};
+
 
                     var table = $('#tablaEmpleados').DataTable
                     ({
