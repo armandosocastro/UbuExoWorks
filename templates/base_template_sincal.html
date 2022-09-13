@@ -8,15 +8,16 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" 
     integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
 -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='libs/css/bootstrap.min.css') }}">
-    
-<!--
-    <script type="text/javascript" src="{{ url_for('static', filename='libs/bootstrap-year-calendar.js') }}"></script>
-    <link href="{{ url_for('static', filename='libs/bootstrap-year-calendar.css') }}" rel="stylesheet"/>
--->
+   <!-- <link rel="stylesheet" href="{{ url_for('static', filename='libs/css/bootstrap.min.css') }}">-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.0/css/bootstrap.min.css" 
+        integrity="sha512-XWTTruHZEYJsxV3W/lSXG1n3Q39YIWOstqvmFsdNEEQfHoZ6vm6E9GK2OrF6DSJSpIbRbi+Nn0WDPID9O7xB2Q==" 
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+
     <!-- Este paquete hace falta para el calendario -->
   
-    <script type="text/javascript" src="{{ url_for('static', filename='libs/jquery-1.11.3.min.js') }}"></script>
+    <!--<script type="text/javascript" src="{{ url_for('static', filename='libs/jquery-1.11.3.min.js') }}"></script>-->
+    <script src="https://code.jquery.com/jquery-1.11.3.min.js" 
+        integrity="sha256-7LkWEzqTdpEfELxcZZlS6wAx5Ff13zZ83lYO2/ujj7g=" crossorigin="anonymous"></script>
 
     <link rel="stylesheet" href="{{ url_for('static', filename= 'libs/style.css') }} "/>
 
@@ -24,27 +25,12 @@
 <!--
     <script src="{{ url_for('static', filename='libs/main.js') }}"></script>
 -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='libs/style.css') }}">
 
 	<link href="https://fonts.googleapis.com/css?family=Lato:300,400,700&display=swap" rel="stylesheet">
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css"> -->
     <link rel="stylesheet" href="{{ url_for('static', filename='libs/font/bootstrap-icons.css') }}">
-
-<!--
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" 
-        integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
--->    
-    
-  
-
-<!-- Include datatables de bootstrap -->
-<!-- Prueba con gastosAjax 
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.10.0/bootstrap-table.min.css">
-<link rel="stylesheet" href="https://rawgit.com/vitalets/x-editable/master/dist/bootstrap3-editable/css/bootstrap-editable.css">
--->
 
 </head>
 <body>
@@ -130,10 +116,6 @@
 </div>
 
 {% block scripts %}
-
-
-
-
 
 {% endblock %}
 </body>
