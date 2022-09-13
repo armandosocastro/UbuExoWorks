@@ -25,7 +25,7 @@
         <form name="formulario" id="form-prueba" method="POST" action=""> 
             {%if (current_user.is_admin() == True) or (current_user.is_gestor() == True) %}       
                 <input type="button" value="Aprobar gastos" id="aprobar"/>
-            {% endif %}
+            {% endif%}
                 <table id="table" 
                 data-sortable="true"
                 data-toggle="table"
@@ -99,7 +99,8 @@
 
 <script src="{{ url_for('static', filename='libs/popper.js') }}"></script>
 
-<script src="{{ url_for('static', filename='libs/bootstrap-3.3.5/js/bootstrap.min.js') }}"></script>
+<!--script src="{{ url_for('static', filename='libs/bootstrap-3.3.5/js/bootstrap.min.js') }}"></script>-->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 
 
 
