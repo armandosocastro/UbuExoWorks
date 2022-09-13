@@ -69,7 +69,7 @@ def create_app():
     app.config ['MAIL_PASSWORD'] = os.getenv('MAIL_PASSWORD')
     app.config ['MAIL_USE_SSL'] = False
     app.config ['MAIL_USE_TLS'] = True
-    app.config['SECRET_KEY'] = 'pASSW0Rd'
+    app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
     app.config['JWT_SECRET_KEY'] = "pASSW0Rd"
     #Establecemos 10 minutos como tiempo de validez de los tokens de acceso a la API
     app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(minutes=10)
