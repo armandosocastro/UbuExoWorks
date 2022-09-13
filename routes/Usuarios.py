@@ -14,9 +14,6 @@ from flask_wtf import CSRFProtect
 from flask_mail import Mail, Message
 from flask_login import current_user, login_required
 
-
-#from models.Usuarios import db
-#from app import db
 # Modelos
 from models.Usuarios import Fichaje, Gasto, Usuario, Empresa, Rol
 
@@ -48,7 +45,7 @@ def not_found(e):
 @expects_json()
 def get_usuarios():
     try:
-        #usuarios = Usuario.query.filter(Usuario.login.like('prueba@prueba.com')).first()
+
         datos=request.get_json()
         usuario = datos.get('login','')
         
@@ -96,12 +93,7 @@ def solicitud_borrar_fichaje():
     
 @main.route('/empresasAjax', methods=['get','post'])
 def empresasAjax():
-    #datos = request.get_data()
-    #parametro = request.form
-    #idUsuario = parametro['idUsuario']
     listadoEmpresas = Empresa.get_all()
-    #roles = Rol.get_by_Rol()
-    #fecha = parametro['fecha']
     
     if listadoEmpresas == []:
         #Devolvemos un diccionario vacio si no hay empresas.
@@ -112,12 +104,10 @@ def empresasAjax():
     
 @main.route('/usuariosEmpresaAjax', methods=['get','post'])
 def usuariosEmpresaAjax():
-    #datos = request.get_data()
-    #parametro = request.form
-    #idUsuario = parametro['idUsuario']
+
     listadoUsuarios = Usuario.get_by_empresa(session['idEmpresa'])
     roles = Rol.get_by_Rol()
-    #fecha = parametro['fecha']
+
     print('listado usuarios empresa: ',listadoUsuarios)
     
     if listadoUsuarios == []:
@@ -185,7 +175,6 @@ def login():
                 #Generamos el token a partir del id del usuario
                 token = create_access_token(identity=usuario.idUsuario)
                 idUsuario= usuario.idUsuario
-                #return jsonify(token=usuario.idUsuario),200
                 return jsonify(idUsuario=idUsuario,token=token),200
             else:
                 return jsonify("dispositivo no registrado"), 300
@@ -363,14 +352,12 @@ def getFichajeCalendario():
         list_fichajes = []
         idUsuario = request.args.get('idUsuario')
         fecha = request.args.get('fecha')
-        print('usuario: ',idUsuario, 'fecha:',fecha)
-        
-        
+        print('usuario: ',idUsuario, 'fecha:',fecha)       
         fichajes = Fichaje.get_by_idEmpleadoAno(idUsuario,fecha)
-        #print(fichajes)
+
         for fichaje in fichajes:
             fecha = fichaje.fecha.strftime('%Y-%m-%d')
-            #print("fecha: ", fecha)
+
             dict_fichajes = {'title': 'Dia fichado', 'start': fecha , 'end': fecha }
             list_fichajes.append(dict_fichajes)
         return jsonify(list_fichajes)
@@ -380,13 +367,10 @@ def getFichajeCalendario():
 #Metodo para la API devuelve los fichajes de una fecha concreta  
 @main.route('/get/fichaje', methods=['get'])
 @jwt_required()
-#@expects_json()
 def getFichajePorFecha():
     try:
         current_user_id = get_jwt_identity()
         print('current id:', current_user_id)
-        #datos = request.get_json()
-        #print(datos)
 
         idUsuario = request.args.get('idUsuario')
         fecha = request.args.get('fecha')
@@ -406,31 +390,29 @@ def getFichajePorFecha():
 @main.route('/usuario/fichajes', methods=['get'])
 @talisman()
 def usuarioFichajes():
-    #datos = request.get_data()
+
     idUsuario = request.args.get('idUsuario')
     fecha = request.args.get('fecha')
     print('usuario: ',idUsuario)
     print('fehcha actual pasada: ',fecha)
-    #fichajes = Fichaje.get_by_idEmpleado(idUsuario)
+
     fichajes = Fichaje.get_by_idEmpleadoFecha(idUsuario, fecha)
     print(fichajes)
     return render_template('fichajes.html', listaFichajes=fichajes, fechaHoy=fecha, idUsuario=idUsuario)
 
 @main.route('/usuario/fichajesAjax', methods=['get','post'])
 def usuarioFichajesAjax():
-    #datos = request.get_data()
+
     parametro = request.form
     idUsuario = parametro['idUsuario']
     fecha = parametro['fecha']
     print('id: ',idUsuario, parametro)
-    
-    #idUsuario = request.args.get('idUsuario')
-    #fecha = request.args.get('fecha')
+
     print('usuario ajax: ',idUsuario)
     print('fehcha actual pasada ajax: ',fecha)
-    #fichajes = Fichaje.get_by_idEmpleado(idUsuario)
+
     fichajes = Fichaje.get_by_idEmpleadoFecha(idUsuario, fecha)
-    #print('fichajes ajax:',fichajes)
+
     entrada = False
     if fichajes == []:
         #Devolvemos un diccionario vacio si no hay datos de gastos para enviar.
@@ -443,8 +425,7 @@ def usuarioFichajesAjax():
             print('fichaje ajax:',data)
         data_json = {'data': data}
         return jsonify(data_json)
-    
-    #return render_template('fichajes.html', listaFichajes=fichajes, fechaHoy=fecha)
+ 
     
 @main.route('/usuario/fichajesRangoAjax', methods=['get','post'])
 def usuarioFichajesRangoAjax():
@@ -559,7 +540,6 @@ def cargaTicket():
 def validaTicket():
     
     idGasto = request.form['idGasto']
-    #idGasto = request.args.get('idGasto')
 
     gasto = Gasto.get_by_idGasto(idGasto)
      
@@ -596,17 +576,13 @@ def alta_usuario():
         nif = form.nif.data
         email = form.email.data
         emailRecuperacion = form.emailRecuperacion.datsa
-        #password = form.password.data
-        #idempresa=current_user.
         idempresa = session['idEmpresa']
         estado = True
         idRol = form.rol.data
         idJornadaLaboral = 1
-        #numEmpleados = 1
 
-        #print('email y pass: ', email, password)
         user = Usuario.get_by_login(email)
-        #empresa = Usuarios.Empresa.get_by_cif(cif)
+
 
         if user is not None:
             error = 'El usuario ya esta registrado en el sistema'
@@ -679,10 +655,7 @@ def modifica_usuario():
                 user.apellidos = form.apellidos.data
                 user.nif = form.nif.data
                 user.email = form.email.data
-                #password = form.password.data
-                #idempresa=current_user.
                 idempresa = session['idEmpresa']
-                #estado = True
                 user.estado = form.estado.data
                 user.idRol = form.rol.data
                 idJornadaLaboral = 1

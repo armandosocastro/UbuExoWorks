@@ -17,10 +17,9 @@ from flask_wtf import CSRFProtect
 
 
 #Importamos la configuracion del fichero config.py
-#from config import config
 
 from formularios import FormCambioPassword, FormRegistro, FormLogin
-#from models.Usuarios import Usuario, Empresa
+
 from models.Usuarios import Usuario, Empresa
 from os import environ as env
 from dotenv import load_dotenv
@@ -43,7 +42,6 @@ def fecha_actual():
     return str(mes)+'/'+str(dia)+'/'+str(año)
    
 
-#def create_app(settings_module='config.DevelopmentConfig'):
 def create_app():
     app = Flask(__name__)
     
@@ -63,8 +61,6 @@ def create_app():
     
     load_dotenv()
     
-    #app.config.from_object(settings_module)
-    #app.config.from_envvar('SQLALCHEMY_DATABASE_URI')
     
     app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('SQLALCHEMY_DATABASE_URI')
     app.config ['MAIL_SERVER'] = os.getenv('MAIL_SERVER')
@@ -86,13 +82,6 @@ def create_app():
     
     #Aosciamos la BD con nuestra aplicacion
     from database.database import db
-    #db = SQLAlchemy(app)
-    
-    #uri = os.getenv("DATABASE_URL")
-    #if uri.startswith("postgres://"):
-    #    uri = uri.replace("postgres://", "postgresql://", 1)
-    
-
     
     db.init_app(app)
     with app.app_context():
@@ -102,9 +91,6 @@ def create_app():
 
     mail.init_app(app)
     
-     #if __name__ == '__main__':
-    #Threaded option to enable multiple instances for multiple user access support
-    #app.config.from_object(config['development'])
     
     def page_not_found(error):
         return "<h1> Not found page </h1>",404
@@ -113,13 +99,13 @@ def create_app():
     from routes import Usuarios
        # Blueprints
        # Cuando accedamos a localhost/api/usuarios nos enlace con la ruta / del blueprint usuarios
-       #app.register_blueprint(Usuarios.main, url_prefix='/api/usuarios')
+
     
     app.register_blueprint(Usuarios.main, url_prefix='/api')
            
            #Manejador de errores
     app.register_error_handler(404, page_not_found)
-           #app.run(host='0.0.0.0', port=_port)
+
 
     #Creamos una instancia de la clase LoginManager
     login_manager = LoginManager(app)
@@ -148,11 +134,9 @@ def create_app():
             apellidos = form.apellidos.data
             email = form.email.data
             password = form.password.data
-            #idempresa = 1
             estado = True
             idRol = 1
             idJornadaLaboral = 1
-            #numEmpleados = 1
             
             print('email y pass: ', email, password)
             user = Usuarios.Usuario.get_by_login(email)
@@ -187,13 +171,11 @@ def create_app():
         #En el caso de que lleguemos aqui con un id de Empresa en la url actualizamos la variable de session.
         if request.args.get('idEmpresa') != None:
             session['idEmpresa']=request.args.get('idEmpresa')
-        #print('empresa id: ',session['idEmpresa'])
-        #return "Hello, Flask!"
-        #listadoUsuarios = Usuarios.Usuario.get_by_empresa(session['idEmpresa'])
+       
         empresa = Usuarios.Empresa.get_nombre_by_id(session['idEmpresa'])
         user = Usuarios.Usuario.get_by_id(session['idUsuario'])
         print('Usuario completo: ', user)
-        #return render_template("index.html", usuarios=listadoUsuarios)
+       
         if session['rol'] == 1 or session['rol'] == 0:
             return render_template("index.html", idUsuario = session['idUsuario'], idEmpresa = session['idEmpresa'], empresa = empresa)
         else:
@@ -205,10 +187,9 @@ def create_app():
     def admin():
         print('En panel de Administracion...con el usuario:', session['username'], session['idUsuario'])
       
-        #empresa = Usuarios.Empresa.get_nombre_by_id(session['idEmpresa'])
         empresas = Usuarios.Empresa.get_all()
         print('Listado de enmpresas: ', empresas)
-        #return render_template("index.html", usuarios=listadoUsuarios)
+
         return render_template("admin.html", idUsuario = session['idUsuario'], is_Admin = True)
     
     @app.route('/cambiaPass', methods=['POST','GET'])
@@ -216,7 +197,7 @@ def create_app():
     def cambiaPass():
         form = FormCambioPassword()
         error = None
-        #user = Usuarios.Usuario.get_by_login(email)
+
         user = current_user
         if request.method =='GET':
             form.email.data = user.login
@@ -252,7 +233,6 @@ def create_app():
                     print('Es un ADMINISTRADOR')
                     login_user(user)
                     session['idUsuario'] = user.idUsuario
-                    #session['idEmpresa'] = user.get_id_empresa()
                     session['username'] = user.get_login()
                     session['rol'] = user.idRol
                     return redirect(url_for("admin"))
@@ -268,7 +248,6 @@ def create_app():
                 form.email.errors.append("Usuario deshabiliado, contacte con su administrador.")
             form.email.errors.append("Usuario o contraseña incorrectos.")
         return render_template('login_form.html', form=form)
-        #return render_template('login_register.html', form=form)
 
     @app.route("/logout")
     def logout():
