@@ -32,6 +32,7 @@ from flask_talisman import Talisman
 
 mail = Mail()
 
+talisman = Talisman()
 
 def fecha_actual():
     now = datetime.now()
@@ -53,7 +54,7 @@ def create_app():
         'img-src': ['*', 'data:', '\'self\''],   
     }
     
-    Talisman(app, content_security_policy=csp)
+    talisman = Talisman(app, content_security_policy=csp)
     
     
     #Talisman(app, content_security_policy=[])

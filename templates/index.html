@@ -151,6 +151,7 @@
                         var id = this.dataset.id;
 
                         window.location.href = "{{ url_for('usuarios_blueprint.usuarioFichajes') }}" + "?idUsuario=" + id;
+                        
                     });
 
                     $('#tablaEmpleados tbody').on('click', '#botonModificar', function () {

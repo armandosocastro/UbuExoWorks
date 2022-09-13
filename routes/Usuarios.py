@@ -29,7 +29,10 @@ from auth import admin_required, gestor_required
 import jwt
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 
+
+
 from app import mail
+from app import talisman
 
 #from app import csrf
 
@@ -401,6 +404,7 @@ def getFichajePorFecha():
  
     
 @main.route('/usuario/fichajes', methods=['get'])
+@talisman()
 def usuarioFichajes():
     #datos = request.get_data()
     idUsuario = request.args.get('idUsuario')
