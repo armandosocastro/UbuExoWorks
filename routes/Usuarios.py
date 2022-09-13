@@ -478,7 +478,8 @@ def usuarioFichajesRango():
             print('fichajes:', fichajes)
             if fichajes == []:
                 #Devolvemos un diccionario vacio si no hay datos de gastos para enviar.
-                return jsonify([fichaje.to_JSON() for fichaje in fichajes])
+                #return jsonify([fichaje.to_JSON() for fichaje in fichajes])
+                return jsonify([])
             else:
                 return jsonify([fichaje.to_JSON() for fichaje in fichajes])
         else:
