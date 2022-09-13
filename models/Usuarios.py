@@ -36,19 +36,6 @@ class Usuario(UserMixin, db.Model):
     emailRecuperacion = db.Column(db.String(45))
     tlf = db.Column(db.String(12))
     imei = db.Column(db.String(15))
-    
-    """def __init__(self, idUsuario=None, nombre=None, apellidos=None, login=None, password=None, 
-        estado=None, idEmpresa=None,idJornadaLaboral=None, idRol=None) -> None:
-        self.idUsuario=idUsuario
-        self.nombre=nombre
-        self.apellidos=apellidos
-        self.login=login
-        self.password=generate_password_hash(password)
-        self.estado=estado
-        self.idEmpresa=idEmpresa
-        self.idJornadaLaboral=idJornadaLaboral
-        self.idRol=idRol """
-        
 
     def get_id_empresa(self):
         return self.idEmpresa    
@@ -160,15 +147,7 @@ class Empresa(db.Model):
     planContratado = db.Column(db.Integer, nullable=False)
     numEmpleados = db.Column(db.Integer, nullable=False)
     empleados = db.relationship('Usuario', lazy='dynamic')
-    
-    """
-    def __init__(self, idEmpresa, nombre=None, cif=None, planContratado=None, numEmpleados=1) -> None:
-        self.idEmpresa = idEmpresa
-        self.nombre = nombre
-        self.cif = cif
-        self.planContratado = planContratado
-        self.numEmpleados = numEmpleados
-    """        
+   
                  
     @staticmethod
     def get_all():    
@@ -253,30 +232,13 @@ class Fichaje(db.Model):
     hora_entrada = db.Column(db.Time(timezone=false), nullable=False)
     entrada_latitud = db.Column(db.Float, nullable=False)
     entrada_longitud = db.Column(db.Float, nullable=False)
-    #hora_salida= db.Column(db.Time(timezone=false), nullable=False)
-    #salida_latitud = db.Column(db.Float, nullable=False)
-    #salida_longitud = db.Column(db.Float, nullable=False)
+
     incidencia = db.Column(db.String, nullable=False)
     idUsuario =  db.Column(db.Integer, ForeignKey('USUARIO.idUsuario'))
     usuario = db.relationship('Usuario')
     tipo = db.Column(db.String, nullable=False)
     borrado = db.Column(db.Boolean, nullable=False)
    
-    """ 
-    def __init__(self, idFichaje, fecha=None, hora_entrada=None, entrada_latitud=None, entrada_longitud=None,
-                 hora_salida=None, salida_latitud=None, salida_longitud=None, incidencia=None, idUsuario=None) -> None:
-        
-        self.idFichaje=idFichaje
-        self.fecha=fecha
-        self.hora_entrada=hora_entrada
-        self.entrada_latitud=entrada_latitud
-        self.entrada_longitud=entrada_longitud
-        self.hora_salida=hora_salida
-        self.salida_latitud=salida_latitud
-        self.salida_longitud=salida_longitud
-        self.incidencia=incidencia
-        self.idUsuario=idUsuario 
-    """
         
     def to_JSON(self):
          
@@ -285,13 +247,9 @@ class Fichaje(db.Model):
         return {
             'idFichaje': self.idFichaje,
             'fecha': self.fecha,
-            #'hora_entrada':self.hora_entrada,
             'hora_entrada':hora,
             'entrada_latitud':self.entrada_latitud,
             'entrada_longitud':self.entrada_longitud,
-            #'hora_salida':self.hora_salida,
-            #'salida_latitud':self.entrada_latitud,
-            #'salida_longitud':self.entrada_longitud,
             'incidencia':self.incidencia,
             'idUsuario':self.idUsuario,
             'tipo': self.tipo,
@@ -315,19 +273,19 @@ class Fichaje(db.Model):
         fecha_formateada = datetime.strptime(fecha, "%Y/%m/%d")
         year = fecha_formateada.year
         month = fecha_formateada.month
-        #print('año:',year, 'mes:', month)
+
         fechaini = str(year) + '/' + str(month) + '/' + '1'
-        #fechafin = str(year) + '/' + str(month) + '/' + '30'
+
         fecha_dada = datetime(year=year, month=month, day=fecha_formateada.day).date()
         
         lastDayOfMonth = fecha_dada.replace(day = monthrange(fecha_dada.year, fecha_dada.month)[1])
         fechafin = str(lastDayOfMonth.year) + '/' + str(lastDayOfMonth.month) + '/' + str(lastDayOfMonth.day)
-        #print(fechaini,':',fechafin)
+
         fechaini_format = datetime.strptime(fechaini, "%Y/%m/%d")
         fechafin_format = datetime.strptime(fechafin, "%Y/%m/%d")
-        #print('fecha fin: ',lastDayOfMonth)
+
         return db.session.query(Fichaje).filter(and_( Fichaje.idUsuario == idEmpleado, and_(Fichaje.fecha <= fechafin_format, Fichaje.fecha>=fechaini_format))).all()
-        #return Fichaje.query.filter_by(idUsuario=idEmpleado, fecha=fecha).all()     
+
     
     #Obtenemos todos los fichajes del año actual
     @staticmethod
@@ -335,19 +293,16 @@ class Fichaje(db.Model):
         fecha_formateada = datetime.strptime(fecha, "%Y/%m/%d")
         year = fecha_formateada.year
         month = fecha_formateada.month
-        #print('año:',year, 'mes:', month)
+
         fechaini = str(year) + '/' + str(1) + '/' + '1'
         fechafin = str(year) + '/' + str(12) + '/' + '31'
         fecha_dada = datetime(year=year, month=month, day=fecha_formateada.day).date()
-        
-        #lastDayOfMonth = fecha_dada.replace(day = monthrange(fecha_dada.year, fecha_dada.month)[1])
-        #fechafin = str(lastDayOfMonth.year) + '/' + str(lastDayOfMonth.month) + '/' + str(lastDayOfMonth.day)
-        #print(fechaini,':',fechafin)
+     
         fechaini_format = datetime.strptime(fechaini, "%Y/%m/%d")
         fechafin_format = datetime.strptime(fechafin, "%Y/%m/%d")
-        #print('fecha fin: ',lastDayOfMonth)
+
         return db.session.query(Fichaje).filter(and_( Fichaje.idUsuario == idEmpleado, and_(Fichaje.fecha <= fechafin_format, Fichaje.fecha>=fechaini_format))).all()
-        #return Fichaje.query.filter_by(idUsuario=idEmpleado, fecha=fecha).all()     
+
         
     #Obtenemos todos los fichajes entre rango de fechas
     def get_by_idEmpleadoRango(idEmpleado,fecha_ini, fecha_fin):

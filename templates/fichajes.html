@@ -118,12 +118,10 @@
                 <script type="text/javascript" src="https://cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js"></script>
                 <script src="{{ url_for('static', filename='libs/popper.js') }}"></script>
 
-                <!--<script type="text/javascript" src="{{ url_for('static', filename='libs/bootstrap-3.3.5/js/bootstrap.min.js') }}"></script>-->
+                
                 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
                 
-  <!--              
-                <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/js/bootstrap-datepicker.min.js"></script>
-  -->          
+        
                 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.10.0/bootstrap-table.js"></script>
                 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.9.1/extensions/editable/bootstrap-table-editable.js"></script>
                 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.9.1/extensions/export/bootstrap-table-export.js"></script>
@@ -146,18 +144,18 @@
 
                     //Funcion Ajax para renderizar el boton para mostrar el ticket en funcion del valor del dato almacenado en la BBDD    
                     var entrada = function( data, type, row, meta ) {
-                        //console.log('data-gasto:', row['ID']);
+                        
                         if (row['tipo'] == 'entrada' || row['tipo'] == 'pausa entrada')
-                            //icono = '/libs/bootstrap-icons-1.8.3/caret-right.svg';
+                            
                             return "<img class='img-icono-perfil' src='{{ url_for('static', filename='/libs/bootstrap-icons-1.8.3/caret-right.svg') }}'>";
                         else
-                            //icono = '/libs/bootstrap-icons-1.8.3/caret-left.svg';
+                          
                             return "<img class='img-icono-perfil' src='{{ url_for('static', filename='/libs/bootstrap-icons-1.8.3/caret-left.svg') }}'>";
                     }
                    
                     //Funcion Ajax para renderizar el boton para eliminar un fichaje   
                     var eliminarFichaje = function( data, type, row, meta ) {
-                        //console.log('data-fichaje:', row['ID'],'::');
+                        
                          return "<button type='button' id='eliminarFichaje' class='btn btn-primary' data-fichaje=" + row['ID'] + "><i class='bi bi-x-lg'></i></button>";
                     }
 
@@ -211,9 +209,7 @@
                             {"data":"borrado", "render":eliminarFichaje}
                         ],
                         "rowCallback": function( row, data) {
-                            //console.log('renderizaco');
-                            //console.log('* ', data);
-                            
+
                             if (data['borrado'] === true) {
                                 console.log('este esta borrado');
                                 for (var i = 0; i < 8; i++) {
@@ -230,14 +226,7 @@
                     $('#tablaFichajes tbody').on('click', '#eliminarFichaje', function () {
                         console.log("boton pulsado fichaje tiene: ", this.dataset.fichaje);
                         var idFichaje = this.dataset.fichaje;
-                        //var url_anterior = table.ajax.url();
-                        //var params_tabla = table.ajax;
-                        //console.log('table:', params_tabla);
-                        //console.log('url guardada: ', url_anterior, 'params:', params_tabla);
-                        //var parametros_anteriores = new window.URLSearchParams(window.location.search);    
-                        //var idUsuario_parametros = parametros.get('idUsuario');
                        
-                        //console.log('parametros guardados:',parametros_anteriores);
                         console.log('url_borrar:',url_borraFichaje);
                         var url_borraFichaje = '{{ url_for('usuarios_blueprint.borrarFichajeGestor') }}';
                         url_borraFichaje = url_borraFichaje + "?idFichaje="+idFichaje;
@@ -337,20 +326,19 @@
                             if (startDateVal === '' || endDateVal === '') {
                                 document.getElementById('fechasSelected').innerText = "Rango incorrecto";
                                 
-                                //console.log('sin fechas correctas')
+                              
                             }
                             else {
                             document.getElementById('fechasSelected').innerText = "";                            
-                            //console.log('Buscar por rango de fechas:', startDateVal, '/', endDateVal);
+                           
                             var Fecha_inicial = new Date(startDateVal);
                             var Fecha_final = new Date(endDateVal);
-                            //console.log('date convert:',Fecha_inicial, ':', Fecha_final);
+                           
                             var strFecha_inicial = Fecha_inicial.getFullYear() + "/" + (Fecha_inicial.getMonth()+1) + "/" + Fecha_inicial.getDate();
                             var strFecha_final = Fecha_final.getFullYear() + "/" + (Fecha_final.getMonth()+1) + "/" + Fecha_final.getDate();
-                            //console.log('Dia pulsado: ',strFecha_pulsada);
-    
+                            
                             peticionData = {idUsuario: idUsuario, fecha_ini: strFecha_inicial, fecha_fin: strFecha_final};
-                            //console.log('peticion data: ', peticionData);
+                            
                             //extraemos el idGasto del atributo data-gasto del boton
                             table.ajax.url(url_rangoFechas).load();  
                                 }
@@ -367,7 +355,7 @@
                         document.getElementById('botonGrabaFichaje').addEventListener('click',
                             function addFichaje() {
                                 url_fichaje = '{{ url_for('usuarios_blueprint.fichajeGestor') }}';
-                                //url_fichaje = url_fichaje + "?idGasto="+idGastoParametro;
+                                
                                 console.log('url_fichaje:',url_fichaje);
                                 var fecha_fichaje = jQuery('#txtFecha').val();
                                 var hora_fichaje = jQuery('#txtHora').val();

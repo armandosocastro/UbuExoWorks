@@ -5,22 +5,6 @@
 
 {% block content2 %}
 
-<!--
-<script type="text/javascript">
-    $(document).ready( function() {
-        $("input[value=Borrado]").click( function() {
-
-            var ok = confirm('!Atencion si elimina el usuario perderá el historico de fichajes. Se recomienda hacer una exportacion antes','Sin titulo')
-            if (ok)
-                {
-                    console.log('OK')
-                    $('#idAccion').val('Borrado');
-                    $('form').submit();
-                }
-            });
-    });
-</script>
--->
 
 <script type="text/javascript" nonce="2726c7f26c">
     $(document).ready( function() {
@@ -92,8 +76,7 @@
             </div>
             <div>
                 <input type="submit" value="Modificar" name="modif">
-         <!--       <input type="button" value="Borrado" class="btn btn-danger btn-xs" name="modif" id="btnBorrado">               
-         -->
+         
                 <button type="button" class="btn btn-danger btn-xs" data-bs-toggle="modal" data-bs-target="#mimodal">
                     Borrado
                   </button>
