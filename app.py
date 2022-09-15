@@ -268,7 +268,6 @@ def create_app():
             email = form.email.data
             user = Usuarios.Usuario.get_by_login(email)
             if user is not None:
-               print('aui')
                return redirect(url_for('usuarios_blueprint.recovery_pass_web', email=email))
             form.email.errors.append("El usuario no existe.")
             return redirect(url_for('home'))

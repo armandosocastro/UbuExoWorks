@@ -207,7 +207,7 @@
                             {"data":"incidencia"},
                             {"data": "geolocalizacion",
                              "render": function(data, type, row) {
-                                return "<button type='button' class='btn btn-primary' id='botonMapa' data-longitud="+row['longitud']+" data-latitud="+row['latitud']+"><i class='bi bi-geo-alt'></i></button>"
+                                return "<button type='button' class='btn btn-primary' id='botonMapa' data-fecha="+row['fecha']+" data-hora="+row['hora']+" data-longitud="+row['longitud']+" data-latitud="+row['latitud']+"><i class='bi bi-geo-alt'></i></button>"
                                 }
                             },
                             {"data":"borrado", "render":eliminarFichaje}
@@ -256,11 +256,18 @@
 
                         var longitud = this.dataset.longitud
                         var latitud = this.dataset.latitud
+                        var fecha = this.dataset.fecha
+                        var hora = this.dataset.hora
+                        console.log('fecha en mapa:', fecha)
                         if (marker == null) {
                             marker = L.marker([longitud,latitud]).addTo(map)
+                            marker.bindPopup('<h5>'+fecha+'</h5>'+'<br><h5>'+hora+'</5>');
+                            marker.addTo(map);
                         }
                         else {
-                            marker.setLatLng([longitud, latitud]).update()
+                            marker.setLatLng([longitud, latitud])
+                            marker.bindPopup('<h5>'+fecha+'</h5>'+'<br><h5>'+hora+'</5>');
+                            marker.update()
                         }
                             map.flyTo([longitud,latitud], 18)
                     });
@@ -419,10 +426,14 @@
                         var longitud = this.dataset.longitud
                         var latitud = this.dataset.latitud
                         if (marker == null) {
-                            marker = L.marker([longitud,latitud]).addTo(map)
+                            marker = L.marker([longitud,latitud])
+                            marker.bindPopup('<p>fichaje</p>');
+                            marker.addTo(map);
+                            
                         }
                         else {
                             marker.setLatLng([longitud, latitud]).update()
+
                         }
                             map.flyTo([longitud,latitud], 18)
                     }
