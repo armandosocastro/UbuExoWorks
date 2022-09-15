@@ -199,6 +199,7 @@ def fichajeGestor():
         latitud = datos.get('latitud','')
         tipo = datos.get('tipo','')
         incidencia = datos.get('incidencia','')
+        borrado = False
         
         entradas = 0
         pausas = 0
@@ -232,7 +233,7 @@ def fichajeGestor():
                 tipo_fichaje = 'pausa salida' 
         
         fichaje = Fichaje(fecha=fecha, hora_entrada=hora, entrada_longitud=longitud, entrada_latitud=latitud,
-                          incidencia=incidencia,idUsuario=idUsuario, tipo=tipo_fichaje)
+                          incidencia=incidencia,idUsuario=idUsuario, tipo=tipo_fichaje, borrado=False)
         fichaje.save()
         return jsonify(token="Ok"),200   
            
