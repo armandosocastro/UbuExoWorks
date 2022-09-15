@@ -359,7 +359,7 @@ def getFichajeCalendario():
         for fichaje in fichajes:
             fecha = fichaje.fecha.strftime('%Y-%m-%d')
 
-            dict_fichajes = {'title': 'Dia fichado', 'start': fecha , 'end': fecha }
+            dict_fichajes = {'title': 'Fichaje', 'start': fecha , 'end': fecha }
             list_fichajes.append(dict_fichajes)
         return jsonify(list_fichajes)
     except Exception as ex:
@@ -421,7 +421,8 @@ def usuarioFichajesAjax():
     else:
         data = []
         for f in fichajes:
-            data.append({"ID":f.idFichaje, "fecha":f.fecha, "hora":str(f.hora_entrada), "tipo":f.tipo, "longitud":f.entrada_longitud, "latitud":f.entrada_latitud,
+            fecha = f.fecha.strftime('%d-%m-%Y')
+            data.append({"ID":f.idFichaje, "fecha":fecha, "hora":str(f.hora_entrada), "tipo":f.tipo, "longitud":f.entrada_longitud, "latitud":f.entrada_latitud,
                               "incidencia":f.incidencia, "borrado":f.borrado})
             print('fichaje ajax:',data)
         data_json = {'data': data}

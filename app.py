@@ -75,7 +75,7 @@ def create_app():
 
     jwt = JWTManager(app)
     
-   #csrf = CSRFProtect()   
+    csrf = CSRFProtect()   
    
     #Session(app)
     
