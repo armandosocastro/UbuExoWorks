@@ -129,6 +129,8 @@ class Usuario(UserMixin, db.Model):
             'idUsuario': self.idUsuario,
             'nombre': self.nombre,
             'apellidos': self.apellidos,
+            'tlf': self.tlf,
+            'iemi': self.imei,
             'login': self.login,
             'password': self.password,
             'estado': self.estado,

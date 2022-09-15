@@ -575,7 +575,8 @@ def alta_usuario():
         apellidos = form.apellidos.data
         nif = form.nif.data
         email = form.email.data
-        emailRecuperacion = form.emailRecuperacion.datsa
+        emailRecuperacion = form.emailRecuperacion.data
+        tlf = form.tlf.data
         idempresa = session['idEmpresa']
         estado = True
         idRol = form.rol.data
@@ -587,7 +588,7 @@ def alta_usuario():
         if user is not None:
             error = 'El usuario ya esta registrado en el sistema'
         else:
-            user = Usuario(nombre=nombre, apellidos=apellidos,nif=nif,login=email,emailRecuperacion=emailRecuperacion, estado=estado,idEmpresa=idempresa,idRol=idRol,idJornadaLaboral=idJornadaLaboral)
+            user = Usuario(nombre=nombre, apellidos=apellidos,nif=nif, tlf=tlf, login=email,emailRecuperacion=emailRecuperacion, estado=estado,idEmpresa=idempresa,idRol=idRol,idJornadaLaboral=idJornadaLaboral)
             password = Usuario.generate_password()
             user.set_password(password)
             user.save()
@@ -600,12 +601,13 @@ def alta_usuario():
 
             return redirect(url_for('home'))
     return render_template("alta.html", form=form, error=error)    
-        
+
+#Metodo API recuperacion de contraseña        
 @main.route('usuario/recuperaPassword', methods=['get'])
 def recoveryPass():
-    idUsuario = request.args.get('idUsuario')
-    print('El usuario: ', idUsuario, ' esta intentando recuperar la pass.')
-    user = Usuario.get_by_id(idUsuario)
+    emailUsuario = request.args.get('email')
+    print('El usuario: ', emailUsuario, ' esta intentando recuperar la pass.')
+    user = Usuario.get_by_login(emailUsuario)
     if user is None:
         return "Error: el usuario no existe."
     else: 
@@ -623,7 +625,30 @@ def recoveryPass():
             msg.html = '<p>Se ha generado una nueva contraseña de acceso</p>' + '<p>Usuario: '+email+'</p>' + '<p>Contraseña: '+passnueva+'</p>'
             mail.send(msg)            
             return "OK"
-    
+        
+#Recuperacion de contraseña desde la web    
+@main.route('recuperaPasswordWeb', methods=['get'])
+def recovery_pass_web():
+    emailUsuario = request.args.get('email')
+    print('El usuario: ', emailUsuario, ' esta intentando recuperar la pass.')
+    user = Usuario.get_by_login(emailUsuario)
+    if user is None:
+        return "Error: el usuario no existe."
+    else: 
+        email = user.emailRecuperacion
+        if email is None:
+            return "Error: no hay email de recuperacion."
+        else:
+            passnueva = Usuario.generate_password()
+            user.set_password(passnueva)
+            user.save()
+            print("Password regenerada enviada al correo ", email)
+            #enviamos el correo confirmando
+
+            msg = Message("Recuperacion contraseña UbuExoWorks", sender='ubuexoworks@gmail.com' ,recipients=[email])
+            msg.html = '<p>Se ha generado una nueva contraseña de acceso</p>' + '<p>Usuario: '+email+'</p>' + '<p>Contraseña: '+passnueva+'</p>'
+            mail.send(msg)            
+            return redirect(url_for('home'))
         
 @main.route('/usuario/modifica', methods=['get', 'post'])
 @login_required
@@ -640,7 +665,10 @@ def modifica_usuario():
         form.nombre.data = user.nombre
         form.apellidos.data = user.apellidos
         form.nif.data = user.nif
+        form.tlf.data = user.tlf
+        form.imei.data = user.imei
         form.email.data = user.login
+        form.emailRecuperacion.data = user.emailRecuperacion
         form.rol.data = user.idRol
         form.estado.data = user.estado
         
@@ -654,7 +682,10 @@ def modifica_usuario():
                 user.nombre = form.nombre.data
                 user.apellidos = form.apellidos.data
                 user.nif = form.nif.data
+                user.tlf = form.tlf.data
+                print('telefono: ', user.tlf)
                 user.email = form.email.data
+                user.emailRecuperacion = form.emailRecuperacion.data
                 idempresa = session['idEmpresa']
                 user.estado = form.estado.data
                 user.idRol = form.rol.data

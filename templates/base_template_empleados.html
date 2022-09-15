@@ -32,7 +32,7 @@
                     <hr>
     
                     <ul class="nav nav-pills flex-column mb-sm-auto" id="menu">
-                        <li class="active">
+                        <li class="nav-item">
                             <a class="nav-link" href="{{ url_for('usuarios_blueprint.usuarioFichajes') }}?idUsuario={{ idUsuario }}">
                                 Fichajes
                             </a>
@@ -56,11 +56,11 @@
                         </a>
                         <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdownUser1">
                             <li><a class="dropdown-item" href="#">Configuracion</a></li>
-                            <li><a class="dropdown-item" href="#">Perfil</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('home') }}">Perfil</a></li>
                             <li>
                                 <hr class="dropdown-divider">
                             </li>
-                            <li><a class="dropdown-item" href="/logout">Sign out</a></li>
+                            <li><a class="dropdown-item" href="/logout">Cerrar sesión</a></li>
                         </ul>
                     </div>
     

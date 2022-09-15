@@ -1,7 +1,5 @@
 # app.py
 
-
-
 import os
 import re
 from datetime import datetime, timedelta
@@ -18,7 +16,7 @@ from flask_wtf import CSRFProtect
 
 #Importamos la configuracion del fichero config.py
 
-from formularios import FormCambioPassword, FormRegistro, FormLogin
+from formularios import FormCambioPassword, FormRecupera, FormRegistro, FormLogin
 
 from models.Usuarios import Usuario, Empresa
 from os import environ as env
@@ -28,6 +26,7 @@ from auth import admin_required
 from flask_jwt_extended import JWTManager
 
 from flask_talisman import Talisman
+
 
 mail = Mail()
 
@@ -132,7 +131,9 @@ def create_app():
             plan = form.planContratado.data
             nombre = form.nombre.data
             apellidos = form.apellidos.data
+            tlf = form.tlf.data
             email = form.email.data
+            emailRecuperacion = form.emailRecuperacion.data
             password = form.password.data
             estado = True
             idRol = 1
@@ -151,7 +152,8 @@ def create_app():
                 empresa.save()
                 idempresa = empresa.get_id_empresa()
                 print('emrpesa: ', idempresa)
-                user = Usuarios.Usuario(nombre=nombre, apellidos=apellidos ,login=email, estado=estado, idEmpresa=idempresa,idRol=idRol, idJornadaLaboral=idJornadaLaboral)    
+                user = Usuarios.Usuario(nombre=nombre, apellidos=apellidos ,login=email, tlf=tlf, 
+                                        emailRecuperacion= emailRecuperacion, estado=estado, idEmpresa=idempresa,idRol=idRol, idJornadaLaboral=idJornadaLaboral)    
                 user.set_password(password)
                 user.save()
                 #enviamos el correo confirmando
@@ -201,6 +203,10 @@ def create_app():
         user = current_user
         if request.method =='GET':
             form.email.data = user.login
+        
+        if request.method =='POST':
+            if form.cancel.data:
+                return redirect(url_for('home'))
             
         if form.validate_on_submit():
             email = form.email.data
@@ -248,7 +254,26 @@ def create_app():
                 form.email.errors.append("Usuario deshabiliado, contacte con su administrador.")
             form.email.errors.append("Usuario o contraseña incorrectos.")
         return render_template('login_form.html', form=form)
-
+    
+    @app.route("/recupera", methods=['get', 'post'])
+    def recuperar():
+        form = FormRecupera()
+        error = None
+        
+        if request.method =='POST':
+            if form.cancel.data:
+                return redirect(url_for('home'))
+        
+        if form.validate_on_submit():
+            email = form.email.data
+            user = Usuarios.Usuario.get_by_login(email)
+            if user is not None:
+               print('aui')
+               return redirect(url_for('usuarios_blueprint.recovery_pass_web', email=email))
+            form.email.errors.append("El usuario no existe.")
+            return redirect(url_for('home'))
+        return render_template('recuperapass_form.html', form=form)
+    
     @app.route("/logout")
     def logout():
         logout_user()

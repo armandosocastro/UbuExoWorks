@@ -16,6 +16,8 @@ class FormRegistro(FlaskForm):
     planContratado = StringField('Plan', validators=[DataRequired()], default=1)
     nombre = StringField('Nombre', validators=[DataRequired()])
     apellidos = StringField('Apellidos', validators=[DataRequired()])
+    nif = StringField('Nif', validators=[Regexp('[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][A-Z]', message="NIF incorrecto")])
+    tlf = StringField('Telefono', validators=[Regexp('[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]', message="Campo obliogatorio")])
     email = StringField('Email', validators=[DataRequired(), Email()])
     emailRecuperacion = StringField('Email recuperacion', validators=[DataRequired(), Email()])
     password = PasswordField('Contraseña', validators=[DataRequired()])
@@ -29,6 +31,13 @@ class FormLogin(FlaskForm):
     rememberme = BooleanField('Recuerdame')
     
     submit = SubmitField('Login')
+    
+class FormRecupera(FlaskForm):
+    email = StringField('Email', validators=[DataRequired(), Email()])
+    
+    submit = SubmitField('Recuperar')
+    cancel = SubmitField('Cancelar', render_kw={'formnovalidate': True})
+
 
 class FormCambioPassword(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()])
@@ -36,7 +45,8 @@ class FormCambioPassword(FlaskForm):
     password = PasswordField('Contraseña nueva', validators=[DataRequired()])
     password2 = PasswordField('Repita su contraseña', validators=[DataRequired(), EqualTo('password', 'Las contraseñas no coinciden')])
     
-    submit = SubmitField('CambioPass')
+    submit = SubmitField('Cambiar contraseña')
+    cancel = SubmitField('Cancelar', render_kw={'formnovalidate': True})
     
     
 #Obtenemos los Roles disponibles
@@ -45,10 +55,12 @@ def roles_opcion():
     return Rol.get_by_Rol()
 
 class FormAlta(FlaskForm):
-    nombre = StringField('Nombre', validators=[DataRequired()])
-    apellidos = StringField('Apellidos', validators=[DataRequired()])
+    nombre = StringField('Nombre', validators=[DataRequired(message="Campo obliogatorio")])
+    apellidos = StringField('Apellidos', validators=[DataRequired(message="Campo obliogatorio")])
     nif = StringField('Nif', validators=[Regexp('[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][A-Z]', message="NIF incorrecto")])
     email = StringField('Email', validators=[DataRequired(message="Formato correo incorrecto"), Email()])
+    emailRecuperacion = StringField('Email alternativo', validators=[DataRequired(message="Formato correo incorrecto"), Email()])
+    tlf = StringField('Telefono', validators=[Regexp('[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]', message="Campo obliogatorio")])
     #Ponemos en una lista los roles disponibles sacandolos de la tabla ROL
     #rol = QuerySelectField(query_factory=lambda: roles_opcion(), get_label='idRol')
     rol = SelectField('Rol', choices=[])
@@ -59,7 +71,10 @@ class FormModifica(FlaskForm):
     nombre = StringField('Nombre', validators=[DataRequired()])
     apellidos = StringField('Apellidos', validators=[DataRequired()])
     nif = StringField('Nif', validators=[Regexp('[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][A-Z]', message="NIF incorrecto")])
+    tlf = StringField('Telefono', validators=[Regexp('[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]', message="Campo obliogatorio")])
     email = StringField('Email', validators=[DataRequired(message="Formato correo incorrecto"), Email()])
+    emailRecuperacion = StringField('Email alternativo', validators=[DataRequired(message="Formato correo incorrecto"), Email()])
+    imei = StringField('Imei dispositivo registrado', render_kw={'readonly': True})
     #rol = QuerySelectField(query_factory=lambda: roles_opcion(), get_label='idRol')
     rol = SelectField('Rol', choices=[], coerce=int)
     estado = BooleanField('Habilitado')

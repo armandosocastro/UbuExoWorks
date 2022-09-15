@@ -66,7 +66,7 @@ integrity="sha512-T/tUfKSV1bihCnd+MxKD0Hm1uBBroVYBOYSk1knyvQ9VyZJpc/ALb4P0r6ubwV
                         <ul class="nav nav-pills flex-column mb-sm-auto" id="menu">
                             <li class="nav-link">
                                 <a class="nav-link" href="/">
-                                    Empleados
+                                    Gestión Empleados
                                 </a>
                             </li>
                             <li class="nav-item">
@@ -80,12 +80,12 @@ integrity="sha512-T/tUfKSV1bihCnd+MxKD0Hm1uBBroVYBOYSk1knyvQ9VyZJpc/ALb4P0r6ubwV
                         <ul class="nav nav-pills flex-column mb-sm-auto" id="menu">
                             <li class="nav-link">
                                 <a class="nav-link" href="{{ url_for('usuarios_blueprint.usuarioFichajes') }}?idUsuario={{ idUsuario }}">
-                                    Fichajes
+                                    Mis Fichajes
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ url_for('usuarios_blueprint.usuarioGastos') }}?idUsuario={{ idUsuario }}">
-                                    Gastos
+                                    Mis Gastos
                                 </a>
                             </li>  
                         </ul>
@@ -124,7 +124,7 @@ integrity="sha512-T/tUfKSV1bihCnd+MxKD0Hm1uBBroVYBOYSk1knyvQ9VyZJpc/ALb4P0r6ubwV
                     <li>
                         <hr class="dropdown-divider">
                     </li>
-                    <li><a class="dropdown-item" href="/logout">Sign out</a></li>
+                    <li><a class="dropdown-item" href="/logout">Cerrar sesión</a></li>
                 </ul>
             </div>
         </ul>

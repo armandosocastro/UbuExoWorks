@@ -19,37 +19,37 @@
             <div>
                 <img src="/static/icons/logoUbuExoWorks.png" id="icon" alt="User Icon" />
             </div>
-            <div>
-                {{ form.email.label }}
+            <p>
+                {{ form.email.label }}<br>
                 {{ form.email }}<br>
                 {% for error in form.email.errors %}
                 <span style="color: red;">{{ error }}</span>
                 {% endfor %}
-            </div>  
-            <div>
-                {{ form.passwordActual.label }}
+            </p>  
+            <p>
+                {{ form.passwordActual.label }}<br>
                 {{ form.passwordActual }}<br>
                 {% for error in form.passwordActual.errors %}
                 <span style="color: red;">{{ error }}</span>
                 {% endfor %}
-            </div>
-            <div>
-                {{ form.password.label }}
+            </p>
+            <p>
+                {{ form.password.label }}<br>
                 {{ form.password }}<br>
                 {% for error in form.password.errors %}
                 <span style="color: red;">{{ error }}</span>
                 {% endfor %}
-            </div>
-            <div>
-                {{ form.password2.label }}
+            </p>
+            <p>
+                {{ form.password2.label }}<br>
                 {{ form.password2 }}<br>
                 {% for error in form.password2.errors %}
                 <span style="color: red;">{{ error }}</span>
                 {% endfor %}
-            </div>
-            <div>
-                {{ form.submit() }}
-            </div>
+            </p>
+            <p>
+                {{ form.submit() }} {{ form.cancel() }}
+            </p>
         </form>
         
     </div>

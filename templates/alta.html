@@ -5,58 +5,66 @@
 {% block content2 %}
 
 <body class="m-0 vh-100 row justify-content-center align-items-center ">
-    <div class="d-flex justify-content-around">
 
+    <div class="col-auto p-5 text-center" >
         {% if error %}
         <p style="color: red;"><strong>Error:</strong> {{ error }}
         {% endif %}
 
         <form action="" method="post" novalidate>
             {{ form.hidden_tag() }}
-            <div class="row">
-            <div class="mb-3">
-                {{ form.nif.label }}<span class="tab"></span>
-                {{ form.nif }}<br>
+            <p>
+                {{ form.nif.label }}<br>
+                {{ form.nif(size=10) }}<br>
                 {% for error in form.nif.errors %}
-                <span style="color: red;">{{ error }}</span>
+                <span style="color: red;">[{{ error }}]</span>
                 {% endfor %}
-            </div>
-
-            <div class="row">
-            <div class="col-md-6 mb-3">
-                {{ form.nombre.label }}<span class="tab"></span>
-                {{ form.nombre }}<br>
+            </p>
+            <p>
+                {{ form.nombre.label }}<br>
+                {{ form.nombre(size=60) }}<br>
                 {% for error in form.nombre.errors %}
-                <span style="color: red;">{{ error }}</span>
+                <span style="color: red;">[{{ error }}]</span>
                 {% endfor %}
-            </div>
-            <div class="col-md-6 mb-3">
-                {{ form.apellidos.label }}<span class="tab"></span>
-                {{ form.apellidos }}<br>
+            </p>
+            <p>
+                {{ form.apellidos.label }}<br>
+                {{ form.apellidos(size=60) }}<br>
                 {% for error in form.apellidos.errors %}
-                <span style="color: red;">{{ error }}</span>
+                <span style="color: red;">[{{ error }}]</span>
                 {% endfor %}
-            </div>
-   
-            
-
-            <div class=" mb-3">
-                {{ form.email.label }}<span class="tab"></span>
-                {{ form.email }}<br>
+            </p>
+            <p>
+                {{ form.tlf.label }}<br>
+                {{ form.tlf(size=9) }}<br>
+                {% for error in form.tlf.errors %}
+                <span style="color: red;">[{{ error }}]</span>
+                {% endfor %}
+            </p>
+            <p>
+                {{ form.email.label }}<br>
+                {{ form.email(size=60) }}<br>
                 {% for error in form.email.errors %}
-                <span style="color: red;">{{ error }}</span>
+                <span style="color: red;">[{{ error }}]</span>
                 {% endfor %}
-            </div>
-            <div class="mb-3">
-                {{ form.rol.label }}<span class="tab"></span>
+            </p>
+            <p>
+                {{ form.emailRecuperacion.label }}<br>
+                {{ form.emailRecuperacion(size=60) }}<br>
+                {% for error in form.email.errors %}
+                <span style="color: red;">[{{ error }}]</span>
+                {% endfor %}
+            </p>
+            <p>
+                {{ form.rol.label }}<br>
                 {{ form.rol }}<br>
                 {% for error in form.rol.errors %}
-                <span style="color: red;">{{ error }}</span>
+                <span style="color: red;">[{{ error }}]</span>
                 {% endfor %}
-            </div>
-            <div>
+            </p>
+            <p>
                 {{ form.submit() }}
-            </div>
+            </p>
         </form>
     </div>
 </body>
