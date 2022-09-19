@@ -547,6 +547,7 @@ def registra_gasto():
             numeroTicket = request.form['numeroTicket']
             print('aqui llego')
             if str(current_user_id) == str(idUsuario):
+                print('coinciden')
                 imagen = request.files['ticket']
                 imagen_string = base64.b64encode(imagen.read())
             
@@ -556,7 +557,8 @@ def registra_gasto():
                 
                 return jsonify("Ok"), 200
             else:
-                return jsonify({'token incorrecto'}), 401
+                print('no coinciden')
+                return jsonify('token incorrecto'), 401
     except Exception as ex:
         return jsonify({ 'error': str(ex)}), 500
          
