@@ -545,7 +545,7 @@ def registra_gasto():
             razonSocial = request.form['razonSocial']
             descripcion = request.form['descripcion']
             numeroTicket = request.form['numeroTicket']
-            
+            print('aqui llego')
             if str(current_user_id) == str(idUsuario):
                 imagen = request.files['ticket']
                 imagen_string = base64.b64encode(imagen.read())
