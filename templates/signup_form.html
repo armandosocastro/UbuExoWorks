@@ -52,6 +52,13 @@
             {% endfor %}
           </p>
           <p>
+            {{ form.nif.label }}<br>
+            {{ form.nif(size=60) }}<br>
+            {% for error in form.cif.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+          </p>
+          <p>
             {{ form.tlf.label }}<br>
             {{ form.tlf(size=60) }}<br>
             {% for error in form.tlf.errors %}
@@ -74,14 +81,14 @@
           </p>
           <p>
             {{ form.password.label }}<br>
-                  {{ form.password(size=32) }}<br>
+                  {{ form.password() }}<br>
                   {% for error in form.password2.errors %}
                   <span style="color: red;">[{{ error }}]</span>
                   {% endfor %}
           </p>
           <p>
                   {{ form.password2.label }}<br>
-                  {{ form.password2(size=30) }}<br>
+                  {{ form.password2() }}<br>
                   {% for error in form.password2.errors %}
                   <span style="color: red;">[{{ error }}]</span>
                   {% endfor %}

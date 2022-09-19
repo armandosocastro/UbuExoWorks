@@ -18,7 +18,7 @@ from flask_wtf import CSRFProtect
 
 from formularios import FormCambioPassword, FormRecupera, FormRegistro, FormLogin
 
-from models.Usuarios import Usuario, Empresa
+from models.Modelo import Usuario, Empresa
 from os import environ as env
 from dotenv import load_dotenv
 
@@ -95,12 +95,12 @@ def create_app():
         return "<h1> Not found page </h1>",404
     
     # Routes
-    from routes import Usuarios
+    from routes import Controlador
        # Blueprints
        # Cuando accedamos a localhost/api/usuarios nos enlace con la ruta / del blueprint usuarios
 
     
-    app.register_blueprint(Usuarios.main, url_prefix='/api')
+    app.register_blueprint(Controlador.main, url_prefix='/api')
            
            #Manejador de errores
     app.register_error_handler(404, page_not_found)
@@ -118,7 +118,7 @@ def create_app():
         #return Usuarios.Usuario.query.get(int(user_id))
         print ("Usuario que se intenta logear: ", user_id)
         
-        usuario = Usuarios.Usuario.get_by_id(user_id)
+        usuario = Controlador.Usuario.get_by_id(user_id)
         return usuario
     
     @app.route('/registro', methods=['GET', 'POST'])
@@ -131,6 +131,7 @@ def create_app():
             plan = form.planContratado.data
             nombre = form.nombre.data
             apellidos = form.apellidos.data
+            nif = form.nif.data
             tlf = form.tlf.data
             email = form.email.data
             emailRecuperacion = form.emailRecuperacion.data
@@ -140,19 +141,19 @@ def create_app():
             idJornadaLaboral = 1
             
             print('email y pass: ', email, password)
-            user = Usuarios.Usuario.get_by_login(email)
-            empresa = Usuarios.Empresa.get_by_cif(cif)
+            user = Controlador.Usuario.get_by_login(email)
+            empresa = Controlador.Empresa.get_by_cif(cif)
             
             if empresa is not None:
                 error = 'La empresa ya existe en la aplicacion'
             elif user is not None:
                 error = 'Email ya registrado en el sistema'
             else:
-                empresa = Usuarios.Empresa(nombre=nombre_empresa, cif=cif, planContratado=plan, numEmpleados=1)           
+                empresa = Controlador.Empresa(nombre=nombre_empresa, cif=cif, planContratado=plan, numEmpleados=1)           
                 empresa.save()
                 idempresa = empresa.get_id_empresa()
                 print('emrpesa: ', idempresa)
-                user = Usuarios.Usuario(nombre=nombre, apellidos=apellidos ,login=email, tlf=tlf, 
+                user = Controlador.Usuario(nombre=nombre, apellidos=apellidos ,login=email, tlf=tlf, nif=nif,
                                         emailRecuperacion= emailRecuperacion, estado=estado, idEmpresa=idempresa,idRol=idRol, idJornadaLaboral=idJornadaLaboral)    
                 user.set_password(password)
                 user.save()
@@ -174,9 +175,8 @@ def create_app():
         if request.args.get('idEmpresa') != None:
             session['idEmpresa']=request.args.get('idEmpresa')
        
-        empresa = Usuarios.Empresa.get_nombre_by_id(session['idEmpresa'])
-        user = Usuarios.Usuario.get_by_id(session['idUsuario'])
-        print('Usuario completo: ', user)
+        empresa = Controlador.Empresa.get_nombre_by_id(session['idEmpresa'])
+        user = Controlador.Usuario.get_by_id(session['idUsuario'])
        
         if session['rol'] == 1 or session['rol'] == 0:
             return render_template("index.html", idUsuario = session['idUsuario'], idEmpresa = session['idEmpresa'], empresa = empresa)
@@ -189,7 +189,7 @@ def create_app():
     def admin():
         print('En panel de Administracion...con el usuario:', session['username'], session['idUsuario'])
       
-        empresas = Usuarios.Empresa.get_all()
+        empresas = Controlador.Empresa.get_all()
         print('Listado de enmpresas: ', empresas)
 
         return render_template("admin.html", idUsuario = session['idUsuario'], is_Admin = True)
@@ -233,7 +233,7 @@ def create_app():
         if form.validate_on_submit():
             email = form.email.data
             password = form.password.data
-            user = Usuarios.Usuario.get_by_login(email)
+            user = Controlador.Usuario.get_by_login(email)
             if user is not None and user.check_password(password):
                 if user.is_admin():
                     print('Es un ADMINISTRADOR')
@@ -266,7 +266,7 @@ def create_app():
         
         if form.validate_on_submit():
             email = form.email.data
-            user = Usuarios.Usuario.get_by_login(email)
+            user = Controlador.Usuario.get_by_login(email)
             if user is not None:
                return redirect(url_for('usuarios_blueprint.recovery_pass_web', email=email))
             form.email.errors.append("El usuario no existe.")

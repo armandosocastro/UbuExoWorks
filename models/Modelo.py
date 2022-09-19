@@ -36,6 +36,7 @@ class Usuario(UserMixin, db.Model):
     emailRecuperacion = db.Column(db.String(45))
     tlf = db.Column(db.String(12))
     imei = db.Column(db.String(15))
+    fichajes = db.relationship('Fichaje', back_populates="usuario", passive_deletes=True, cascade="all, delete, delete-orphan")
 
     def get_id_empresa(self):
         return self.idEmpresa    
@@ -51,13 +52,11 @@ class Usuario(UserMixin, db.Model):
         
     def is_admin(self):
         if self.get_rol() == 0:
-            print('Admin en modelo')
             return True
         return False
     
     def is_gestor(self):
         if self.get_rol() == 1:
-            print('Gestor en modelo')
             return True
         return False
             
@@ -70,12 +69,14 @@ class Usuario(UserMixin, db.Model):
     def save(self):
         if not self.idUsuario:
             db.session.add(self)
-            print('añadido en modif')
         else:
             print('actualizado en modif')
         db.session.commit()
         
     def delete(self):
+        db.session.query(Fichaje).filter_by(idUsuario=self.idUsuario).delete()
+        db.session.query(Gasto).filter_by(idUsuario=self.idUsuario).delete()
+
         db.session.delete(self)
         db.session.commit()
         
@@ -103,7 +104,6 @@ class Usuario(UserMixin, db.Model):
     
     @staticmethod
     def registra_imei(self, imei):
-        print("imei", imei)
         self.imei = imei
         
     def check_habilitado(self):
@@ -118,10 +118,7 @@ class Usuario(UserMixin, db.Model):
                 and any(c.isupper() for c in password)
                 and sum(c.isdigit() for c in password) >= 3):
                 break
-        print('password generada: ', password)
         return password
-    
-    
     
     #Metodo para poder serializarlo y enviarlo como un JSON
     def to_JSON(self):
@@ -236,8 +233,8 @@ class Fichaje(db.Model):
     entrada_longitud = db.Column(db.Float, nullable=False)
     tiempo_trabajado = db.Column(db.Time(timezone=false))
     incidencia = db.Column(db.String, nullable=False)
-    idUsuario =  db.Column(db.Integer, ForeignKey('USUARIO.idUsuario'))
-    usuario = db.relationship('Usuario')
+    idUsuario =  db.Column(db.Integer, ForeignKey('USUARIO.idUsuario', ondelete='CASCADE'))
+    usuario = db.relationship('Usuario', back_populates="fichajes")
     tipo = db.Column(db.String, nullable=False)
     borrado = db.Column(db.Boolean, nullable=False)
    
@@ -245,7 +242,6 @@ class Fichaje(db.Model):
     def to_JSON(self):
          
         hora = str(self.hora_entrada)
-        print(hora)
         return {
             'idFichaje': self.idFichaje,
             'fecha': self.fecha,
@@ -258,6 +254,10 @@ class Fichaje(db.Model):
             'tiempo_trabajado': self.tiempo_trabajado,
             'borrado': self.borrado
         }
+    
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()
     
     @staticmethod
     def get_by_idFichaje(idFichaje):    
@@ -278,7 +278,6 @@ class Fichaje(db.Model):
         month = fecha_formateada.month
 
         fechaini = str(year) + '/' + str(month) + '/' + '1'
-
         fecha_dada = datetime(year=year, month=month, day=fecha_formateada.day).date()
         
         lastDayOfMonth = fecha_dada.replace(day = monthrange(fecha_dada.year, fecha_dada.month)[1])
@@ -288,8 +287,7 @@ class Fichaje(db.Model):
         fechafin_format = datetime.strptime(fechafin, "%Y/%m/%d")
 
         return db.session.query(Fichaje).filter(and_( Fichaje.idUsuario == idEmpleado, and_(Fichaje.fecha <= fechafin_format, Fichaje.fecha>=fechaini_format))).all()
-
-    
+ 
     #Obtenemos todos los fichajes del año actual
     @staticmethod
     def get_by_idEmpleadoAno(idEmpleado,fecha):
@@ -342,7 +340,6 @@ class Rol(db.Model):
     @staticmethod
     def get_by_Rol():
         roles = Rol.query.all()
-        print("roles: ", roles, roles[0].nombreRol)
         return roles     
     
     @staticmethod

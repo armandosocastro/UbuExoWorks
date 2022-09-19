@@ -20,10 +20,12 @@
             <h2>Listado de gastos</h2>
             <p class="lead">
 
-        <form name="formulario" id="form-prueba" method="POST" action=""> 
+        <!--<form name="formulario" id="form-prueba" method="POST" action=""> -->
+            <!--
             {%if (current_user.is_admin() == True) or (current_user.is_gestor() == True) %}       
                 <input type="button" value="Aprobar gastos" id="aprobar"/>
             {% endif%}
+            -->
                 <table id="table" 
                 data-sortable="true"
                 data-toggle="table"
@@ -31,8 +33,6 @@
                 data-show-export="true"
                 data-click-to-select="false"
                 class="table-responsive hover" aria-describedby="tablaGastos">   
-          
-
                       <thead>
                         <tr>
                             <th data-field="id" >id</th>
@@ -50,7 +50,7 @@
                        </thead>  
 
                     </table>
-            </form>
+            <!--</form>-->
             </div>                
 
                     <div id="myModal" class="modal fade" role="dialog" >
@@ -160,8 +160,6 @@ integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7
                     "previous": "Anterior"
                 }
             },
-
-            "exportTypes": ['json','csv','excel','pdf'],
             "responsive": true,
             "sPaginationType": "full_numbers",
             "order": [[3, 'desc']],

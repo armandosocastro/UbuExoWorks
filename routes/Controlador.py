@@ -16,7 +16,7 @@ from flask_mail import Mail, Message
 from flask_login import current_user, login_required
 
 # Modelos
-from models.Usuarios import Fichaje, Gasto, Usuario, Empresa, Rol
+from models.Modelo import Fichaje, Gasto, Usuario, Empresa, Rol
 
 from formularios import FormAlta, FormModifica
 import os #Quitar despues de las prubeas con los tickets
