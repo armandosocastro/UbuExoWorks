@@ -550,7 +550,8 @@ def registra_gasto():
                 imagen = request.files['ticket']
                 imagen_string = base64.b64encode(imagen.read())
             
-                gasto = Gasto(fecha=fecha, tipo=tipo, descripcion=descripcion, importe=importe, iva=iva, cif=cif,fotoTicket=imagen_string,idUsuario=idUsuario,razonSocial=razonSocial,numeroTicket=numeroTicket,validado=False)
+                gasto = Gasto(fecha=fecha, tipo=tipo, descripcion=descripcion, importe=importe, iva=iva, cif=cif,
+                              fotoTicket=imagen_string,idUsuario=idUsuario,razonSocial=razonSocial,numeroTicket=numeroTicket)
                 gasto.save()
                 
                 return jsonify("Ok"), 200
