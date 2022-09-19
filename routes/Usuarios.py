@@ -1,6 +1,6 @@
 
-from datetime import datetime, timedelta
-from datetime import time, date
+from datetime import datetime, timedelta, time, date
+
 from fileinput import filename
 from itertools import count
 from lib2to3.pgen2 import token
@@ -26,9 +26,6 @@ import base64 #Para codificar/descodificar las imagenes
 from auth import admin_required, gestor_required
 import jwt
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
-
-
-
 from app import mail
 from app import talisman
 
@@ -46,7 +43,6 @@ def not_found(e):
 @expects_json()
 def get_usuarios():
     try:
-
         datos=request.get_json()
         usuario = datos.get('login','')
         
@@ -108,7 +104,6 @@ def usuarios_empresa_ajax():
 
     listadoUsuarios = Usuario.get_by_empresa(session['idEmpresa'])
     roles = Rol.get_by_Rol()
-
     print('listado usuarios empresa: ',listadoUsuarios)
     
     if listadoUsuarios == []:
@@ -200,7 +195,6 @@ def fichaje_gestor():
         latitud = datos.get('latitud','')
         tipo = datos.get('tipo','')
         incidencia = datos.get('incidencia','')
-        borrado = False
         
         entradas = 0
         pausas = 0
@@ -379,10 +373,8 @@ def get_fichaje_calendario():
         fecha = request.args.get('fecha')
         print('usuario: ',idUsuario, 'fecha:',fecha)       
         fichajes = Fichaje.get_by_idEmpleadoAno(idUsuario,fecha)
-
         for fichaje in fichajes:
             fecha = fichaje.fecha.strftime('%Y-%m-%d')
-
             dict_fichajes = {'title': 'Fichaje', 'start': fecha , 'end': fecha }
             list_fichajes.append(dict_fichajes)
         return jsonify(list_fichajes)
@@ -400,8 +392,7 @@ def get_fichaje_por_fecha():
         idUsuario = request.args.get('idUsuario')
         fecha = request.args.get('fecha')
         print('usuario: ',idUsuario)
-        print('fecha fichaje: ',fecha)
-        
+        print('fecha fichaje: ',fecha)        
         if str(current_user_id) == str(idUsuario):
             fichajes = Fichaje.get_by_idEmpleadoFecha(idUsuario,fecha)
             print(fichajes)
@@ -420,7 +411,6 @@ def usuario_fichajes():
     fecha = request.args.get('fecha')
     print('usuario: ',idUsuario)
     print('fehcha actual pasada: ',fecha)
-
     fichajes = Fichaje.get_by_idEmpleadoFecha(idUsuario, fecha)
     print(fichajes)
     return render_template('fichajes.html', listaFichajes=fichajes, fechaHoy=fecha, idUsuario=idUsuario)
@@ -432,13 +422,10 @@ def usuario_fichajes_ajax():
     idUsuario = parametro['idUsuario']
     fecha = parametro['fecha']
     print('id: ',idUsuario, parametro)
-
     print('usuario ajax: ',idUsuario)
     print('fehcha actual pasada ajax: ',fecha)
-
     fichajes = Fichaje.get_by_idEmpleadoFecha(idUsuario, fecha)
 
-    entrada = False
     if fichajes == []:
         #Devolvemos un diccionario vacio si no hay datos de gastos para enviar.
         return jsonify({'data':[]})
@@ -452,7 +439,6 @@ def usuario_fichajes_ajax():
             print('fichaje ajax:',data)
         data_json = {'data': data}
         return jsonify(data_json)
- 
     
 @main.route('/usuario/fichajesRangoAjax', methods=['get','post'])
 def usuario_fichajes_rango_ajax():
@@ -460,7 +446,6 @@ def usuario_fichajes_rango_ajax():
     idUsuario = parametro['idUsuario']
     fecha_ini = parametro['fecha_ini']
     fecha_fin = parametro['fecha_fin']
-  
     fichajes = Fichaje.get_by_idEmpleadoRango(idUsuario, fecha_ini, fecha_fin)
     
     if fichajes == []:
@@ -507,8 +492,7 @@ def usuario_fichajes_rango():
 #Metodo para obtener los gastos de un usuario en la aplicacion Web
 @main.route('/usuario/gastos', methods=['get'])
 def usuario_gastos():
-    idUsuario = request.args.get('idUsuario')
-    
+    idUsuario = request.args.get('idUsuario') 
     gastos = Gasto.get_by_idEmpleado(idUsuario)
     print('Gastos: ', gastos)
     return render_template('gastosAjax.html', listaGastos=gastos, idUsuario=idUsuario)
@@ -518,8 +502,7 @@ def usuario_gastos():
 def ajax_carga_tickets():
     parametro = request.form
     idUsuario = parametro['idUsuario']
-    print('id: ',idUsuario, parametro)
-    
+    print('id: ',idUsuario, parametro) 
     gastos = Gasto.get_by_idEmpleado(idUsuario)
     print('Gastos para ajax: ', gastos)
     if gastos == []:
@@ -535,8 +518,7 @@ def ajax_carga_tickets():
 @jwt_required()
 def registra_gasto():
     try:
-        if request.method == 'POST':
-            
+        if request.method == 'POST':       
             idUsuario = request.form['idUsuario']
             fecha = request.form['fecha']
             tipo = request.form['tipo']
@@ -556,8 +538,7 @@ def registra_gasto():
             return jsonify("Ok"), 200
     except Exception as ex:
         return jsonify({ 'error': str(ex)}), 500
-        
-   
+         
 @main.route("/cargaTicket", methods=['get'])
 def carga_ticket():
     idGasto = request.args.get('idGasto')
@@ -568,7 +549,6 @@ def carga_ticket():
     imagen = base64.b64decode(gasto.fotoTicket)
     
     return imagen   
-
 
 @main.route("/validaTicket", methods=['POST'])
 @login_required
@@ -585,7 +565,6 @@ def valida_ticket():
     
     gasto.save()
     return "ok"
-
 
 @main.route("/validaTickets", methods=['post','get'])
 def valida_tickets():
