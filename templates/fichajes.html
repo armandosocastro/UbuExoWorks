@@ -137,9 +137,15 @@
         
                 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.10.0/bootstrap-table.js"></script>
                 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.9.1/extensions/editable/bootstrap-table-editable.js"></script>
-               <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.9.1/extensions/export/bootstrap-table-export.js"></script>
+                
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.9.1/extensions/export/bootstrap-table-export.min.js" 
+                    integrity="sha512-B10O3fjdFvKIH2+I1HoNRzhU3PG5lttxH0twDC5/5DpuFesgVEoSOrlPHX7HomSnPhmeO10GXJj6rLmqlejE0w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+              
+                   <!--<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.9.1/extensions/export/bootstrap-table-export.js"></script>-->
                <script type="text/javascript" src="https://rawgit.com/hhurz/tableExport.jquery.plugin/master/tableExport.js"></script>
-                <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.9.1/extensions/filter-control/bootstrap-table-filter-control.js"></script> 
+                <!--<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.9.1/extensions/filter-control/bootstrap-table-filter-control.js"></script> -->
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.9.1/extensions/filter-control/bootstrap-table-filter-control.min.js" 
+                    integrity="sha512-chMvxSQlIXdPJmRkaZT2TYKJbQZ3lkFiBzGAVjewT7LZB9nZ0kd2yt01NNZF9kyqydkUUEpAKoPATChOTDhX4Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
                 
 
                 <script type="text/javascript" nonce="2726c7f26c">
@@ -315,7 +321,7 @@
                             map.flyTo([longitud,latitud], 18)
                     });
                     //Creamos el calendario con los eventos
-                        url_eventos = "{{ url_for('usuarios_blueprint.getFichajeCalendario') }}";
+                        url_eventos = "{{ url_for('usuarios_blueprint.get_fichaje_calendario') }}";
                         url_eventos = url_eventos + '?idUsuario=' + idUsuario + '&fecha=' + strFecha_actual;
                         console.log('url peticion fichajes: ', url_eventos);
 
