@@ -279,8 +279,6 @@ def fichar():
         hora_anterior = time(00, 00)
         tiempo = time(0,0)
         
-        
-        
         print('horas: ', hora_anterior, '::', tiempo)
         
         fichajes_hoy = Fichaje.get_by_idEmpleadoFecha(current_user_id, fecha)
