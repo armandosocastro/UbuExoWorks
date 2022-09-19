@@ -37,7 +37,6 @@ def fecha_actual():
     año = now.year
     mes = now.month
     dia = now.day
-    print("En fecha actual: ",mes,dia,año)
     return str(mes)+'/'+str(dia)+'/'+str(año)
    
 
@@ -52,8 +51,6 @@ def create_app():
     }
     
     talisman = Talisman(app, content_security_policy=csp)
-    
-    
     #Talisman(app, content_security_policy=[])
        
     app.jinja_env.globals.update(fecha_actual=fecha_actual)
@@ -73,8 +70,7 @@ def create_app():
     #Establecemos 10 minutos como tiempo de validez de los tokens de acceso a la API
     app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(minutes=10)
 
-    jwt = JWTManager(app)
-    
+    jwt = JWTManager(app) 
     csrf = CSRFProtect()   
    
     #Session(app)
