@@ -304,7 +304,7 @@ def fichar():
                     print ('fichaje hora ant: ', fichaje.hora_entrada, '::')
                     hora_anterior = fichaje.hora_entrada
                     hora_anterior = time.strftime(fichaje.hora_entrada, "%H:%M")
-                    
+        
         if tipo == 'fichaje':
 
             if entradas % 2 == 0:
@@ -326,8 +326,8 @@ def fichar():
                 tipo_fichaje = 'pausa entrada'
             else:
                 tipo_fichaje = 'pausa salida' 
-        
         if str(current_user_id) == str(idUsuario):
+            
             fichaje = Fichaje(fecha=fecha, hora_entrada=hora, entrada_longitud=longitud, entrada_latitud=latitud,
                           incidencia=None,idUsuario=idUsuario, tipo=tipo_fichaje, tiempo_trabajado=tiempo, borrado=False)
             fichaje.save()
@@ -353,7 +353,13 @@ def get_fichaje():
         if str(current_user_id) == str(idUsuario):
             fichajes = Fichaje.get_by_idEmpleado(idUsuario)
             print(fichajes)
-            return jsonify([fichaje.to_JSON() for fichaje in fichajes])
+            data = []
+            for f in fichajes:
+                fecha = f.fecha.strftime('%d-%m-%Y')
+                #tiempo_trabajado = f.tiempo_trabajado.strftime('%H:%M')
+                data.append({"ID":f.idFichaje, "fecha":fecha, "hora":str(f.hora_entrada), "tipo":f.tipo, "longitud":f.entrada_longitud, "latitud":f.entrada_latitud,
+                              "tiempo_trabajado":str(f.tiempo_trabajado), "incidencia":f.incidencia, "borrado":f.borrado})
+            return jsonify({'fichajes': data})
         else:
             return jsonify({"token incorrecto"}), 401
     except Exception as ex:
@@ -394,7 +400,13 @@ def get_fichaje_por_fecha():
         if str(current_user_id) == str(idUsuario):
             fichajes = Fichaje.get_by_idEmpleadoFecha(idUsuario,fecha)
             print(fichajes)
-            return jsonify([fichaje.to_JSON() for fichaje in fichajes])
+            data = []
+            for f in fichajes:
+                fecha = f.fecha.strftime('%d-%m-%Y')
+                #tiempo_trabajado = f.tiempo_trabajado.strftime('%H:%M')
+                data.append({"ID":f.idFichaje, "fecha":fecha, "hora":str(f.hora_entrada), "tipo":f.tipo, "longitud":f.entrada_longitud, "latitud":f.entrada_latitud,
+                              "tiempo_trabajado":str(f.tiempo_trabajado), "incidencia":f.incidencia, "borrado":f.borrado})
+            return jsonify({'fichajes': data})
         else:
             return jsonify({"token incorrecto"}), 401   
     except Exception as ex:
@@ -480,7 +492,14 @@ def usuario_fichajes_rango():
                 #return jsonify([fichaje.to_JSON() for fichaje in fichajes])
                 return jsonify([])
             else:
-                return jsonify([fichaje.to_JSON() for fichaje in fichajes])
+                data = []
+                for f in fichajes:
+                    fecha = f.fecha.strftime('%d-%m-%Y')
+                    #tiempo_trabajado = f.tiempo_trabajado.strftime('%H:%M')
+                    data.append({"ID":f.idFichaje, "fecha":fecha, "hora":str(f.hora_entrada), "tipo":f.tipo, "longitud":f.entrada_longitud, "latitud":f.entrada_latitud,
+                              "tiempo_trabajado":str(f.tiempo_trabajado), "incidencia":f.incidencia, "borrado":f.borrado})
+                return jsonify({'fichajes': data})
+                
         else:
             return jsonify({'token incorrecto'}), 401
     except Exception as ex:
