@@ -68,8 +68,8 @@ class FormAlta(FlaskForm):
     submit = SubmitField('Alta') 
 
 class FormModifica(FlaskForm):
-    nombre = StringField('Nombre', validators=[DataRequired()])
-    apellidos = StringField('Apellidos', validators=[DataRequired()])
+    nombre = StringField('Nombre', validators=[DataRequired(message="Campo obligatorio")])
+    apellidos = StringField('Apellidos', validators=[DataRequired(message="Campo obligatorio")])
     nif = StringField('Nif', validators=[Regexp('[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][A-Z]', message="NIF incorrecto")])
     tlf = StringField('Telefono', validators=[Regexp('[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]', message="Campo obliogatorio")])
     email = StringField('Email', validators=[DataRequired(message="Formato correo incorrecto"), Email()])

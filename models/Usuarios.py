@@ -234,7 +234,7 @@ class Fichaje(db.Model):
     hora_entrada = db.Column(db.Time(timezone=false), nullable=False)
     entrada_latitud = db.Column(db.Float, nullable=False)
     entrada_longitud = db.Column(db.Float, nullable=False)
-
+    tiempo_trabajado = db.Column(db.Time(timezone=false))
     incidencia = db.Column(db.String, nullable=False)
     idUsuario =  db.Column(db.Integer, ForeignKey('USUARIO.idUsuario'))
     usuario = db.relationship('Usuario')
@@ -255,6 +255,7 @@ class Fichaje(db.Model):
             'incidencia':self.incidencia,
             'idUsuario':self.idUsuario,
             'tipo': self.tipo,
+            'tiempo_trabajado': self.tiempo_trabajado,
             'borrado': self.borrado
         }
     
@@ -268,7 +269,7 @@ class Fichaje(db.Model):
     
     @staticmethod
     def get_by_idEmpleadoFecha(idEmpleado,fecha):
-        return Fichaje.query.filter_by(idUsuario=idEmpleado, fecha=fecha).all()   
+        return Fichaje.query.filter_by(idUsuario=idEmpleado, fecha=fecha).order_by(Fichaje.hora_entrada.asc()).all()
     
     @staticmethod
     def get_by_idEmpleadoMes(idEmpleado,fecha):

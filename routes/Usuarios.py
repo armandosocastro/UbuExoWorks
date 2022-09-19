@@ -1,5 +1,6 @@
 
-from datetime import datetime
+from datetime import datetime, timedelta
+from datetime import time, date
 from fileinput import filename
 from itertools import count
 from lib2to3.pgen2 import token
@@ -92,7 +93,7 @@ def solicitud_borrar_fichaje():
         return jsonify({'mensaje': str(ex)}), 500   
     
 @main.route('/empresasAjax', methods=['get','post'])
-def empresasAjax():
+def empresas_ajax():
     listadoEmpresas = Empresa.get_all()
     
     if listadoEmpresas == []:
@@ -103,7 +104,7 @@ def empresasAjax():
         return jsonify(data_json)
     
 @main.route('/usuariosEmpresaAjax', methods=['get','post'])
-def usuariosEmpresaAjax():
+def usuarios_empresa_ajax():
 
     listadoUsuarios = Usuario.get_by_empresa(session['idEmpresa'])
     roles = Rol.get_by_Rol()
@@ -121,7 +122,7 @@ def usuariosEmpresaAjax():
 #Metodo API para registro del imei del dispositivo
 @main.route('/registraDispositivo', methods=['POST'])
 @expects_json()
-def registraDispositivo():
+def registra_dispositivo():
     datos = request.get_json()
     
     password=datos.get('password','')
@@ -185,7 +186,7 @@ def login():
 @main.route('/fichajeGestor', methods=['POST','GET'])
 #@jwt_required()
 @expects_json()
-def fichajeGestor():
+def fichaje_gestor():
     try:
         #current_user_id = get_jwt_identity()
         datos = request.get_json()
@@ -245,7 +246,7 @@ def fichajeGestor():
 @main.route('/borrarFichaje', methods=['POST'])
 @login_required
 @gestor_required
-def borrarFichajeGestor():
+def borrar_fichaje_gestor():
     try:
         idFichaje = request.args.get('idFichaje')
         print('fichaje a borrar: ',idFichaje)     
@@ -279,7 +280,15 @@ def fichar():
 
         entradas = 0
         pausas = 0
-
+        hora_anterior = datetime.strptime("00:00", "%H:%M")
+        tiempo = datetime.strptime("00:00", "%H:%M")
+        hora_anterior = time(00, 00)
+        tiempo = time(0,0)
+        
+        
+        
+        print('horas: ', hora_anterior, '::', tiempo)
+        
         fichajes_hoy = Fichaje.get_by_idEmpleadoFecha(current_user_id, fecha)
         for fichaje in fichajes_hoy:
             print('fichajes horas: ',(fichaje.hora_entrada).strftime("%H:%M"),' : ', hora)
@@ -296,14 +305,29 @@ def fichar():
                     pausas = pausas + 1
                 else:
                     pausas = pausas - 1
-
-
+                    
+                print('por aqui')
+                if fichaje.tipo == 'entrada':    
+                    
+                    print ('fichaje hora ant: ', fichaje.hora_entrada, '::')
+                    hora_anterior = fichaje.hora_entrada
+                    hora_anterior = time.strftime(fichaje.hora_entrada, "%H:%M")
+                    
         if tipo == 'fichaje':
 
             if entradas % 2 == 0:
                 tipo_fichaje = 'entrada'
             else:
                 tipo_fichaje = 'salida'
+                print('hora antetior: ', hora_anterior)
+                hora_pasada = time.fromisoformat(hora)
+
+                print('hora pasada: ', hora_pasada)
+            
+                a_timedelta = datetime.strptime(hora, "%H:%M") - datetime(1900, 1, 1)
+                b_timedelta = datetime.strptime(hora_anterior, "%H:%M") - datetime(1900, 1, 1)
+                tiempo = a_timedelta - b_timedelta
+                print('Tiempo trabajo: ', tiempo)
         else:
   
             if pausas % 2 == 0:
@@ -313,7 +337,7 @@ def fichar():
         
         if str(current_user_id) == str(idUsuario):
             fichaje = Fichaje(fecha=fecha, hora_entrada=hora, entrada_longitud=longitud, entrada_latitud=latitud,
-                          incidencia=None,idUsuario=idUsuario, tipo=tipo_fichaje, borrado=False)
+                          incidencia=None,idUsuario=idUsuario, tipo=tipo_fichaje, tiempo_trabajado=tiempo, borrado=False)
             fichaje.save()
             return jsonify(token="Ok"),200   
         else:
@@ -327,7 +351,7 @@ def fichar():
 @main.route('/get/fichajes', methods=['get'])
 @jwt_required()
 #@expects_json()
-def getFichaje():
+def get_fichaje():
     try:
         current_user_id = get_jwt_identity()
         print('current id:', current_user_id)
@@ -348,7 +372,7 @@ def getFichaje():
 #Rellenamos todos los fichajes del año actual
 @main.route('/get/fichajesCalendario', methods=['get'])
 #@expects_json()
-def getFichajeCalendario():
+def get_fichaje_calendario():
     try:
         list_fichajes = []
         idUsuario = request.args.get('idUsuario')
@@ -368,7 +392,7 @@ def getFichajeCalendario():
 #Metodo para la API devuelve los fichajes de una fecha concreta  
 @main.route('/get/fichaje', methods=['get'])
 @jwt_required()
-def getFichajePorFecha():
+def get_fichaje_por_fecha():
     try:
         current_user_id = get_jwt_identity()
         print('current id:', current_user_id)
@@ -390,7 +414,7 @@ def getFichajePorFecha():
     
 @main.route('/usuario/fichajes', methods=['get'])
 @talisman()
-def usuarioFichajes():
+def usuario_fichajes():
 
     idUsuario = request.args.get('idUsuario')
     fecha = request.args.get('fecha')
@@ -402,7 +426,7 @@ def usuarioFichajes():
     return render_template('fichajes.html', listaFichajes=fichajes, fechaHoy=fecha, idUsuario=idUsuario)
 
 @main.route('/usuario/fichajesAjax', methods=['get','post'])
-def usuarioFichajesAjax():
+def usuario_fichajes_ajax():
 
     parametro = request.form
     idUsuario = parametro['idUsuario']
@@ -422,15 +446,16 @@ def usuarioFichajesAjax():
         data = []
         for f in fichajes:
             fecha = f.fecha.strftime('%d-%m-%Y')
+            #tiempo_trabajado = f.tiempo_trabajado.strftime('%H:%M')
             data.append({"ID":f.idFichaje, "fecha":fecha, "hora":str(f.hora_entrada), "tipo":f.tipo, "longitud":f.entrada_longitud, "latitud":f.entrada_latitud,
-                              "incidencia":f.incidencia, "borrado":f.borrado})
+                              "tiempo_trabajado":str(f.tiempo_trabajado), "incidencia":f.incidencia, "borrado":f.borrado})
             print('fichaje ajax:',data)
         data_json = {'data': data}
         return jsonify(data_json)
  
     
 @main.route('/usuario/fichajesRangoAjax', methods=['get','post'])
-def usuarioFichajesRangoAjax():
+def usuario_fichajes_rango_ajax():
     parametro = request.form
     idUsuario = parametro['idUsuario']
     fecha_ini = parametro['fecha_ini']
@@ -442,14 +467,22 @@ def usuarioFichajesRangoAjax():
         #Devolvemos un diccionario vacio si no hay datos de gastos para enviar.
         return jsonify({'data':[]})
     else:
-        data_json = {'data':[{"ID":f.idFichaje, "fecha":f.fecha, "hora":str(f.hora_entrada), "tipo":f.tipo, "longitud":f.entrada_longitud, "latitud":f.entrada_latitud,
-                              "incidencia":f.incidencia, "borrado":f.borrado} for f in fichajes]} 
+        data = []
+        for f in fichajes:
+            fecha = f.fecha.strftime('%d-%m-%Y')
+            #tiempo_trabajado = f.tiempo_trabajado.strftime('%H:%M')
+            data.append({"ID":f.idFichaje, "fecha":fecha, "hora":str(f.hora_entrada), "tipo":f.tipo, "longitud":f.entrada_longitud, "latitud":f.entrada_latitud,
+                              "tiempo_trabajado":str(f.tiempo_trabajado), "incidencia":f.incidencia, "borrado":f.borrado})
+            print('fichaje ajax:',data)
+        data_json = {'data': data}
+        #data_json = {'data':[{"ID":f.idFichaje, "fecha":f.fecha, "hora":str(f.hora_entrada), "tipo":f.tipo, "longitud":f.entrada_longitud, "latitud":f.entrada_latitud,
+         #                     "incidencia":f.incidencia, "borrado":f.borrado} for f in fichajes]} 
         return jsonify(data_json)
   
 #Metodo API que devuelve los fichajes entre dos fechas       
 @main.route('/usuario/fichajesRango', methods=['get','post'])
 @jwt_required()
-def usuarioFichajesRango():
+def usuario_fichajes_rango():
     try:
         current_user_id = get_jwt_identity()
         idUsuario = request.args.get('idUsuario')
@@ -473,7 +506,7 @@ def usuarioFichajesRango():
 
 #Metodo para obtener los gastos de un usuario en la aplicacion Web
 @main.route('/usuario/gastos', methods=['get'])
-def usuarioGastos():
+def usuario_gastos():
     idUsuario = request.args.get('idUsuario')
     
     gastos = Gasto.get_by_idEmpleado(idUsuario)
@@ -482,7 +515,7 @@ def usuarioGastos():
 
 #metodo para devolver los tickets para peticion AJAX
 @main.route('/ajax/cargatickets', methods=['get','post'])
-def ajaxCargaTickets():
+def ajax_carga_tickets():
     parametro = request.form
     idUsuario = parametro['idUsuario']
     print('id: ',idUsuario, parametro)
@@ -500,7 +533,7 @@ def ajaxCargaTickets():
 #Metodo API para registrar un gasto con su ticket
 @main.route("/gasto/registraGasto", methods=['post'])
 @jwt_required()
-def registraGasto():
+def registra_gasto():
     try:
         if request.method == 'POST':
             
@@ -526,7 +559,7 @@ def registraGasto():
         
    
 @main.route("/cargaTicket", methods=['get'])
-def cargaTicket():
+def carga_ticket():
     idGasto = request.args.get('idGasto')
     
     gasto = Gasto.get_by_idGasto(idGasto)
@@ -539,7 +572,7 @@ def cargaTicket():
 
 @main.route("/validaTicket", methods=['POST'])
 @login_required
-def validaTicket():
+def valida_ticket():
     
     idGasto = request.form['idGasto']
 
@@ -555,7 +588,7 @@ def validaTicket():
 
 
 @main.route("/validaTickets", methods=['post','get'])
-def validaTickets():
+def valida_tickets():
 
     print('tickets validados:', request.form);
     for i in request.form:
@@ -567,9 +600,12 @@ def validaTickets():
 @gestor_required
 def alta_usuario():
     print("en altas")
+    usuario_actual = Usuario.get_by_id(session['idUsuario'])
     form = FormAlta()
-    form.rol.choices = [(rol.idRol, rol.nombreRol) for rol in Rol.query.all()]
-    print('roles select: ', form.rol.choices)
+    for rol in Rol.query.all():
+        form.rol.choices.append((rol.idRol, rol.nombreRol))
+    if not usuario_actual.is_admin():
+        form.rol.choices.remove((0,'Administrador')  )  
     error = None
     
     if form.validate_on_submit():
@@ -606,7 +642,7 @@ def alta_usuario():
 
 #Metodo API recuperacion de contraseña        
 @main.route('usuario/recuperaPassword', methods=['get'])
-def recoveryPass():
+def recovery_pass():
     emailUsuario = request.args.get('email')
     print('El usuario: ', emailUsuario, ' esta intentando recuperar la pass.')
     user = Usuario.get_by_login(emailUsuario)

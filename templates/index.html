@@ -94,7 +94,7 @@
                     var fecha_actual = new Date();
                     var strFecha_actual = fecha_actual.getFullYear() + "/" + (fecha_actual.getMonth()+1) + "/" + fecha_actual.getDate();
                     
-                    url_home = "{{ url_for('usuarios_blueprint.usuariosEmpresaAjax') }}";
+                    url_home = "{{ url_for('usuarios_blueprint.usuarios_empresa_ajax') }}";
                     console.log('url carga:', url_home);
 
 
@@ -157,7 +157,7 @@
                         console.log("gastos pulsado tiene el id de usuario: ", this.dataset.id);
                         var id = this.dataset.id;
 
-                        window.location.href = "{{ url_for('usuarios_blueprint.usuarioGastos') }}" + "?idUsuario=" + id;
+                        window.location.href = "{{ url_for('usuarios_blueprint.usuario_gastos') }}" + "?idUsuario=" + id;
                     });
 
                     $('#tablaEmpleados tbody').on('click', '#botonFichajes', function () {
@@ -165,7 +165,7 @@
                         console.log("fichajes pulsado tiene el id de usuario: ", this.dataset.id);
                         var id = this.dataset.id;
 
-                        window.location.href = "{{ url_for('usuarios_blueprint.usuarioFichajes') }}" + "?idUsuario=" + id;
+                        window.location.href = "{{ url_for('usuarios_blueprint.usuario_fichajes') }}" + "?idUsuario=" + id;
                         
                     });
 

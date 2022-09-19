@@ -93,9 +93,9 @@
 <script src="{{ url_for('static', filename='libs/popper.js') }}"></script>
 
 
-<!--<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>-->
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" 
-integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<!--<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" 
+integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>-->
 
 
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.10.0/bootstrap-table.js"></script>
@@ -111,7 +111,7 @@ integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7
 
         var idUsuario = "{{ idUsuario }}";
         console.log('idUsuario cargado: ',idUsuario);
-        url_home = "{{ url_for('usuarios_blueprint.ajaxCargaTickets') }}";
+        url_home = "{{ url_for('usuarios_blueprint.ajax_carga_tickets') }}";
         console.log('url carga:', url_home);
         
         //Funcion Ajax para renderizar el checkbox en funcion del valor del dato almacenado en la BBDD    
@@ -151,6 +151,7 @@ integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7
                 }
             },
 
+            "exportTypes": ['json','csv','excel','pdf'],
             "responsive": true,
             "sPaginationType": "full_numbers",
             "order": [[3, 'desc']],
@@ -233,11 +234,11 @@ integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7
             //Guardamos en data-gasto el idGasto para que podamos usarlo luego en el controlador 'click' del botonValida
             jQuery('#botonValida').attr('data-gasto', idGastoParametro);
             //Generamos la url para llamar al metodo de validacion del ticket
-            url_valida = '{{ url_for('usuarios_blueprint.validaTicket') }}';
+            url_valida = '{{ url_for('usuarios_blueprint.valida_ticket') }}';
             url_valida = url_valida + "?idGasto="+idGastoParametro;
             console.log('url_valida:',url_valida);
                 
-            img = "{{ url_for('usuarios_blueprint.cargaTicket', idGasto=id) }}";
+            img = "{{ url_for('usuarios_blueprint.carga_ticket', idGasto=id) }}";
                 
             console.log('modal mostrada....');
                 //No coge el idGastoTabla y se lo tengo que añadir aqui.

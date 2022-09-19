@@ -85,6 +85,7 @@
                             <th data-field="tipo" data-sortable="true">Tipo</th>
                             <th data-field="longitud" data-sortable="true">Longitud</th>
                             <th data-field="latitud" data-sortable="true">Latitud</th>
+                            <th data-field="tiempo_trabajado" data-sortable="true">Tiempo trabajado</th>
                             <th data-field="incidencia" data-sortable="true">Incidencia</th>
                             <th data-field="geolocalizacion"></th>
                             <th data-field="borrado"></th>
@@ -126,14 +127,18 @@
                 <script src="{{ url_for('static', filename='libs/popper.js') }}"></script>
 
                 
-                <!--<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>-->
-                <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" 
-                integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+                <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+                <!--<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" 
+                integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>-->
+
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/datatables.net-rowgroup/1.2.0/dataTables.rowGroup.min.js" 
+                integrity="sha512-jbepm9zLdn/4fJRCLn5o4iCXoBJnYn+PKlg01eGbOZCjcS/6pvxCIYEc59E4N/crHV66UOLdOS7VNLKDGYSrfg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+         
         
                 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.10.0/bootstrap-table.js"></script>
                 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.9.1/extensions/editable/bootstrap-table-editable.js"></script>
-                <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.9.1/extensions/export/bootstrap-table-export.js"></script>
-               <!-- <script type="text/javascript" src="https://rawgit.com/hhurz/tableExport.jquery.plugin/master/tableExport.js"></script> -->
+               <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.9.1/extensions/export/bootstrap-table-export.js"></script>
+               <script type="text/javascript" src="https://rawgit.com/hhurz/tableExport.jquery.plugin/master/tableExport.js"></script>
                 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.9.1/extensions/filter-control/bootstrap-table-filter-control.js"></script> 
                 
 
@@ -146,7 +151,7 @@
                     var fecha_actual = new Date();
                     var strFecha_actual = fecha_actual.getFullYear() + "/" + (fecha_actual.getMonth()+1) + "/" + fecha_actual.getDate();
                     
-                    url_home = "{{ url_for('usuarios_blueprint.usuarioFichajesAjax') }}";
+                    url_home = "{{ url_for('usuarios_blueprint.usuario_fichajes_ajax') }}";
                     console.log('url carga:', url_home);
                     var peticionData = {'idUsuario': idUsuario, 'fecha': strFecha_actual};
 
@@ -165,6 +170,11 @@
                     var eliminarFichaje = function( data, type, row, meta ) {
                         
                          return "<button type='button' id='eliminarFichaje' class='btn btn-primary' data-fichaje=" + row['ID'] + "><i class='bi bi-x-lg'></i></button>";
+                    }
+
+                    var calculaTiempo = function( data, type, row, meta ) {
+                        console.log('calculando jornada');
+                        return 'NumeroFichajes' + ' ' + rows.count();
                     }
 
                     var table = $('#tablaFichajes').DataTable
@@ -192,6 +202,34 @@
                         },
                         "responsive": true,
                          "sPaginationType": "full_numbers",
+                         "rowGroup": {
+                             "startRender": null,
+                             "endRender": function (rows, group) {
+                                var suma = rows
+                                    .data()
+                                    .pluck('tiempo_trabajado')
+                                    .reduce(function (a, b) {
+                                        var splitTime1 = a.toString().split(':');
+                                        var splitTime2 = b.toString().split(':');
+
+                                        horas = parseInt(splitTime1[0])+parseInt(splitTime2[0]);
+                                        minutos = parseInt(splitTime1[1])+parseInt(splitTime2[1]);
+                                        //console.log('h:',horas, splitTime1[0], splitTime1[1]);
+                                        //console.log('m:',minutos);
+                                        horas_sum = horas + minutos/60;
+                                        minutos_sum = minutos%60;
+                                        console.log('split:', splitTime1, '---', splitTime2);
+                                        console.log('horas:', horas);
+
+                                        return horas+':'+minutos;    
+                                    }, '00:00:00');
+                                    if (Number.isNaN(suma)) {
+                                        suma='00:00';
+                                    }
+                                    return 'Tiempo total trabajado (hh:mm) ' + suma;
+                             },
+                            "dataSrc": "fecha"
+                         },
                          "order": [[1, 'desc']],
                         "ajax": {
                             "method": "POST",
@@ -208,6 +246,7 @@
                             {"data":"tipo"},
                             {"data":"longitud"},
                             {"data":"latitud"},
+                            {"data":"tiempo_trabajado"},
                             {"data":"incidencia"},
                             {"data": "geolocalizacion",
                              "render": function(data, type, row) {
@@ -236,7 +275,7 @@
                         var idFichaje = this.dataset.fichaje;
                        
                         console.log('url_borrar:',url_borraFichaje);
-                        var url_borraFichaje = '{{ url_for('usuarios_blueprint.borrarFichajeGestor') }}';
+                        var url_borraFichaje = '{{ url_for('usuarios_blueprint.borrar_fichaje_gestor') }}';
                         url_borraFichaje = url_borraFichaje + "?idFichaje="+idFichaje;
                         console.log('url_borrar:',url_borraFichaje);
                         //Como el parametro del idFichaje ya va concatenado en la url ya no lo ponemos en "data" de la peticion Ajax
@@ -335,7 +374,7 @@
                         document.getElementById('btnBuscaRango').addEventListener('click', 
                             function busquedaPorRango() {
     
-                            var url_rangoFechas = "{{ url_for('usuarios_blueprint.usuarioFichajesRangoAjax') }}";
+                            var url_rangoFechas = "{{ url_for('usuarios_blueprint.usuario_fichajes_rango_ajax') }}";
                             var startDateVal = startDate.value;
                             var endDateVal = endDate.value;
                             if (startDateVal === '' || endDateVal === '') {
@@ -369,7 +408,7 @@
 
                         document.getElementById('botonGrabaFichaje').addEventListener('click',
                             function addFichaje() {
-                                url_fichaje = '{{ url_for('usuarios_blueprint.fichajeGestor') }}';
+                                url_fichaje = '{{ url_for('usuarios_blueprint.fichaje_gestor') }}';
                                 
                                 console.log('url_fichaje:',url_fichaje);
                                 var fecha_fichaje = jQuery('#txtFecha').val();
