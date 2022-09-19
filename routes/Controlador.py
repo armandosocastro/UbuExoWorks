@@ -535,7 +535,7 @@ def ajax_carga_tickets():
 @jwt_required()
 def registra_gasto():
     try:
-        if request.method == 'POST':       
+            current_user_id = get_jwt_identity()     
             idUsuario = request.form['idUsuario']
             fecha = request.form['fecha']
             tipo = request.form['tipo']
@@ -546,13 +546,16 @@ def registra_gasto():
             descripcion = request.form['descripcion']
             numeroTicket = request.form['numeroTicket']
             
-            imagen = request.files['ticket']
-            imagen_string = base64.b64encode(imagen.read())
+            if str(current_user_id) == str(idUsuario):
+                imagen = request.files['ticket']
+                imagen_string = base64.b64encode(imagen.read())
             
-            gasto = Gasto(fecha=fecha, tipo=tipo, descripcion=descripcion, importe=importe, iva=iva, cif=cif,fotoTicket=imagen_string,idUsuario=idUsuario,razonSocial=razonSocial,numeroTicket=numeroTicket)
-            gasto.save()
-            
-            return jsonify("Ok"), 200
+                gasto = Gasto(fecha=fecha, tipo=tipo, descripcion=descripcion, importe=importe, iva=iva, cif=cif,fotoTicket=imagen_string,idUsuario=idUsuario,razonSocial=razonSocial,numeroTicket=numeroTicket,validado=False)
+                gasto.save()
+                
+                return jsonify("Ok"), 200
+            else:
+                return jsonify({'token incorrecto'}), 401
     except Exception as ex:
         return jsonify({ 'error': str(ex)}), 500
          
