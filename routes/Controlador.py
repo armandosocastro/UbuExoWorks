@@ -26,7 +26,7 @@ import base64 #Para codificar/descodificar las imagenes
 from auth import admin_required, gestor_required
 import jwt
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
-#from flask_wtf import CSRFProtect
+
 from app import mail
 from app import talisman
 

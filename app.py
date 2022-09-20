@@ -115,7 +115,6 @@ def create_app():
     
     @login_manager.user_loader
     def load_user(user_id):
-        #return Usuarios.Usuario.query.get(int(user_id))
         print ("Usuario que se intenta logear: ", user_id)
         
         usuario = Controlador.Usuario.get_by_id(user_id)
@@ -205,7 +204,7 @@ def create_app():
     def cambia_pass_get():
         form = FormCambioPassword()
         error = NoneAlgorithm
-        return render_template('cambiapass_form.html', form=form)   
+        return render_template('cambiapass_form.html', form=form, error=error)   
     
     
     @app.route('/cambiaPass', methods=['POST'])
@@ -234,7 +233,7 @@ def create_app():
                 user.save()
                 return redirect(url_for('home'))
             form.passwordActual.errors.append("Contraseña actual incorrecta.")
-        return render_template('cambiapass_form.html', form=form)
+        return render_template('cambiapass_form.html', form=form, error=error)
           
     @app.route("/login", methods=['get', 'post'])
     def login():
@@ -267,7 +266,7 @@ def create_app():
                     return redirect(url_for("home"))
                 form.email.errors.append("Usuario deshabiliado, contacte con su administrador.")
             form.email.errors.append("Usuario o contraseña incorrectos.")
-        return render_template('login_form.html', form=form)
+        return render_template('login_form.html', form=form, error=error)
     
     @app.route("/recupera", methods=['get', 'post'])
     def recuperar():
@@ -285,7 +284,7 @@ def create_app():
                return redirect(url_for('usuarios_blueprint.recovery_pass_web', email=email))
             form.email.errors.append("El usuario no existe.")
             return redirect(url_for('home'))
-        return render_template('recuperapass_form.html', form=form)
+        return render_template('recuperapass_form.html', form=form, error=error)
     
     @app.route("/logout")
     def logout():

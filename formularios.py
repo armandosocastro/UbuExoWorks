@@ -1,5 +1,5 @@
 import email
-#from msilib.schema import CheckBox
+
 from flask_wtf import FlaskForm
 import sqlalchemy
 from wtforms import StringField, PasswordField, BooleanField, SubmitField, SelectField
@@ -10,7 +10,7 @@ from models.Modelo import Rol
 
 
 class FormRegistro(FlaskForm):
-    #username = StringField('Nombre de usuario', validators=[DataRequired()])
+
     empresa = StringField('Empresa', validators=[DataRequired()])
     cif = StringField('Cif', validators=[DataRequired()])
     planContratado = StringField('Plan', validators=[DataRequired()], default=1)
@@ -52,7 +52,7 @@ class FormCambioPassword(FlaskForm):
 #Obtenemos los Roles disponibles
 def roles_opcion():
     roles = Rol.get_by_Rol()
-    return Rol.get_by_Rol()
+    return roles
 
 class FormAlta(FlaskForm):
     nombre = StringField('Nombre', validators=[DataRequired(message="Campo obliogatorio")])
@@ -75,7 +75,7 @@ class FormModifica(FlaskForm):
     email = StringField('Email', validators=[DataRequired(message="Formato correo incorrecto"), Email()])
     emailRecuperacion = StringField('Email alternativo', validators=[DataRequired(message="Formato correo incorrecto"), Email()])
     imei = StringField('Imei dispositivo registrado', render_kw={'readonly': True})
-    #rol = QuerySelectField(query_factory=lambda: roles_opcion(), get_label='idRol')
+
     rol = SelectField('Rol', choices=[], coerce=int)
     estado = BooleanField('Habilitado')
     

@@ -24,25 +24,3 @@ def gestor_required(f):
             abort(401)
         return f(*args, **kws)
     return decorated_function
-
-
-"""def token_required(f):
-    @wraps(f)
-    def decorated_function(*args, **kws):
-        token = None
-        if 'x-access-tokens' in request.headers:
-            token = request.headers['x-access-tokens']
-            print('token contenido: ', token)
-
-        if not token:
-            return jsonify({'message': 'a valid token is missing'})
-        try:
-            print('os environ:',os.environ.get('SECRET_KEY'))
-            data = jwt.decode(token, os.environ.get('SECRET_KEY'))
-            print('data:', data['idUsuario'])
-        except:
-            
-            return jsonify({'message': 'token is invalid'})
-        return f(*args, **kws)
-    return decorated_function
- """
