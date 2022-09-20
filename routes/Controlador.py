@@ -512,6 +512,12 @@ def usuario_gastos():
     idUsuario = request.args.get('idUsuario') 
     gastos = Gasto.get_by_idEmpleado(idUsuario)
     print('Gastos: ', gastos)
+    data_gastos = []
+    for g in gastos:
+        fecha = g.fecha.strftime('%d-%m-%Y')
+        data_gastos.append({"ID":g.idGasto, "idUsuario":g.idUsuario, "fecha":fecha, "tipo":g.tipo, "razonsocial":g.razonSocial, "importe":g.importe, 
+                           "iva":g.iva, "cif":g.cif, "numeroticket":g.numeroTicket, "validado":g.validado})
+        
     return render_template('gastosAjax.html', listaGastos=gastos, idUsuario=idUsuario)
 
 #metodo para devolver los tickets para peticion AJAX
@@ -526,7 +532,7 @@ def ajax_carga_tickets():
         #Devolvemos un diccionario vacio si no hay datos de gastos para enviar.
         return jsonify({'data':[]})
     else:
-        data_json = {'data':[{"ID":g.idGasto, "idUsuario":g.idUsuario, "fecha":g.fecha, "tipo":g.tipo, "razonsocial":g.razonSocial, "importe":g.importe,
+        data_json = {'data':[{"ID":g.idGasto, "idUsuario":g.idUsuario, "fecha":g.fecha.strftime('%d-%m-%Y'), "tipo":g.tipo, "razonsocial":g.razonSocial, "importe":g.importe,
                           "iva":g.iva, "cif":g.cif, "numeroticket":g.numeroTicket, "validado":g.validado} for g in gastos]} 
         return jsonify(data_json)
 

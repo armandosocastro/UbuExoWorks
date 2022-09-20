@@ -16,10 +16,9 @@
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/css/datepicker.min.css">
 
-<!--<link rel='stylesheet' type='text/css' href='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.2/main.min.css'/>-->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.2/main.min.css" 
     integrity="sha256-5veQuRbWaECuYxwap/IOE/DAwNxgm4ikX7nrgsqYp88=" crossorigin="anonymous">
-<!--<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.2/main.min.js"></script>-->
+
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.2/main.min.js" 
     integrity="sha256-sR+oJaZ3c0FHR6+kKaX1zeXReUGbzuNI8QTKpGHE0sg=" crossorigin="anonymous"></script>
 
@@ -76,7 +75,7 @@
                         data-filter-control="true" 
                         data-show-export="true"
                         data-click-to-select="false"
-                        class="table" aria-describedby="tablaFichajes">  
+                        class="table table-borderless" aria-describedby="tablaFichajes">  
                       <thead>
                         <tr>
                             <th data-field="entrada"></th>
@@ -127,31 +126,37 @@
                 <script src="{{ url_for('static', filename='libs/popper.js') }}"></script>
 
                 
-                <!--<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>-->
                 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js" 
                 integrity="sha512-K1qjQ+NcF2TYO/eI3M6v8EiNYZfA95pQumfvcVrTHtwQVDG+aHRqLi/ETn2uB+1JqwYqVG3LIvdm9lj6imS/pQ==" crossorigin="anonymous"></script>
-                <!--<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" 
-                integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>-->
 
                 <script src="https://cdnjs.cloudflare.com/ajax/libs/datatables.net-rowgroup/1.2.0/dataTables.rowGroup.min.js" 
                 integrity="sha512-jbepm9zLdn/4fJRCLn5o4iCXoBJnYn+PKlg01eGbOZCjcS/6pvxCIYEc59E4N/crHV66UOLdOS7VNLKDGYSrfg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-         
+                    <!--ahora-->
+               <!--<script src="https://cdn.jsdelivr.net/npm/tableexport.jquery.plugin@1.10.21/tableExport.min.js"></script>-->
+               <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/TableExport/3.0.0/js/tableexport.min.js" 
+                integrity="sha512-RkWgAJ/+Z70htLqVxSr3DB7+ntDD1mAV0I7i79wyFSA2QjFgie9+0SlRgAua3z6cxPKFqJ9eb8PU/z5LkpPwRQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>-->
         
                 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.10.0/bootstrap-table.js"></script>
                 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.9.1/extensions/editable/bootstrap-table-editable.js"></script>
                 
-                <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.9.1/extensions/export/bootstrap-table-export.min.js" 
-                    integrity="sha512-B10O3fjdFvKIH2+I1HoNRzhU3PG5lttxH0twDC5/5DpuFesgVEoSOrlPHX7HomSnPhmeO10GXJj6rLmqlejE0w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+                <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.9.1/extensions/export/bootstrap-table-export.min.js" 
+                    integrity="sha512-B10O3fjdFvKIH2+I1HoNRzhU3PG5lttxH0twDC5/5DpuFesgVEoSOrlPHX7HomSnPhmeO10GXJj6rLmqlejE0w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>-->
               
                    <!--<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.9.1/extensions/export/bootstrap-table-export.js"></script>-->
                
                 <!--<script type="text/javascript" src="https://rawgit.com/hhurz/tableExport.jquery.plugin/master/tableExport.js"></script>-->
-               <script src="https://cdnjs.cloudflare.com/ajax/libs/TableExport/5.2.0/js/tableexport.js" 
-                integrity="sha512-Azqvrwc2opXWFeMnE5xq69qhUAw77VH57FtkbHIf01BzI+C1loZ7YlXzDnMbnvXO7lkv7QuZq0aDZA03h7WO0w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-                <!--<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.9.1/extensions/filter-control/bootstrap-table-filter-control.js"></script> -->
+               <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/TableExport/5.2.0/js/tableexport.js" 
+                integrity="sha512-Azqvrwc2opXWFeMnE5xq69qhUAw77VH57FtkbHIf01BzI+C1loZ7YlXzDnMbnvXO7lkv7QuZq0aDZA03h7WO0w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>-->
+                
                 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.9.1/extensions/filter-control/bootstrap-table-filter-control.min.js" 
                     integrity="sha512-chMvxSQlIXdPJmRkaZT2TYKJbQZ3lkFiBzGAVjewT7LZB9nZ0kd2yt01NNZF9kyqydkUUEpAKoPATChOTDhX4Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
                 
+                <script src="https://cdn.datatables.net/buttons/2.2.3/js/dataTables.buttons.min.js"></script>
+                <script src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.html5.min.js"></script>
+                <script src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.print.min.js"></script> <!--Añade print-->
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script> <!--Añade Excel-->
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
 
                 <script type="text/javascript" nonce="2726c7f26c">
 
@@ -190,7 +195,8 @@
 
                     var table = $('#tablaFichajes').DataTable
                     ({
-
+                        dom: 'l<"row"B>frtip',
+                        buttons: ['csv', 'excel', 'print'],
                         language: {
                             "decimal": "",
                             "emptyTable": "No hay información",
@@ -211,6 +217,7 @@
                                 "previous": "Anterior"
                             }
                         },
+
                         "responsive": true,
                          "sPaginationType": "full_numbers",
                          "rowGroup": {
