@@ -1,5 +1,6 @@
 # app.py
 
+from crypt import methods
 import os
 import re
 from datetime import datetime, timedelta
@@ -7,6 +8,7 @@ from datetime import datetime, timedelta
 from flask_sqlalchemy import SQLAlchemy
 from flask import Flask, redirect, render_template, url_for, session, jsonify, request
 from flask_expects_json import expects_json
+from itsdangerous import NoneAlgorithm
 #from flask_session import Session
 from werkzeug.security import generate_password_hash,check_password_hash
 from flask_mail import Mail, Message
@@ -119,7 +121,14 @@ def create_app():
         usuario = Controlador.Usuario.get_by_id(user_id)
         return usuario
     
-    @app.route('/registro', methods=['GET', 'POST'])
+    @app.route('/registro', methods=['GET'])
+    def registro_get():
+        form = FormRegistro()
+        error = None
+        
+        return render_template("signup_form.html", form=form, error=error)
+
+    @app.route('/registro', methods=['POST'])
     def registro():
         form = FormRegistro()
         error = None
@@ -192,7 +201,14 @@ def create_app():
 
         return render_template("admin.html", idUsuario = session['idUsuario'], is_Admin = True)
     
-    @app.route('/cambiaPass', methods=['POST','GET'])
+    @app.route('/cambiaPass', methods=['GET'])
+    def cambia_pass_get():
+        form = FormCambioPassword()
+        error = NoneAlgorithm
+        return render_template('cambiapass_form.html', form=form)   
+    
+    
+    @app.route('/cambiaPass', methods=['POST'])
     @login_required
     def cambiaPass():
         form = FormCambioPassword()

@@ -181,7 +181,7 @@ def login():
     return jsonify("No existe usuario"),300
 
 #Metodo para registrar un fichaje por el Gestor sin necesidad de tokens de seguridad
-@main.route('/fichajeGestor', methods=['POST','GET'])
+@main.route('/fichajeGestor', methods=['POST'])
 #@jwt_required()
 @expects_json()
 def fichaje_gestor():
@@ -258,7 +258,7 @@ def borrar_fichaje_gestor():
         return 'Peticion incorrecta'
 
 #Metodo API para registrar un fichaje
-@main.route('/fichaje', methods=['POST','GET'])
+@main.route('/fichaje', methods=['POST'])
 @jwt_required()
 @expects_json()
 def fichar():
@@ -428,7 +428,7 @@ def usuario_fichajes():
     print(fichajes)
     return render_template('fichajes.html', listaFichajes=fichajes, fechaHoy=fecha, idUsuario=idUsuario)
 
-@csrf.exempt
+
 @main.route('/usuario/fichajesAjax', methods=['get','post'])
 def usuario_fichajes_ajax():
 
@@ -454,7 +454,7 @@ def usuario_fichajes_ajax():
         data_json = {'data': data}
         return jsonify(data_json)
 
-@csrf.exempt    
+   
 @main.route('/usuario/fichajesRangoAjax', methods=['get','post'])
 def usuario_fichajes_rango_ajax():
     parametro = request.form
@@ -525,7 +525,7 @@ def usuario_gastos():
         
     return render_template('gastosAjax.html', listaGastos=gastos, idUsuario=idUsuario)
 
-@csrf.exempt
+
 #metodo para devolver los tickets para peticion AJAX
 @main.route('/ajax/cargatickets', methods=['get','post'])
 def ajax_carga_tickets():
