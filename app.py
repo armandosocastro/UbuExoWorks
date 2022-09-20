@@ -1,6 +1,4 @@
 # app.py
-
-from crypt import methods
 import os
 import re
 from datetime import datetime, timedelta
@@ -115,8 +113,6 @@ def create_app():
     
     @login_manager.user_loader
     def load_user(user_id):
-        print ("Usuario que se intenta logear: ", user_id)
-        
         usuario = Controlador.Usuario.get_by_id(user_id)
         return usuario
     
@@ -145,8 +141,7 @@ def create_app():
             estado = True
             idRol = 1
             idJornadaLaboral = 1
-            
-            print('email y pass: ', email, password)
+
             user = Controlador.Usuario.get_by_login(email)
             empresa = Controlador.Empresa.get_by_cif(cif)
             
@@ -158,7 +153,6 @@ def create_app():
                 empresa = Controlador.Empresa(nombre=nombre_empresa, cif=cif, planContratado=plan, numEmpleados=1)           
                 empresa.save()
                 idempresa = empresa.get_id_empresa()
-                print('emrpesa: ', idempresa)
                 user = Controlador.Usuario(nombre=nombre, apellidos=apellidos ,login=email, tlf=tlf, nif=nif,
                                         emailRecuperacion= emailRecuperacion, estado=estado, idEmpresa=idempresa,idRol=idRol, idJornadaLaboral=idJornadaLaboral)    
                 user.set_password(password)
@@ -176,7 +170,6 @@ def create_app():
     @app.route("/" )
     @login_required
     def home():
-        print('En home...con el usuario:', session['username'], session['idUsuario'], 'rol session:', session['rol'])
         #En el caso de que lleguemos aqui con un id de Empresa en la url actualizamos la variable de session.
         if request.args.get('idEmpresa') != None:
             session['idEmpresa']=request.args.get('idEmpresa')
@@ -193,11 +186,6 @@ def create_app():
     @login_required
     @admin_required
     def admin():
-        print('En panel de Administracion...con el usuario:', session['username'], session['idUsuario'])
-      
-        empresas = Controlador.Empresa.get_all()
-        print('Listado de enmpresas: ', empresas)
-
         return render_template("admin.html", idUsuario = session['idUsuario'], is_Admin = True)
     
     @app.route('/cambiaPass', methods=['GET'])
@@ -206,13 +194,11 @@ def create_app():
         error = NoneAlgorithm
         return render_template('cambiapass_form.html', form=form, error=error)   
     
-    
     @app.route('/cambiaPass', methods=['POST'])
     @login_required
     def cambiaPass():
         form = FormCambioPassword()
         error = None
-
         user = current_user
         if request.method =='GET':
             form.email.data = user.login
@@ -228,7 +214,6 @@ def create_app():
             password2 = form.password2.data
             
             if user.check_password(password_actual):
-                print('La contraseña actual coincide..')
                 user.set_password(password)
                 user.save()
                 return redirect(url_for('home'))
@@ -256,13 +241,11 @@ def create_app():
                     session['rol'] = user.idRol
                     return redirect(url_for("admin"))
                 if user.check_habilitado():
-                    print('por aqui no......')
                     login_user(user)
                     session['idUsuario'] = user.idUsuario
                     session['idEmpresa'] = user.get_id_empresa()
                     session['username'] = user.get_login()
                     session['rol'] = user.idRol
-                    print('idempresa: ', session['idEmpresa'], session['username'], 'rol:', session['rol'])
                     return redirect(url_for("home"))
                 form.email.errors.append("Usuario deshabiliado, contacte con su administrador.")
             form.email.errors.append("Usuario o contraseña incorrectos.")

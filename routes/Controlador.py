@@ -537,8 +537,12 @@ def recovery_pass_web():
 @login_required
 @gestor_required
 def modifica_usuario():
+    usuario_actual = Usuario.get_by_id(session['idUsuario'])
     form = FormModifica()
-    form.rol.choices = [(rol.idRol, rol.nombreRol) for rol in Rol.query.all()]
+    for rol in Rol.query.all():
+        form.rol.choices.append((rol.idRol, rol.nombreRol))
+    if not usuario_actual.is_admin():
+        form.rol.choices.remove((0,'Administrador')  )  
     error = None
     id_usuario = request.args.get('idUsuario')
     id_empresa = session['idEmpresa']

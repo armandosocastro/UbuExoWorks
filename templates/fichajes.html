@@ -177,10 +177,9 @@
                         
                         if (row['tipo'] == 'entrada' || row['tipo'] == 'pausa entrada')
                             
-                            return "<img class='img-icono-perfil' src='{{ url_for('static', filename='/libs/bootstrap-icons-1.8.3/caret-right.svg') }}'>";
+                            return "<i class='bi bi-caret-right'>";
                         else
-                          
-                            return "<img class='img-icono-perfil' src='{{ url_for('static', filename='/libs/bootstrap-icons-1.8.3/caret-left.svg') }}'>";
+                            return "<i class='bi bi-caret-left'>";
                     }
                    
                     //Funcion Ajax para renderizar el boton para eliminar un fichaje   
@@ -281,12 +280,13 @@
 
                             if (data['borrado'] === true) {
                                 console.log('este esta borrado');
-                                for (var i = 0; i < 8; i++) {
+                                for (var i = 0; i < 9; i++) {
                                     celda = row.cells[i].innerHTML;
                                     $('td:eq('+i+')', row).html('<del>'+celda+'</del>');
                                 };
                                 $('td:eq(7)', row).html('');
                                 $('td:eq(8)', row).html('');
+                                $('td:eq(9)', row).html('');
                             }
                         }
                             
@@ -304,6 +304,9 @@
                         $.ajax({
                             type:"POST",
                             url:url_borraFichaje,
+                            headers: {
+                                "X-CSRFToken": csrftoken
+                            },
                             success: function(resultado) {
                                 console.log('resultado:', resultado);
                             },
