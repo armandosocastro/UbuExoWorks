@@ -31,6 +31,7 @@ from flask_talisman import Talisman
 mail = Mail()
 
 talisman = Talisman()
+csrf = CSRFProtect()
 
 def fecha_actual():
     now = datetime.now()
@@ -71,7 +72,8 @@ def create_app():
     app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(minutes=10)
 
     jwt = JWTManager(app) 
-    csrf = CSRFProtect()   
+    csrf = CSRFProtect(app) 
+  
    
     #Session(app)
     
@@ -85,7 +87,7 @@ def create_app():
     #Creamos el objeto mail y lo inicializamos
 
     mail.init_app(app)
-    
+    csrf.init_app(app)
     
     def page_not_found(error):
         return "<h1> Not found page </h1>",404

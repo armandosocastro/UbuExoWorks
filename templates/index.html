@@ -97,7 +97,7 @@
                     url_home = "{{ url_for('usuarios_blueprint.usuarios_empresa_ajax') }}";
                     console.log('url carga:', url_home);
 
-
+                    var csrftoken = $('meta[name=csrf-token]').attr('content')
                     var table = $('#tablaEmpleados').DataTable
                     ({
                         language: {
@@ -124,6 +124,9 @@
                         "ajax": {
                             "method": "POST",
                             "url": url_home,
+                            "headers": {
+                                "X-CSRFToken": csrftoken
+                            },
                             "data": null
                         },
                         "columns": [

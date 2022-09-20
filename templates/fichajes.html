@@ -189,6 +189,8 @@
                         return 'NumeroFichajes' + ' ' + rows.count();
                     }
 
+                    var csrftoken = $('meta[name=csrf-token]').attr('content')
+                    
                     var table = $('#tablaFichajes').DataTable
                     ({
                         dom: 'l<"row"B>frtip',
@@ -246,6 +248,9 @@
                         "ajax": {
                             "method": "POST",
                             "url": url_home,
+                            "headers": {
+                                "X-CSRFToken": csrftoken
+                            },
                             "data": function () {
                                 return peticionData;
                             },

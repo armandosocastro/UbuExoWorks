@@ -149,7 +149,8 @@ integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7
             return "<button type='button' class='btn btn-primary' data-toggle='modal' data-target= '#myModal' data-gasto=" + row['ID'] + "><i class='bi bi-image'></i></button>";
         }
 
-
+        //Generamos el token csrf
+        var csrftoken = $('meta[name=csrf-token]').attr('content')
         var table = $('#table').DataTable
         ({
             dom: 'l<"row"B>frtip',
@@ -191,7 +192,9 @@ integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7
             ],
             "ajax": {
                 "method": "POST",
-
+                "headers": {
+                    "X-CSRFToken": csrftoken
+                },
                 "url": url_home,
                 "data": {'idUsuario':idUsuario},
             },

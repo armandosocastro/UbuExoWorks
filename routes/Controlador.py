@@ -26,10 +26,11 @@ import base64 #Para codificar/descodificar las imagenes
 from auth import admin_required, gestor_required
 import jwt
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
+#from flask_wtf import CSRFProtect
 from app import mail
 from app import talisman
 
-#from app import csrf
+from app import csrf
 
 main = Blueprint('usuarios_blueprint', __name__)
 
@@ -87,18 +88,20 @@ def solicitud_borrar_fichaje():
         
     except Exception as ex:
         return jsonify({'mensaje': str(ex)}), 500   
+ 
     
 @main.route('/empresasAjax', methods=['get','post'])
 def empresas_ajax():
     listadoEmpresas = Empresa.get_all()
-    
+    print('Ajax empresas')
     if listadoEmpresas == []:
         #Devolvemos un diccionario vacio si no hay empresas.
         return jsonify({'data':[]})
     else:
         data_json = {'data':[{"id":e.idEmpresa, "nombre":e.nombre, "cif":e.cif, "plancontratado":e.planContratado} for e in listadoEmpresas]} 
         return jsonify(data_json)
-    
+ 
+
 @main.route('/usuariosEmpresaAjax', methods=['get','post'])
 def usuarios_empresa_ajax():
 
@@ -425,6 +428,7 @@ def usuario_fichajes():
     print(fichajes)
     return render_template('fichajes.html', listaFichajes=fichajes, fechaHoy=fecha, idUsuario=idUsuario)
 
+@csrf.exempt
 @main.route('/usuario/fichajesAjax', methods=['get','post'])
 def usuario_fichajes_ajax():
 
@@ -449,7 +453,8 @@ def usuario_fichajes_ajax():
             print('fichaje ajax:',data)
         data_json = {'data': data}
         return jsonify(data_json)
-    
+
+@csrf.exempt    
 @main.route('/usuario/fichajesRangoAjax', methods=['get','post'])
 def usuario_fichajes_rango_ajax():
     parametro = request.form
@@ -520,6 +525,7 @@ def usuario_gastos():
         
     return render_template('gastosAjax.html', listaGastos=gastos, idUsuario=idUsuario)
 
+@csrf.exempt
 #metodo para devolver los tickets para peticion AJAX
 @main.route('/ajax/cargatickets', methods=['get','post'])
 def ajax_carga_tickets():

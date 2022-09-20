@@ -49,17 +49,22 @@
                 
                 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js" integrity="sha384-q2kxQ16AaE6UbzuKqyBE9/u/KzioAlnx2maXQHiDX9d4/zp8Ok3f+M7DPm+Ib6IU" crossorigin="anonymous"></script>
                 
-                <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+                <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js" 
+                integrity="sha512-K1qjQ+NcF2TYO/eI3M6v8EiNYZfA95pQumfvcVrTHtwQVDG+aHRqLi/ETn2uB+1JqwYqVG3LIvdm9lj6imS/pQ==" crossorigin="anonymous"></script>
+
                 
-                
-                
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/datatables.net-rowgroup/1.2.0/dataTables.rowGroup.min.js" 
+                integrity="sha512-jbepm9zLdn/4fJRCLn5o4iCXoBJnYn+PKlg01eGbOZCjcS/6pvxCIYEc59E4N/crHV66UOLdOS7VNLKDGYSrfg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    
+        
                 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.10.0/bootstrap-table.js"></script>
                 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.9.1/extensions/editable/bootstrap-table-editable.js"></script>
-                <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.9.1/extensions/export/bootstrap-table-export.js"></script>
-                <script type="text/javascript" src="https://rawgit.com/hhurz/tableExport.jquery.plugin/master/tableExport.js"></script>
-                <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.9.1/extensions/filter-control/bootstrap-table-filter-control.js"></script>
+        
                 
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.9.1/extensions/filter-control/bootstrap-table-filter-control.min.js" 
+                    integrity="sha512-chMvxSQlIXdPJmRkaZT2TYKJbQZ3lkFiBzGAVjewT7LZB9nZ0kd2yt01NNZF9kyqydkUUEpAKoPATChOTDhX4Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
                 
+
 
 
                 <script type="text/javascript" nonce="2726c7f26c">
@@ -72,7 +77,9 @@
                     
                     url_empresas = "{{ url_for('usuarios_blueprint.empresas_ajax') }}";
                     console.log('url carga:', url_empresas);
-
+                    //Generamos el token csrf
+                    var csrftoken = $('meta[name=csrf-token]').attr('content')
+                    console.log('token:', csrftoken)
 
                     var table = $('#tablaEmpresas').DataTable
                     ({
@@ -100,7 +107,11 @@
                         "ajax": {
                             "method": "POST",
                             "url": url_empresas,
+                            "headers": {
+                                "X-CSRFToken": csrftoken
+                            },
                             "data": null
+                           
                         },
                         "columns": [
                             {"data":"id"},
