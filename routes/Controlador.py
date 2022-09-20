@@ -267,6 +267,15 @@ def fichar():
         print(ex)
         return 'JSON incorrecto', 400
     
+#Funcion auxiliar para crear diccionario de fichajes    
+def crear_dict_fichajes(lista_fichajes):
+    data = []
+    for f in lista_fichajes:
+        fecha = f.fecha.strftime('%d-%m-%Y')
+        data.append({"ID":f.idFichaje, "fecha":fecha, "hora":str(f.hora_entrada), "tipo":f.tipo, "longitud":f.entrada_longitud, "latitud":f.entrada_latitud,
+                "tiempo_trabajado":str(f.tiempo_trabajado), "incidencia":f.incidencia, "borrado":f.borrado})    
+    return data       
+    
 #Metodo API para obtener todos los fichajes de un usuario    
 @main.route('/get/fichajes', methods=['get'])
 @jwt_required()
@@ -276,13 +285,7 @@ def get_fichaje():
         id_usuario = request.args.get('idUsuario')
         if str(current_user_id) == str(id_usuario):
             fichajes = Fichaje.get_by_idEmpleado(id_usuario)
-            data = []
-            for f in fichajes:
-                fecha = f.fecha.strftime('%d-%m-%Y')
-                #tiempo_trabajado = f.tiempo_trabajado.strftime('%H:%M')
-                data.append({"ID":f.idFichaje, "fecha":fecha, "hora":str(f.hora_entrada), "tipo":f.tipo, "longitud":f.entrada_longitud, "latitud":f.entrada_latitud,
-                              "tiempo_trabajado":str(f.tiempo_trabajado), "incidencia":f.incidencia, "borrado":f.borrado})
-            return jsonify({'fichajes': data})
+            return jsonify({'fichajes': crear_dict_fichajes(fichajes)})
         else:
             return jsonify({TOKEN_INCORRECTO}), 401
     except Exception as ex:
@@ -304,7 +307,8 @@ def get_fichaje_calendario():
         return jsonify(list_fichajes)
     except Exception as ex:
         return jsonify({'mensaje': str(ex)}), 500        
- 
+  
+
 #Metodo para la API devuelve los fichajes de una fecha concreta  
 @main.route('/get/fichaje', methods=['get'])
 @jwt_required()
@@ -315,12 +319,7 @@ def get_fichaje_por_fecha():
         fecha = request.args.get('fecha')     
         if str(current_user_id) == str(id_usuario):
             fichajes = Fichaje.get_by_idEmpleadoFecha(id_usuario,fecha)
-            data = []
-            for f in fichajes:
-                fecha = f.fecha.strftime('%d-%m-%Y')
-                data.append({"ID":f.idFichaje, "fecha":fecha, "hora":str(f.hora_entrada), "tipo":f.tipo, "longitud":f.entrada_longitud, "latitud":f.entrada_latitud,
-                              "tiempo_trabajado":str(f.tiempo_trabajado), "incidencia":f.incidencia, "borrado":f.borrado})
-            return jsonify({'fichajes': data})
+            return jsonify({'fichajes': crear_dict_fichajes(fichajes)})
         else:
             return jsonify({TOKEN_INCORRECTO}), 401   
     except Exception as ex:
@@ -344,12 +343,7 @@ def usuario_fichajes_ajax():
         #Devolvemos un diccionario vacio si no hay datos de gastos para enviar.
         return jsonify({'data':[]})
     else:
-        data = []
-        for f in fichajes:
-            fecha = f.fecha.strftime('%d-%m-%Y')
-            data.append({"ID":f.idFichaje, "fecha":fecha, "hora":str(f.hora_entrada), "tipo":f.tipo, "longitud":f.entrada_longitud, "latitud":f.entrada_latitud,
-                              "tiempo_trabajado":str(f.tiempo_trabajado), "incidencia":f.incidencia, "borrado":f.borrado})
-        data_json = {'data': data}
+        data_json = {'data': crear_dict_fichajes(fichajes)}
         return jsonify(data_json)
 
 @main.route('/usuario/fichajesRangoAjax', methods=['get','post'])
@@ -363,13 +357,7 @@ def usuario_fichajes_rango_ajax():
         #Devolvemos un diccionario vacio si no hay datos de gastos para enviar.
         return jsonify({'data':[]})
     else:
-        data = []
-        for f in fichajes:
-            fecha = f.fecha.strftime('%d-%m-%Y')
-            #tiempo_trabajado = f.tiempo_trabajado.strftime('%H:%M')
-            data.append({"ID":f.idFichaje, "fecha":fecha, "hora":str(f.hora_entrada), "tipo":f.tipo, "longitud":f.entrada_longitud, "latitud":f.entrada_latitud,
-                              "tiempo_trabajado":str(f.tiempo_trabajado), "incidencia":f.incidencia, "borrado":f.borrado})
-        data_json = {'data': data}
+        data_json = {'data': crear_dict_fichajes(fichajes)}
         return jsonify(data_json)
   
 #Metodo API que devuelve los fichajes entre dos fechas       
@@ -388,12 +376,7 @@ def usuario_fichajes_rango():
                 #return jsonify([fichaje.to_JSON() for fichaje in fichajes])
                 return jsonify([])
             else:
-                data = []
-                for f in fichajes:
-                    fecha = f.fecha.strftime('%d-%m-%Y')
-                    data.append({"ID":f.idFichaje, "fecha":fecha, "hora":str(f.hora_entrada), "tipo":f.tipo, "longitud":f.entrada_longitud, "latitud":f.entrada_latitud,
-                              "tiempo_trabajado":str(f.tiempo_trabajado), "incidencia":f.incidencia, "borrado":f.borrado})
-                return jsonify({'fichajes': data})    
+                return jsonify({'fichajes': crear_dict_fichajes(fichajes)})    
         else:
             return jsonify({TOKEN_INCORRECTO}), 401
     except Exception as ex:
