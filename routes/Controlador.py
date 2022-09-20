@@ -14,17 +14,13 @@ from flask_login import current_user, login_required
 
 # Modelos
 from models.Modelo import Fichaje, Gasto, Usuario, Empresa, Rol
-
 from formularios import FormAlta, FormModifica
 import os #Quitar despues de las prubeas con los tickets
-
 import base64 #Para codificar/descodificar las imagenes
-
 from auth import admin_required, gestor_required
-import jwt
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 
-from app import mail, talisman,csrf
+from app import mail, talisman
 main = Blueprint('usuarios_blueprint', __name__)
 
 @main.errorhandler(404)
@@ -90,7 +86,6 @@ def empresas_ajax():
 def usuarios_empresa_ajax():
     listadoUsuarios = Usuario.get_by_empresa(session['idEmpresa'])
     roles = Rol.get_by_Rol()
-    print('listado usuarios empresa: ',listadoUsuarios)  
     if listadoUsuarios == []:
         #Devolvemos un diccionario vacio si no hay datos de gastos para enviar.
         return jsonify({'data':[]})
@@ -137,8 +132,6 @@ def login():
     if imei == "":
         return jsonify("imei vacio"),400   
     usuario = Usuario.get_by_login(username)  
-    secret = os.environ.get('SECRET_KEY') #sale del fichero .env
-    print('secreto', secret)  
     if usuario is not None:
         if Usuario.check_password(usuario, password):  
             if Usuario.check_imei(usuario, imei):      
@@ -168,7 +161,6 @@ def fichaje_gestor():
         pausas = 0
         fichajes_hoy = Fichaje.get_by_idEmpleadoFecha(idUsuario, fecha)
         for fichaje in fichajes_hoy:
-            print('fichajes horas: ',(fichaje.hora_entrada).strftime("%H:%M"),' : ', hora)
             #No permitimos fichajes a la misma hora, debe transcurrir un minuto entre ellos
             if (fichaje.hora_entrada).strftime("%H:%M") == hora:
                 return jsonify("solapado")
@@ -210,7 +202,6 @@ def borrar_fichaje_gestor():
         fichaje.save() 
         return "ok"
     except Exception as ex:
-        print(ex)
         return 'Peticion incorrecta'
 
 #Metodo API para registrar un fichaje
@@ -221,8 +212,6 @@ def fichar():
     try:
         current_user_id = get_jwt_identity()
         datos = request.get_json()
-        print(datos)
-        print('curren id fichaje:', current_user_id)
         idUsuario= datos.get('idUsuario','')
         fecha = datos.get('fecha','')
         hora = datos.get('hora','')
@@ -235,10 +224,8 @@ def fichar():
         tiempo = datetime.strptime("00:00", "%H:%M")
         hora_anterior = time(00, 00)
         tiempo = time(0,0)
-        print('horas: ', hora_anterior, '::', tiempo)
         fichajes_hoy = Fichaje.get_by_idEmpleadoFecha(current_user_id, fecha)
         for fichaje in fichajes_hoy:
-            print('fichajes horas: ',(fichaje.hora_entrada).strftime("%H:%M"),' : ', hora)
             #No permitimos fichajes a la misma hora, debe transcurrir un minuto entre ellos
             #En el caso de que este borrado no lo tenemos en cuenta
             if fichaje.borrado == False:
@@ -252,10 +239,7 @@ def fichar():
                     pausas = pausas + 1
                 else:
                     pausas = pausas - 1       
-                print('por aqui')
                 if fichaje.tipo == 'entrada':    
-                    
-                    print ('fichaje hora ant: ', fichaje.hora_entrada, '::')
                     hora_anterior = fichaje.hora_entrada
                     hora_anterior = time.strftime(fichaje.hora_entrada, "%H:%M")
         if tipo == 'fichaje':
@@ -263,13 +247,10 @@ def fichar():
                 tipo_fichaje = 'entrada'
             else:
                 tipo_fichaje = 'salida'
-                print('hora antetior: ', hora_anterior)
-                hora_pasada = time.fromisoformat(hora)
-                print('hora pasada: ', hora_pasada)    
+                hora_pasada = time.fromisoformat(hora)  
                 a_timedelta = datetime.strptime(hora, "%H:%M") - datetime(1900, 1, 1)
                 b_timedelta = datetime.strptime(hora_anterior, "%H:%M") - datetime(1900, 1, 1)
                 tiempo = a_timedelta - b_timedelta
-                print('Tiempo trabajo: ', tiempo)
         else:
             if pausas % 2 == 0:
                 tipo_fichaje = 'pausa entrada'
@@ -292,12 +273,9 @@ def fichar():
 def get_fichaje():
     try:
         current_user_id = get_jwt_identity()
-        print('current id:', current_user_id)
         idUsuario = request.args.get('idUsuario')
-        print('usuario: ',idUsuario)
         if str(current_user_id) == str(idUsuario):
             fichajes = Fichaje.get_by_idEmpleado(idUsuario)
-            print(fichajes)
             data = []
             for f in fichajes:
                 fecha = f.fecha.strftime('%d-%m-%Y')
@@ -317,8 +295,7 @@ def get_fichaje_calendario():
     try:
         list_fichajes = []
         idUsuario = request.args.get('idUsuario')
-        fecha = request.args.get('fecha')
-        print('usuario: ',idUsuario, 'fecha:',fecha)       
+        fecha = request.args.get('fecha')     
         fichajes = Fichaje.get_by_idEmpleadoAno(idUsuario,fecha)
         for fichaje in fichajes:
             fecha = fichaje.fecha.strftime('%Y-%m-%d')
@@ -334,14 +311,10 @@ def get_fichaje_calendario():
 def get_fichaje_por_fecha():
     try:
         current_user_id = get_jwt_identity()
-        print('current id:', current_user_id)
         idUsuario = request.args.get('idUsuario')
-        fecha = request.args.get('fecha')
-        print('usuario: ',idUsuario)
-        print('fecha fichaje: ',fecha)        
+        fecha = request.args.get('fecha')     
         if str(current_user_id) == str(idUsuario):
             fichajes = Fichaje.get_by_idEmpleadoFecha(idUsuario,fecha)
-            print(fichajes)
             data = []
             for f in fichajes:
                 fecha = f.fecha.strftime('%d-%m-%Y')
@@ -359,10 +332,7 @@ def get_fichaje_por_fecha():
 def usuario_fichajes():
     idUsuario = request.args.get('idUsuario')
     fecha = request.args.get('fecha')
-    print('usuario: ',idUsuario)
-    print('fehcha actual pasada: ',fecha)
     fichajes = Fichaje.get_by_idEmpleadoFecha(idUsuario, fecha)
-    print(fichajes)
     return render_template('fichajes.html', listaFichajes=fichajes, fechaHoy=fecha, idUsuario=idUsuario)
 
 @main.route('/usuario/fichajesAjax', methods=['get','post'])
@@ -370,9 +340,6 @@ def usuario_fichajes_ajax():
     parametro = request.form
     idUsuario = parametro['idUsuario']
     fecha = parametro['fecha']
-    print('id: ',idUsuario, parametro)
-    print('usuario ajax: ',idUsuario)
-    print('fehcha actual pasada ajax: ',fecha)
     fichajes = Fichaje.get_by_idEmpleadoFecha(idUsuario, fecha)
     if fichajes == []:
         #Devolvemos un diccionario vacio si no hay datos de gastos para enviar.
@@ -383,7 +350,6 @@ def usuario_fichajes_ajax():
             fecha = f.fecha.strftime('%d-%m-%Y')
             data.append({"ID":f.idFichaje, "fecha":fecha, "hora":str(f.hora_entrada), "tipo":f.tipo, "longitud":f.entrada_longitud, "latitud":f.entrada_latitud,
                               "tiempo_trabajado":str(f.tiempo_trabajado), "incidencia":f.incidencia, "borrado":f.borrado})
-            print('fichaje ajax:',data)
         data_json = {'data': data}
         return jsonify(data_json)
 
@@ -404,7 +370,6 @@ def usuario_fichajes_rango_ajax():
             #tiempo_trabajado = f.tiempo_trabajado.strftime('%H:%M')
             data.append({"ID":f.idFichaje, "fecha":fecha, "hora":str(f.hora_entrada), "tipo":f.tipo, "longitud":f.entrada_longitud, "latitud":f.entrada_latitud,
                               "tiempo_trabajado":str(f.tiempo_trabajado), "incidencia":f.incidencia, "borrado":f.borrado})
-            print('fichaje ajax:',data)
         data_json = {'data': data}
         return jsonify(data_json)
   
@@ -417,10 +382,8 @@ def usuario_fichajes_rango():
         idUsuario = request.args.get('idUsuario')
         fecha_ini = request.args.get('fecha_ini')
         fecha_fin = request.args.get('fecha_fin')
-        print('::', idUsuario, fecha_fin, fecha_ini)
         if str(current_user_id) == str(idUsuario):
             fichajes = Fichaje.get_by_idEmpleadoRango(idUsuario, fecha_ini, fecha_fin)
-            print('fichajes:', fichajes)
             if fichajes == []:
                 #Devolvemos un diccionario vacio si no hay datos de gastos para enviar.
                 #return jsonify([fichaje.to_JSON() for fichaje in fichajes])
@@ -443,7 +406,6 @@ def usuario_fichajes_rango():
 def usuario_gastos():
     idUsuario = request.args.get('idUsuario') 
     gastos = Gasto.get_by_idEmpleado(idUsuario)
-    print('Gastos: ', gastos)
     data_gastos = []
     for g in gastos:
         fecha = g.fecha.strftime('%d-%m-%Y')
@@ -456,9 +418,7 @@ def usuario_gastos():
 def ajax_carga_tickets():
     parametro = request.form
     idUsuario = parametro['idUsuario']
-    print('id: ',idUsuario, parametro) 
     gastos = Gasto.get_by_idEmpleado(idUsuario)
-    print('Gastos para ajax: ', gastos)
     if gastos == []:
         #Devolvemos un diccionario vacio si no hay datos de gastos para enviar.
         return jsonify({'data':[]})
@@ -482,19 +442,14 @@ def registra_gasto():
             razonSocial = request.form['razonSocial']
             descripcion = request.form['descripcion']
             numeroTicket = request.form['numeroTicket']
-            print('aqui llego')
             if str(current_user_id) == str(idUsuario):
-                print('coinciden')
                 imagen = request.files['ticket']
                 imagen_string = base64.b64encode(imagen.read())
-            
                 gasto = Gasto(fecha=fecha, tipo=tipo, descripcion=descripcion, importe=importe, iva=iva, cif=cif,
                               fotoTicket=imagen_string,idUsuario=idUsuario,razonSocial=razonSocial,numeroTicket=numeroTicket)
                 gasto.save()
-                
                 return jsonify("Ok"), 200
             else:
-                print('no coinciden')
                 return jsonify('token incorrecto'), 401
     except Exception as ex:
         return jsonify({ 'error': str(ex)}), 500
@@ -503,7 +458,6 @@ def registra_gasto():
 def carga_ticket():
     idGasto = request.args.get('idGasto')
     gasto = Gasto.get_by_idGasto(idGasto)
-    print('idGasto: ',idGasto, gasto.importe)
     imagen = base64.b64decode(gasto.fotoTicket)
     return imagen   
 
@@ -519,18 +473,10 @@ def valida_ticket():
     gasto.save()
     return "ok"
 
-@main.route("/validaTickets", methods=['post','get'])
-def valida_tickets():
-    print('tickets validados:', request.form);
-    for i in request.form:
-        print(request.form['aprobar'])
-    return "true"
-
 @main.route('/alta', methods=['get', 'post'])
 @login_required
 @gestor_required
 def alta_usuario():
-    print("en altas")
     usuario_actual = Usuario.get_by_id(session['idUsuario'])
     form = FormAlta()
     for rol in Rol.query.all():
@@ -557,7 +503,6 @@ def alta_usuario():
             password = Usuario.generate_password()
             user.set_password(password)
             user.save()
-            print("Creado usuario")
             #enviamos el correo confirmando
             msg = Message("Registro UbuExoWorks", sender='ubuexoworks@gmail.com' ,recipients=[email])
             msg.html = '<p>Se ha completado el registro correctamente</p>' + '<p>Usuario: '+email+'</p>' + '<p>Contraseña: '+password+'</p>'
@@ -569,7 +514,6 @@ def alta_usuario():
 @main.route('usuario/recuperaPassword', methods=['get'])
 def recovery_pass():
     emailUsuario = request.args.get('email')
-    print('El usuario: ', emailUsuario, ' esta intentando recuperar la pass.')
     user = Usuario.get_by_login(emailUsuario)
     if user is None:
         return "Error: el usuario no existe."
@@ -581,7 +525,6 @@ def recovery_pass():
             passnueva = Usuario.generate_password()
             user.set_password(passnueva)
             user.save()
-            print("Password regenerada enviada al correo ", email)
             #enviamos el correo confirmando
             msg = Message("Recuperacion contraseña UbuExoWorks", sender='ubuexoworks@gmail.com' ,recipients=[email])
             msg.html = '<p>Se ha generado una nueva contraseña de acceso</p>' + '<p>Usuario: '+email+'</p>' + '<p>Contraseña: '+passnueva+'</p>'
@@ -592,7 +535,6 @@ def recovery_pass():
 @main.route('recuperaPasswordWeb', methods=['get'])
 def recovery_pass_web():
     emailUsuario = request.args.get('email')
-    print('El usuario: ', emailUsuario, ' esta intentando recuperar la pass.')
     user = Usuario.get_by_login(emailUsuario)
     if user is None:
         return "Error: el usuario no existe."
@@ -604,7 +546,6 @@ def recovery_pass_web():
             passnueva = Usuario.generate_password()
             user.set_password(passnueva)
             user.save()
-            print("Password regenerada enviada al correo ", email)
             #enviamos el correo confirmando
             msg = Message("Recuperacion contraseña UbuExoWorks", sender='ubuexoworks@gmail.com' ,recipients=[email])
             msg.html = '<p>Se ha generado una nueva contraseña de acceso</p>' + '<p>Usuario: '+email+'</p>' + '<p>Contraseña: '+passnueva+'</p>'
@@ -620,7 +561,6 @@ def modifica_usuario():
     error = None
     idUsuario = request.args.get('idUsuario')
     idEmpresa = session['idEmpresa']
-    print('EMPRESAID:', idEmpresa)
     user = Usuario.get_by_id(idUsuario)
     if request.method =='GET':
         form.nombre.data = user.nombre
@@ -642,7 +582,6 @@ def modifica_usuario():
                 user.apellidos = form.apellidos.data
                 user.nif = form.nif.data
                 user.tlf = form.tlf.data
-                print('telefono: ', user.tlf)
                 user.email = form.email.data
                 user.emailRecuperacion = form.emailRecuperacion.data
                 idempresa = session['idEmpresa']
