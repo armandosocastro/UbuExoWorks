@@ -11,7 +11,6 @@ from werkzeug.utils import secure_filename
 from flask_wtf import CSRFProtect
 from flask_mail import Mail, Message
 from flask_login import current_user, login_required
-
 # Modelos
 from models.Modelo import Fichaje, Gasto, Usuario, Empresa, Rol
 from formularios import FormAlta, FormModifica
@@ -19,7 +18,6 @@ import os #Quitar despues de las prubeas con los tickets
 import base64 #Para codificar/descodificar las imagenes
 from auth import admin_required, gestor_required
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
-
 from app import mail, talisman
 main = Blueprint('usuarios_blueprint', __name__)
 
@@ -43,8 +41,8 @@ def get_usuarios():
 @jwt_required()
 def get_usuario():
     try:
-        idUsuario = request.args.get('idUsuario')   
-        usuario = Usuario.get_by_id(idUsuario)
+        id_usuario = request.args.get('idUsuario')   
+        usuario = Usuario.get_by_id(id_usuario)
         if usuario is not None:
             return jsonify(usuario.to_JSON()), 200
     except Exception as ex:
@@ -55,13 +53,13 @@ def get_usuario():
 @jwt_required()
 def solicitud_borrar_fichaje():
     try:
-        idUsuario = request.args.get('idUsuario')   
+        id_usuario = request.args.get('idUsuario')   
         idFichaje = request.args.get('idFichaje')
         fichaje = Fichaje.get_by_idFichaje(idFichaje)     
         #Hay que localizar el email del gestor de la empres
-        usuario = Usuario.get_by_id(idUsuario)
-        idEmpresa = usuario.idEmpresa
-        gestor = Usuario.get_gestor(idEmpresa)
+        usuario = Usuario.get_by_id(id_usuario)
+        id_empresa = usuario.idEmpresa
+        gestor = Usuario.get_gestor(id_empresa)
         email= gestor.get_email()      
         #enviamos el correo con la solicitud de borrado
         msg = Message("UbuExoWorks: Solicitud borrado de fichaje", sender='ubuexoworks@gmail.com' ,recipients=[email])
@@ -73,13 +71,13 @@ def solicitud_borrar_fichaje():
      
 @main.route('/empresasAjax', methods=['get','post'])
 def empresas_ajax():
-    listadoEmpresas = Empresa.get_all()
+    listado_empresas = Empresa.get_all()
     print('Ajax empresas')
-    if listadoEmpresas == []:
+    if listado_empresas == []:
         #Devolvemos un diccionario vacio si no hay empresas.
         return jsonify({'data':[]})
     else:
-        data_json = {'data':[{"id":e.idEmpresa, "nombre":e.nombre, "cif":e.cif, "plancontratado":e.planContratado} for e in listadoEmpresas]} 
+        data_json = {'data':[{"id":e.idEmpresa, "nombre":e.nombre, "cif":e.cif, "plancontratado":e.planContratado} for e in listado_empresas]} 
         return jsonify(data_json)
  
 @main.route('/usuariosEmpresaAjax', methods=['get','post'])
@@ -150,7 +148,7 @@ def login():
 def fichaje_gestor():
     try:
         datos = request.get_json()
-        idUsuario= datos.get('idUsuario','')
+        id_usuario= datos.get('idUsuario','')
         fecha = datos.get('fecha','')
         hora = datos.get('hora','')
         longitud = datos.get('longitud','')
@@ -159,7 +157,7 @@ def fichaje_gestor():
         incidencia = datos.get('incidencia','')
         entradas = 0
         pausas = 0
-        fichajes_hoy = Fichaje.get_by_idEmpleadoFecha(idUsuario, fecha)
+        fichajes_hoy = Fichaje.get_by_idEmpleadoFecha(id_usuario, fecha)
         for fichaje in fichajes_hoy:
             #No permitimos fichajes a la misma hora, debe transcurrir un minuto entre ellos
             if (fichaje.hora_entrada).strftime("%H:%M") == hora:
@@ -183,7 +181,7 @@ def fichaje_gestor():
             else:
                 tipo_fichaje = 'pausa salida'      
         fichaje = Fichaje(fecha=fecha, hora_entrada=hora, entrada_longitud=longitud, entrada_latitud=latitud,
-                          incidencia=incidencia,idUsuario=idUsuario, tipo=tipo_fichaje, borrado=False)
+                          incidencia=incidencia,idUsuario=id_usuario, tipo=tipo_fichaje, borrado=False)
         fichaje.save()
         return jsonify(token="Ok"),200            
     except Exception as ex:
@@ -196,8 +194,8 @@ def fichaje_gestor():
 @gestor_required
 def borrar_fichaje_gestor():
     try:
-        idFichaje = request.args.get('idFichaje')    
-        fichaje = Fichaje.get_by_idFichaje(idFichaje)
+        id_fichaje = request.args.get('idFichaje')    
+        fichaje = Fichaje.get_by_idFichaje(id_fichaje)
         fichaje.borrado = True
         fichaje.save() 
         return "ok"
@@ -212,7 +210,7 @@ def fichar():
     try:
         current_user_id = get_jwt_identity()
         datos = request.get_json()
-        idUsuario= datos.get('idUsuario','')
+        id_usuario= datos.get('idUsuario','')
         fecha = datos.get('fecha','')
         hora = datos.get('hora','')
         longitud = datos.get('longitud','')
@@ -256,9 +254,9 @@ def fichar():
                 tipo_fichaje = 'pausa entrada'
             else:
                 tipo_fichaje = 'pausa salida' 
-        if str(current_user_id) == str(idUsuario):   
+        if str(current_user_id) == str(id_usuario):   
             fichaje = Fichaje(fecha=fecha, hora_entrada=hora, entrada_longitud=longitud, entrada_latitud=latitud,
-                          incidencia=None,idUsuario=idUsuario, tipo=tipo_fichaje, tiempo_trabajado=tiempo, borrado=False)
+                          incidencia=None,idUsuario=id_usuario, tipo=tipo_fichaje, tiempo_trabajado=tiempo, borrado=False)
             fichaje.save()
             return jsonify(token="Ok"),200   
         else:
@@ -273,9 +271,9 @@ def fichar():
 def get_fichaje():
     try:
         current_user_id = get_jwt_identity()
-        idUsuario = request.args.get('idUsuario')
-        if str(current_user_id) == str(idUsuario):
-            fichajes = Fichaje.get_by_idEmpleado(idUsuario)
+        id_usuario = request.args.get('idUsuario')
+        if str(current_user_id) == str(id_usuario):
+            fichajes = Fichaje.get_by_idEmpleado(id_usuario)
             data = []
             for f in fichajes:
                 fecha = f.fecha.strftime('%d-%m-%Y')
@@ -294,9 +292,9 @@ def get_fichaje():
 def get_fichaje_calendario():
     try:
         list_fichajes = []
-        idUsuario = request.args.get('idUsuario')
+        id_usuario = request.args.get('idUsuario')
         fecha = request.args.get('fecha')     
-        fichajes = Fichaje.get_by_idEmpleadoAno(idUsuario,fecha)
+        fichajes = Fichaje.get_by_idEmpleadoAno(id_usuario,fecha)
         for fichaje in fichajes:
             fecha = fichaje.fecha.strftime('%Y-%m-%d')
             dict_fichajes = {'title': 'Fichaje', 'start': fecha , 'end': fecha }
@@ -311,14 +309,13 @@ def get_fichaje_calendario():
 def get_fichaje_por_fecha():
     try:
         current_user_id = get_jwt_identity()
-        idUsuario = request.args.get('idUsuario')
+        id_usuario = request.args.get('idUsuario')
         fecha = request.args.get('fecha')     
-        if str(current_user_id) == str(idUsuario):
-            fichajes = Fichaje.get_by_idEmpleadoFecha(idUsuario,fecha)
+        if str(current_user_id) == str(id_usuario):
+            fichajes = Fichaje.get_by_idEmpleadoFecha(id_usuario,fecha)
             data = []
             for f in fichajes:
                 fecha = f.fecha.strftime('%d-%m-%Y')
-                #tiempo_trabajado = f.tiempo_trabajado.strftime('%H:%M')
                 data.append({"ID":f.idFichaje, "fecha":fecha, "hora":str(f.hora_entrada), "tipo":f.tipo, "longitud":f.entrada_longitud, "latitud":f.entrada_latitud,
                               "tiempo_trabajado":str(f.tiempo_trabajado), "incidencia":f.incidencia, "borrado":f.borrado})
             return jsonify({'fichajes': data})
@@ -330,17 +327,17 @@ def get_fichaje_por_fecha():
 @main.route('/usuario/fichajes', methods=['get'])
 @talisman()
 def usuario_fichajes():
-    idUsuario = request.args.get('idUsuario')
+    id_usuario = request.args.get('idUsuario')
     fecha = request.args.get('fecha')
-    fichajes = Fichaje.get_by_idEmpleadoFecha(idUsuario, fecha)
-    return render_template('fichajes.html', listaFichajes=fichajes, fechaHoy=fecha, idUsuario=idUsuario)
+    fichajes = Fichaje.get_by_idEmpleadoFecha(id_usuario, fecha)
+    return render_template('fichajes.html', listaFichajes=fichajes, fechaHoy=fecha, idUsuario=id_usuario)
 
 @main.route('/usuario/fichajesAjax', methods=['get','post'])
 def usuario_fichajes_ajax():
     parametro = request.form
-    idUsuario = parametro['idUsuario']
+    id_usuario = parametro['idUsuario']
     fecha = parametro['fecha']
-    fichajes = Fichaje.get_by_idEmpleadoFecha(idUsuario, fecha)
+    fichajes = Fichaje.get_by_idEmpleadoFecha(id_usuario, fecha)
     if fichajes == []:
         #Devolvemos un diccionario vacio si no hay datos de gastos para enviar.
         return jsonify({'data':[]})
@@ -356,10 +353,10 @@ def usuario_fichajes_ajax():
 @main.route('/usuario/fichajesRangoAjax', methods=['get','post'])
 def usuario_fichajes_rango_ajax():
     parametro = request.form
-    idUsuario = parametro['idUsuario']
+    id_usuario = parametro['idUsuario']
     fecha_ini = parametro['fecha_ini']
     fecha_fin = parametro['fecha_fin']
-    fichajes = Fichaje.get_by_idEmpleadoRango(idUsuario, fecha_ini, fecha_fin)
+    fichajes = Fichaje.get_by_idEmpleadoRango(id_usuario, fecha_ini, fecha_fin)
     if fichajes == []:
         #Devolvemos un diccionario vacio si no hay datos de gastos para enviar.
         return jsonify({'data':[]})
@@ -379,11 +376,11 @@ def usuario_fichajes_rango_ajax():
 def usuario_fichajes_rango():
     try:
         current_user_id = get_jwt_identity()
-        idUsuario = request.args.get('idUsuario')
+        id_usuario = request.args.get('idUsuario')
         fecha_ini = request.args.get('fecha_ini')
         fecha_fin = request.args.get('fecha_fin')
-        if str(current_user_id) == str(idUsuario):
-            fichajes = Fichaje.get_by_idEmpleadoRango(idUsuario, fecha_ini, fecha_fin)
+        if str(current_user_id) == str(id_usuario):
+            fichajes = Fichaje.get_by_idEmpleadoRango(id_usuario, fecha_ini, fecha_fin)
             if fichajes == []:
                 #Devolvemos un diccionario vacio si no hay datos de gastos para enviar.
                 #return jsonify([fichaje.to_JSON() for fichaje in fichajes])
@@ -392,7 +389,6 @@ def usuario_fichajes_rango():
                 data = []
                 for f in fichajes:
                     fecha = f.fecha.strftime('%d-%m-%Y')
-                    #tiempo_trabajado = f.tiempo_trabajado.strftime('%H:%M')
                     data.append({"ID":f.idFichaje, "fecha":fecha, "hora":str(f.hora_entrada), "tipo":f.tipo, "longitud":f.entrada_longitud, "latitud":f.entrada_latitud,
                               "tiempo_trabajado":str(f.tiempo_trabajado), "incidencia":f.incidencia, "borrado":f.borrado})
                 return jsonify({'fichajes': data})    
@@ -404,21 +400,21 @@ def usuario_fichajes_rango():
 #Metodo para obtener los gastos de un usuario en la aplicacion Web
 @main.route('/usuario/gastos', methods=['get'])
 def usuario_gastos():
-    idUsuario = request.args.get('idUsuario') 
-    gastos = Gasto.get_by_idEmpleado(idUsuario)
+    id_usuario = request.args.get('idUsuario') 
+    gastos = Gasto.get_by_idEmpleado(id_usuario)
     data_gastos = []
     for g in gastos:
         fecha = g.fecha.strftime('%d-%m-%Y')
         data_gastos.append({"ID":g.idGasto, "idUsuario":g.idUsuario, "fecha":fecha, "tipo":g.tipo, "razonsocial":g.razonSocial, "importe":g.importe, 
                            "iva":g.iva, "cif":g.cif, "numeroticket":g.numeroTicket, "validado":g.validado})        
-    return render_template('gastosAjax.html', listaGastos=gastos, idUsuario=idUsuario)
+    return render_template('gastosAjax.html', listaGastos=gastos, idUsuario=id_usuario)
 
 #metodo para devolver los tickets para peticion AJAX
 @main.route('/ajax/cargatickets', methods=['get','post'])
 def ajax_carga_tickets():
     parametro = request.form
-    idUsuario = parametro['idUsuario']
-    gastos = Gasto.get_by_idEmpleado(idUsuario)
+    id_usuario = parametro['idUsuario']
+    gastos = Gasto.get_by_idEmpleado(id_usuario)
     if gastos == []:
         #Devolvemos un diccionario vacio si no hay datos de gastos para enviar.
         return jsonify({'data':[]})
@@ -433,7 +429,7 @@ def ajax_carga_tickets():
 def registra_gasto():
     try:
             current_user_id = get_jwt_identity()     
-            idUsuario = request.form['idUsuario']
+            id_usuario = request.form['idUsuario']
             fecha = request.form['fecha']
             tipo = request.form['tipo']
             importe = request.form['importe']
@@ -442,11 +438,11 @@ def registra_gasto():
             razonSocial = request.form['razonSocial']
             descripcion = request.form['descripcion']
             numeroTicket = request.form['numeroTicket']
-            if str(current_user_id) == str(idUsuario):
+            if str(current_user_id) == str(id_usuario):
                 imagen = request.files['ticket']
                 imagen_string = base64.b64encode(imagen.read())
                 gasto = Gasto(fecha=fecha, tipo=tipo, descripcion=descripcion, importe=importe, iva=iva, cif=cif,
-                              fotoTicket=imagen_string,idUsuario=idUsuario,razonSocial=razonSocial,numeroTicket=numeroTicket)
+                              fotoTicket=imagen_string,idUsuario=id_usuario,razonSocial=razonSocial,numeroTicket=numeroTicket)
                 gasto.save()
                 return jsonify("Ok"), 200
             else:
@@ -456,16 +452,16 @@ def registra_gasto():
          
 @main.route("/cargaTicket", methods=['get'])
 def carga_ticket():
-    idGasto = request.args.get('idGasto')
-    gasto = Gasto.get_by_idGasto(idGasto)
+    id_gasto = request.args.get('idGasto')
+    gasto = Gasto.get_by_idGasto(id_gasto)
     imagen = base64.b64decode(gasto.fotoTicket)
     return imagen   
 
 @main.route("/validaTicket", methods=['POST'])
 @login_required
 def valida_ticket():  
-    idGasto = request.form['idGasto']
-    gasto = Gasto.get_by_idGasto(idGasto)    
+    id_gasto = request.form['idGasto']
+    gasto = Gasto.get_by_idGasto(id_gasto)    
     if gasto.validado == False:
         gasto.validado = True
     else:
@@ -493,13 +489,13 @@ def alta_usuario():
         tlf = form.tlf.data
         idempresa = session['idEmpresa']
         estado = True
-        idRol = form.rol.data
+        id_rol = form.rol.data
         idJornadaLaboral = 1
         user = Usuario.get_by_login(email)
         if user is not None:
             error = 'El usuario ya esta registrado en el sistema'
         else:
-            user = Usuario(nombre=nombre, apellidos=apellidos,nif=nif, tlf=tlf, login=email,emailRecuperacion=emailRecuperacion, estado=estado,idEmpresa=idempresa,idRol=idRol,idJornadaLaboral=idJornadaLaboral)
+            user = Usuario(nombre=nombre, apellidos=apellidos,nif=nif, tlf=tlf, login=email,emailRecuperacion=emailRecuperacion, estado=estado,idEmpresa=idempresa,idRol=id_rol,idJornadaLaboral=idJornadaLaboral)
             password = Usuario.generate_password()
             user.set_password(password)
             user.save()
@@ -513,8 +509,8 @@ def alta_usuario():
 #Metodo API recuperacion de contraseña        
 @main.route('usuario/recuperaPassword', methods=['get'])
 def recovery_pass():
-    emailUsuario = request.args.get('email')
-    user = Usuario.get_by_login(emailUsuario)
+    email_usuario = request.args.get('email')
+    user = Usuario.get_by_login(email_usuario)
     if user is None:
         return "Error: el usuario no existe."
     else: 
@@ -534,8 +530,8 @@ def recovery_pass():
 #Recuperacion de contraseña desde la web    
 @main.route('recuperaPasswordWeb', methods=['get'])
 def recovery_pass_web():
-    emailUsuario = request.args.get('email')
-    user = Usuario.get_by_login(emailUsuario)
+    email_usuario = request.args.get('email')
+    user = Usuario.get_by_login(email_usuario)
     if user is None:
         return "Error: el usuario no existe."
     else: 
@@ -559,9 +555,9 @@ def modifica_usuario():
     form = FormModifica()
     form.rol.choices = [(rol.idRol, rol.nombreRol) for rol in Rol.query.all()]
     error = None
-    idUsuario = request.args.get('idUsuario')
-    idEmpresa = session['idEmpresa']
-    user = Usuario.get_by_id(idUsuario)
+    id_usuario = request.args.get('idUsuario')
+    id_empresa = session['idEmpresa']
+    user = Usuario.get_by_id(id_usuario)
     if request.method =='GET':
         form.nombre.data = user.nombre
         form.apellidos.data = user.apellidos
@@ -589,5 +585,5 @@ def modifica_usuario():
                 user.idRol = form.rol.data
                 idJornadaLaboral = 1
                 user.save()  
-        return redirect(url_for('home', idEmpresa=idEmpresa))
+        return redirect(url_for('home', idEmpresa=id_empresa))
     return render_template("modifica.html", form=form, error=error)    
