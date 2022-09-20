@@ -22,6 +22,7 @@ main = Blueprint('usuarios_blueprint', __name__)
 
 TOKEN_INCORRECTO = "token incorrecto"
 RESPUESTA_OK = "Ok"
+SENDER_EMAIL = "ubuexoworks@gmail.com"
 
 @main.errorhandler(404)
 def not_found(e):
@@ -56,18 +57,18 @@ def get_usuario():
 def solicitud_borrar_fichaje():
     try:
         id_usuario = request.args.get('idUsuario')   
-        idFichaje = request.args.get('idFichaje')
-        fichaje = Fichaje.get_by_idFichaje(idFichaje)     
+        id_fichaje = request.args.get('idFichaje')
+        fichaje = Fichaje.get_by_idFichaje(id_fichaje)     
         #Hay que localizar el email del gestor de la empres
         usuario = Usuario.get_by_id(id_usuario)
         id_empresa = usuario.idEmpresa
         gestor = Usuario.get_gestor(id_empresa)
         email= gestor.get_email()      
         #enviamos el correo con la solicitud de borrado
-        msg = Message("UbuExoWorks: Solicitud borrado de fichaje", sender='ubuexoworks@gmail.com' ,recipients=[email])
+        msg = Message("UbuExoWorks: Solicitud borrado de fichaje", sender=SENDER_EMAIL ,recipients=[email])
         msg.html = '<p>Se solicita el borrado del fichaje del dia ' + str(fichaje.fecha) + 'a las ' + str(fichaje.hora_entrada) + ' horas' + ' con el identificador ' + str(fichaje.idFichaje) + '</p>'
         mail.send(msg)
-        return  jsonify('Ok'), 200     
+        return  jsonify(RESPUESTA_OK), 200     
     except Exception as ex:
         return jsonify({'mensaje': str(ex)}), 500   
      
@@ -85,7 +86,6 @@ def empresas_ajax():
 @main.route('/usuariosEmpresaAjax', methods=['get','post'])
 def usuarios_empresa_ajax():
     listadoUsuarios = Usuario.get_by_empresa(session['idEmpresa'])
-    roles = Rol.get_by_Rol()
     if listadoUsuarios == []:
         #Devolvemos un diccionario vacio si no hay datos de gastos para enviar.
         return jsonify({'data':[]})
@@ -113,7 +113,7 @@ def registra_dispositivo():
         if Usuario.check_password(usuario, password):  
             Usuario.registra_imei(usuario,imei)
             usuario.save()
-            return jsonify("Ok"),200
+            return jsonify(RESPUESTA_OK),200
         return jsonify("Contraseña incorrecta"),300
     return jsonify("No existe usuario"),300
 
@@ -185,7 +185,7 @@ def fichaje_gestor():
         fichaje = Fichaje(fecha=fecha, hora_entrada=hora, entrada_longitud=longitud, entrada_latitud=latitud,
                           incidencia=incidencia,idUsuario=id_usuario, tipo=tipo_fichaje, borrado=False)
         fichaje.save()
-        return jsonify(token="Ok"),200            
+        return jsonify(token=RESPUESTA_OK),200            
     except Exception as ex:
         print(ex)
         return 'JSON incorrecto', 400
@@ -200,7 +200,7 @@ def borrar_fichaje_gestor():
         fichaje = Fichaje.get_by_idFichaje(id_fichaje)
         fichaje.borrado = True
         fichaje.save() 
-        return "ok"
+        return RESPUESTA_OK
     except Exception as ex:
         return 'Peticion incorrecta'
 
@@ -260,7 +260,7 @@ def fichar():
             fichaje = Fichaje(fecha=fecha, hora_entrada=hora, entrada_longitud=longitud, entrada_latitud=latitud,
                           incidencia=None,idUsuario=id_usuario, tipo=tipo_fichaje, tiempo_trabajado=tiempo, borrado=False)
             fichaje.save()
-            return jsonify(token="Ok"),200   
+            return jsonify(token=RESPUESTA_OK),200   
         else:
             return jsonify({TOKEN_INCORRECTO}), 401     
     except Exception as ex:
@@ -502,7 +502,7 @@ def alta_usuario():
             user.set_password(password)
             user.save()
             #enviamos el correo confirmando
-            msg = Message("Registro UbuExoWorks", sender='ubuexoworks@gmail.com' ,recipients=[email])
+            msg = Message("Registro UbuExoWorks", sender=SENDER_EMAIL ,recipients=[email])
             msg.html = '<p>Se ha completado el registro correctamente</p>' + '<p>Usuario: '+email+'</p>' + '<p>Contraseña: '+password+'</p>'
             mail.send(msg)
             return redirect(url_for('home'))
@@ -524,7 +524,7 @@ def recovery_pass():
             user.set_password(passnueva)
             user.save()
             #enviamos el correo confirmando
-            msg = Message("Recuperacion contraseña UbuExoWorks", sender='ubuexoworks@gmail.com' ,recipients=[email])
+            msg = Message("Recuperacion contraseña UbuExoWorks", sender=SENDER_EMAIL ,recipients=[email])
             msg.html = '<p>Se ha generado una nueva contraseña de acceso</p>' + '<p>Usuario: '+email+'</p>' + '<p>Contraseña: '+passnueva+'</p>'
             mail.send(msg)            
             return RESPUESTA_OK
@@ -545,7 +545,7 @@ def recovery_pass_web():
             user.set_password(passnueva)
             user.save()
             #enviamos el correo confirmando
-            msg = Message("Recuperacion contraseña UbuExoWorks", sender='ubuexoworks@gmail.com' ,recipients=[email])
+            msg = Message("Recuperacion contraseña UbuExoWorks", sender=SENDER_EMAIL ,recipients=[email])
             msg.html = '<p>Se ha generado una nueva contraseña de acceso</p>' + '<p>Usuario: '+email+'</p>' + '<p>Contraseña: '+passnueva+'</p>'
             mail.send(msg)            
             return redirect(url_for('home'))
