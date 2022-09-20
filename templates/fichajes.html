@@ -445,6 +445,9 @@
                                     type:"POST",
                                     dataType: "json",
                                     contentType: 'application/json',
+                                    headers: {
+                                        "X-CSRFToken": csrftoken
+                                    },
                                     data: JSON.stringify({ idUsuario:idUsuario, fecha:fecha_fichaje, hora:hora_fichaje, longitud:0, latitud:0, tipo:tipo_fichaje, 
                                             incidencia:incidencia_fichaje}),
                                     url:url_fichaje,
