@@ -1,4 +1,3 @@
-
 from datetime import datetime, timedelta, time, date
 from fileinput import filename
 from itertools import count
@@ -20,6 +19,9 @@ from auth import admin_required, gestor_required
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 from app import mail, talisman
 main = Blueprint('usuarios_blueprint', __name__)
+
+TOKEN_INCORRECTO = "token incorrecto"
+RESPUESTA_OK = "Ok"
 
 @main.errorhandler(404)
 def not_found(e):
@@ -135,8 +137,8 @@ def login():
             if Usuario.check_imei(usuario, imei):      
                 #Generamos el token a partir del id del usuario
                 token = create_access_token(identity=usuario.idUsuario)
-                idUsuario= usuario.idUsuario
-                return jsonify(idUsuario=idUsuario,token=token),200
+                id_usuario= usuario.idUsuario
+                return jsonify(idUsuario=id_usuario,token=token),200
             else:
                 return jsonify("dispositivo no registrado"), 300
         return jsonify("contraseña incorrecta"),300
@@ -260,7 +262,7 @@ def fichar():
             fichaje.save()
             return jsonify(token="Ok"),200   
         else:
-            return jsonify({"token incorrecto"}), 401     
+            return jsonify({TOKEN_INCORRECTO}), 401     
     except Exception as ex:
         print(ex)
         return 'JSON incorrecto', 400
@@ -282,7 +284,7 @@ def get_fichaje():
                               "tiempo_trabajado":str(f.tiempo_trabajado), "incidencia":f.incidencia, "borrado":f.borrado})
             return jsonify({'fichajes': data})
         else:
-            return jsonify({"token incorrecto"}), 401
+            return jsonify({TOKEN_INCORRECTO}), 401
     except Exception as ex:
         return jsonify({'mensaje': str(ex)}), 500    
     
@@ -320,7 +322,7 @@ def get_fichaje_por_fecha():
                               "tiempo_trabajado":str(f.tiempo_trabajado), "incidencia":f.incidencia, "borrado":f.borrado})
             return jsonify({'fichajes': data})
         else:
-            return jsonify({"token incorrecto"}), 401   
+            return jsonify({TOKEN_INCORRECTO}), 401   
     except Exception as ex:
         return jsonify({'mensaje': str(ex)}), 500        
      
@@ -393,7 +395,7 @@ def usuario_fichajes_rango():
                               "tiempo_trabajado":str(f.tiempo_trabajado), "incidencia":f.incidencia, "borrado":f.borrado})
                 return jsonify({'fichajes': data})    
         else:
-            return jsonify({'token incorrecto'}), 401
+            return jsonify({TOKEN_INCORRECTO}), 401
     except Exception as ex:
         return jsonify({ 'error': str(ex)}), 500
 
@@ -444,9 +446,9 @@ def registra_gasto():
                 gasto = Gasto(fecha=fecha, tipo=tipo, descripcion=descripcion, importe=importe, iva=iva, cif=cif,
                               fotoTicket=imagen_string,idUsuario=id_usuario,razonSocial=razonSocial,numeroTicket=numeroTicket)
                 gasto.save()
-                return jsonify("Ok"), 200
+                return jsonify(RESPUESTA_OK), 200
             else:
-                return jsonify('token incorrecto'), 401
+                return jsonify(TOKEN_INCORRECTO), 401
     except Exception as ex:
         return jsonify({ 'error': str(ex)}), 500
          
@@ -467,7 +469,7 @@ def valida_ticket():
     else:
         gasto.validado = False
     gasto.save()
-    return "ok"
+    return RESPUESTA_OK
 
 @main.route('/alta', methods=['get', 'post'])
 @login_required
@@ -525,7 +527,7 @@ def recovery_pass():
             msg = Message("Recuperacion contraseña UbuExoWorks", sender='ubuexoworks@gmail.com' ,recipients=[email])
             msg.html = '<p>Se ha generado una nueva contraseña de acceso</p>' + '<p>Usuario: '+email+'</p>' + '<p>Contraseña: '+passnueva+'</p>'
             mail.send(msg)            
-            return "OK"
+            return RESPUESTA_OK
         
 #Recuperacion de contraseña desde la web    
 @main.route('recuperaPasswordWeb', methods=['get'])
