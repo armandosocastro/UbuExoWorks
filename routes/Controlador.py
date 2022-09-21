@@ -1,3 +1,4 @@
+
 from datetime import datetime, timedelta, time, date
 from fileinput import filename
 from itertools import count
@@ -8,6 +9,7 @@ from flask_expects_json import expects_json
 from werkzeug.security import check_password_hash
 from werkzeug.utils import secure_filename
 from flask_wtf import CSRFProtect
+from flask_wtf.csrf import generate_csrf
 from flask_mail import Mail, Message
 from flask_login import current_user, login_required
 # Modelos
@@ -100,6 +102,28 @@ def usuarios_empresa_ajax():
 @expects_json()
 def registra_dispositivo():
     datos = request.get_json()  
+    password=datos.get('password','')
+    if password == "":
+        return jsonify(error = "password vacio"),400   
+    username=datos.get('login', '')
+    if username == "":
+        return jsonify(error = "login vacio"),400   
+    imei=datos.get('imei', '')
+    if imei == "":
+        return jsonify(error = "imei vacio"),400   
+    usuario = Usuario.get_by_login(username)  
+    if usuario is not None:
+        if Usuario.check_password(usuario, password):  
+            Usuario.registra_imei(usuario,imei)
+            usuario.save()
+            return jsonify(RESPUESTA_OK),200
+        return jsonify("Contraseña incorrecta"),300
+    return jsonify("No existe usuario"),300
+
+#Metodo API para registro del imei del dispositivo
+@main.route('/registraDispositivo', methods=['POST'])
+def registra_dispositivo_otro():
+    datos = request.args
     password=datos.get('password','')
     if password == "":
         return jsonify(error = "password vacio"),400   

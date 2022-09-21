@@ -99,7 +99,7 @@ def create_app():
 
     
     app.register_blueprint(Controlador.main, url_prefix='/api')
-    csrf.exempt(Controlador.main)
+    #csrf.exempt(Controlador.main)
            
            #Manejador de errores
     app.register_error_handler(404, page_not_found)
