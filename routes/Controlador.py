@@ -98,7 +98,6 @@ def usuarios_empresa_ajax():
 
 #Metodo API para registro del imei del dispositivo
 @main.route('/registraDispositivo', methods=['POST'])
-@csrf.exempt
 @expects_json()
 def registra_dispositivo():
     datos = request.get_json()  
@@ -120,27 +119,33 @@ def registra_dispositivo():
         return jsonify("Contraseña incorrecta"),300
     return jsonify("No existe usuario"),300
 
-#Metodo API para registro del imei del dispositivo
-@main.route('/registraDispositivo', methods=['POST'])
-def registra_dispositivo_otro():
-    datos = request.args
+#Login para la API, se comprueba que tambien tenga registrado el dispositivo
+@main.route('/login', methods=['POST'])
+@expects_json()
+def login():
+    datos = request.get_json() 
     password=datos.get('password','')
     if password == "":
-        return jsonify(error = "password vacio"),400   
+        return jsonify("password vacio"),400  
     username=datos.get('login', '')
     if username == "":
-        return jsonify(error = "login vacio"),400   
+        return jsonify("login vacio"),400   
     imei=datos.get('imei', '')
     if imei == "":
-        return jsonify(error = "imei vacio"),400   
+        return jsonify("imei vacio"),400   
     usuario = Usuario.get_by_login(username)  
     if usuario is not None:
         if Usuario.check_password(usuario, password):  
-            Usuario.registra_imei(usuario,imei)
-            usuario.save()
-            return jsonify(RESPUESTA_OK),200
-        return jsonify("Contraseña incorrecta"),300
+            if Usuario.check_imei(usuario, imei):      
+                #Generamos el token a partir del id del usuario
+                token = create_access_token(identity=usuario.idUsuario)
+                id_usuario= usuario.idUsuario
+                return jsonify(idUsuario=id_usuario,token=token),200
+            else:
+                return jsonify("dispositivo no registrado"),300
+        return jsonify("contraseña incorrecta"),300
     return jsonify("No existe usuario"),300
+
 
 #Metodo para registrar un fichaje por el Gestor sin necesidad de tokens de seguridad
 @main.route('/fichajeGestor', methods=['POST'])
