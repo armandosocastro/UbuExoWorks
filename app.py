@@ -74,7 +74,6 @@ def create_app():
     jwt = JWTManager(app) 
     csrf = CSRFProtect(app) 
   
-   
     #Session(app)
     
     #Aosciamos la BD con nuestra aplicacion
@@ -89,6 +88,7 @@ def create_app():
     mail.init_app(app)
     csrf.init_app(app)
     
+    
     def page_not_found(error):
         return "<h1> Not found page </h1>",404
     
@@ -99,6 +99,7 @@ def create_app():
 
     
     app.register_blueprint(Controlador.main, url_prefix='/api')
+    csrf.exempt(Controlador.main)
            
            #Manejador de errores
     app.register_error_handler(404, page_not_found)

@@ -17,7 +17,7 @@ import os #Quitar despues de las prubeas con los tickets
 import base64 #Para codificar/descodificar las imagenes
 from auth import admin_required, gestor_required
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
-from app import mail, talisman
+from app import mail, talisman, csrf
 main = Blueprint('usuarios_blueprint', __name__)
 
 TOKEN_INCORRECTO = "token incorrecto"
@@ -96,6 +96,7 @@ def usuarios_empresa_ajax():
 
 #Metodo API para registro del imei del dispositivo
 @main.route('/registraDispositivo', methods=['POST'])
+@csrf.exempt
 @expects_json()
 def registra_dispositivo():
     datos = request.get_json()  
@@ -159,6 +160,12 @@ def fichaje_gestor():
         incidencia = datos.get('incidencia','')
         entradas = 0
         pausas = 0
+        
+        hora_anterior = datetime.strptime("00:00", "%H:%M")
+        tiempo = datetime.strptime("00:00", "%H:%M")
+        hora_anterior = time(00, 00)
+        tiempo = time(0,0)
+        
         fichajes_hoy = Fichaje.get_by_idEmpleadoFecha(id_usuario, fecha)
         for fichaje in fichajes_hoy:
             #No permitimos fichajes a la misma hora, debe transcurrir un minuto entre ellos
