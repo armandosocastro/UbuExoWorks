@@ -142,33 +142,6 @@ def registra_dispositivo_otro():
         return jsonify("Contraseña incorrecta"),300
     return jsonify("No existe usuario"),300
 
-#Login para la API, se comprueba que tambien tenga registrado el dispositivo
-@main.route('/login', methods=['POST'])
-@expects_json()
-def login():
-    datos = request.get_json() 
-    password=datos.get('password','')
-    if password == "":
-        return jsonify("password vacio"),400  
-    username=datos.get('login', '')
-    if username == "":
-        return jsonify("login vacio"),400   
-    imei=datos.get('imei', '')
-    if imei == "":
-        return jsonify("imei vacio"),400   
-    usuario = Usuario.get_by_login(username)  
-    if usuario is not None:
-        if Usuario.check_password(usuario, password):  
-            if Usuario.check_imei(usuario, imei):      
-                #Generamos el token a partir del id del usuario
-                token = create_access_token(identity=usuario.idUsuario)
-                id_usuario= usuario.idUsuario
-                return jsonify(idUsuario=id_usuario,token=token),200
-            else:
-                return jsonify("dispositivo no registrado"), 300
-        return jsonify("contraseña incorrecta"),300
-    return jsonify("No existe usuario"),300
-
 #Metodo para registrar un fichaje por el Gestor sin necesidad de tokens de seguridad
 @main.route('/fichajeGestor', methods=['POST'])
 @expects_json()
