@@ -65,7 +65,7 @@ def solicitud_borrar_fichaje():
         usuario = Usuario.get_by_id(id_usuario)
         id_empresa = usuario.idEmpresa
         gestor = Usuario.get_gestor(id_empresa)
-        email= gestor.get_email()      
+        email= gestor.get_login()     
         #enviamos el correo con la solicitud de borrado
         msg = Message("UbuExoWorks: Solicitud borrado de fichaje", sender=SENDER_EMAIL ,recipients=[email])
         msg.html = '<p>Se solicita el borrado del fichaje del dia ' + str(fichaje.fecha) + 'a las ' + str(fichaje.hora_entrada) + ' horas' + ' con el identificador ' + str(fichaje.idFichaje) + '</p>'
