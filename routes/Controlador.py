@@ -60,17 +60,23 @@ def solicitud_borrar_fichaje():
     try:
         id_usuario = request.args.get('idUsuario')   
         id_fichaje = request.args.get('idFichaje')
-        fichaje = Fichaje.get_by_idFichaje(id_fichaje)     
-        #Hay que localizar el email del gestor de la empres
-        usuario = Usuario.get_by_id(id_usuario)
-        id_empresa = usuario.idEmpresa
-        gestor = Usuario.get_gestor(id_empresa)
-        email= gestor.get_login()     
-        #enviamos el correo con la solicitud de borrado
-        msg = Message("UbuExoWorks: Solicitud borrado de fichaje", sender=SENDER_EMAIL ,recipients=[email])
-        msg.html = '<p>Se solicita el borrado del fichaje del dia ' + str(fichaje.fecha) + 'a las ' + str(fichaje.hora_entrada) + ' horas' + ' con el identificador ' + str(fichaje.idFichaje) + '</p>'
-        mail.send(msg)
-        return  jsonify(RESPUESTA_OK), 200     
+        fichaje = Fichaje.get_by_idFichaje(id_fichaje)
+        if fichaje is not None:     
+            #Hay que localizar el email del gestor de la empres
+            usuario = Usuario.get_by_id(id_usuario)
+            print(usuario)
+            id_empresa = Usuario.get_id_empresa(usuario)
+            print(id_empresa)
+            gestor = Usuario.get_gestor(id_empresa)
+            print(gestor)
+            email = Usuario.get_login(gestor)     
+            #enviamos el correo con la solicitud de borrado
+            msg = Message("UbuExoWorks: Solicitud borrado de fichaje", sender=SENDER_EMAIL ,recipients=[email])
+            msg.html = '<p>Se solicita el borrado del fichaje del dia ' + str(fichaje.fecha) + 'a las ' + str(fichaje.hora_entrada) + ' horas' + ' con el identificador ' + str(fichaje.idFichaje) + '</p>'
+            mail.send(msg)
+            return jsonify(RESPUESTA_OK), 200
+        else:
+            return jsonify('No existe fichaje'), 400     
     except Exception as ex:
         return jsonify({'mensaje': str(ex)}), 500   
      
