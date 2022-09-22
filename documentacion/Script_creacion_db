@@ -1,0 +1,563 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 14.5 (Ubuntu 14.5-1.pgdg20.04+1)
+-- Dumped by pg_dump version 14.2
+
+-- Started on 2022-09-07 16:52:57
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+--
+-- TOC entry 5 (class 2615 OID 2200)
+-- Name: public; Type: SCHEMA; Schema: -; Owner: iqouknmpzctbyh
+--
+
+CREATE SCHEMA public;
+
+
+ALTER SCHEMA public OWNER TO iqouknmpzctbyh;
+
+--
+-- TOC entry 4365 (class 0 OID 0)
+-- Dependencies: 5
+-- Name: SCHEMA public; Type: COMMENT; Schema: -; Owner: iqouknmpzctbyh
+--
+
+COMMENT ON SCHEMA public IS 'standard public schema';
+
+
+--
+-- TOC entry 839 (class 1247 OID 432858)
+-- Name: enum_rol; Type: TYPE; Schema: public; Owner: iqouknmpzctbyh
+--
+
+CREATE TYPE public.enum_rol AS (
+	empleado integer,
+	gestor integer
+);
+
+
+ALTER TYPE public.enum_rol OWNER TO iqouknmpzctbyh;
+
+SET default_tablespace = '';
+
+SET default_table_access_method = heap;
+
+--
+-- TOC entry 211 (class 1259 OID 432859)
+-- Name: AUSENCIA; Type: TABLE; Schema: public; Owner: iqouknmpzctbyh
+--
+
+CREATE TABLE public."AUSENCIA" (
+    fecha date NOT NULL,
+    tipo character varying(1) NOT NULL,
+    "idUsuario" integer NOT NULL,
+    "idAusencia" integer NOT NULL
+);
+
+
+ALTER TABLE public."AUSENCIA" OWNER TO iqouknmpzctbyh;
+
+--
+-- TOC entry 212 (class 1259 OID 432862)
+-- Name: AUSENCIA_idAusencia_seq; Type: SEQUENCE; Schema: public; Owner: iqouknmpzctbyh
+--
+
+CREATE SEQUENCE public."AUSENCIA_idAusencia_seq"
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public."AUSENCIA_idAusencia_seq" OWNER TO iqouknmpzctbyh;
+
+--
+-- TOC entry 4368 (class 0 OID 0)
+-- Dependencies: 212
+-- Name: AUSENCIA_idAusencia_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: iqouknmpzctbyh
+--
+
+ALTER SEQUENCE public."AUSENCIA_idAusencia_seq" OWNED BY public."AUSENCIA"."idAusencia";
+
+
+--
+-- TOC entry 213 (class 1259 OID 432863)
+-- Name: DIETA; Type: TABLE; Schema: public; Owner: iqouknmpzctbyh
+--
+
+CREATE TABLE public."DIETA" (
+    kilometraje integer,
+    "idFichaje" integer NOT NULL,
+    "idDieta" integer NOT NULL
+);
+
+
+ALTER TABLE public."DIETA" OWNER TO iqouknmpzctbyh;
+
+--
+-- TOC entry 214 (class 1259 OID 432866)
+-- Name: DIETA_idDieta_seq; Type: SEQUENCE; Schema: public; Owner: iqouknmpzctbyh
+--
+
+CREATE SEQUENCE public."DIETA_idDieta_seq"
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public."DIETA_idDieta_seq" OWNER TO iqouknmpzctbyh;
+
+--
+-- TOC entry 4369 (class 0 OID 0)
+-- Dependencies: 214
+-- Name: DIETA_idDieta_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: iqouknmpzctbyh
+--
+
+ALTER SEQUENCE public."DIETA_idDieta_seq" OWNED BY public."DIETA"."idDieta";
+
+
+--
+-- TOC entry 215 (class 1259 OID 432867)
+-- Name: EMPRESA; Type: TABLE; Schema: public; Owner: iqouknmpzctbyh
+--
+
+CREATE TABLE public."EMPRESA" (
+    nombre character varying(45) NOT NULL,
+    cif character varying(20) NOT NULL,
+    "planContratado" integer NOT NULL,
+    "numEmpleados" integer NOT NULL,
+    "idEmpresa" integer NOT NULL
+);
+
+
+ALTER TABLE public."EMPRESA" OWNER TO iqouknmpzctbyh;
+
+--
+-- TOC entry 216 (class 1259 OID 432870)
+-- Name: EMPRESA_idEmpresa_seq; Type: SEQUENCE; Schema: public; Owner: iqouknmpzctbyh
+--
+
+CREATE SEQUENCE public."EMPRESA_idEmpresa_seq"
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public."EMPRESA_idEmpresa_seq" OWNER TO iqouknmpzctbyh;
+
+--
+-- TOC entry 4370 (class 0 OID 0)
+-- Dependencies: 216
+-- Name: EMPRESA_idEmpresa_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: iqouknmpzctbyh
+--
+
+ALTER SEQUENCE public."EMPRESA_idEmpresa_seq" OWNED BY public."EMPRESA"."idEmpresa";
+
+
+--
+-- TOC entry 217 (class 1259 OID 432871)
+-- Name: FICHAJE; Type: TABLE; Schema: public; Owner: iqouknmpzctbyh
+--
+
+CREATE TABLE public."FICHAJE" (
+    fecha date NOT NULL,
+    hora_entrada time without time zone NOT NULL,
+    entrada_longitud real NOT NULL,
+    entrada_latitud real NOT NULL,
+    incidencia character varying(45),
+    "idUsuario" integer NOT NULL,
+    "idFichaje" bigint NOT NULL,
+    tipo character varying(20),
+    borrado boolean DEFAULT false NOT NULL
+);
+
+
+ALTER TABLE public."FICHAJE" OWNER TO iqouknmpzctbyh;
+
+--
+-- TOC entry 218 (class 1259 OID 432874)
+-- Name: FICHAJE_idFichaje_seq; Type: SEQUENCE; Schema: public; Owner: iqouknmpzctbyh
+--
+
+CREATE SEQUENCE public."FICHAJE_idFichaje_seq"
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public."FICHAJE_idFichaje_seq" OWNER TO iqouknmpzctbyh;
+
+--
+-- TOC entry 4371 (class 0 OID 0)
+-- Dependencies: 218
+-- Name: FICHAJE_idFichaje_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: iqouknmpzctbyh
+--
+
+ALTER SEQUENCE public."FICHAJE_idFichaje_seq" OWNED BY public."FICHAJE"."idFichaje";
+
+
+--
+-- TOC entry 219 (class 1259 OID 432875)
+-- Name: GASTO; Type: TABLE; Schema: public; Owner: iqouknmpzctbyh
+--
+
+CREATE TABLE public."GASTO" (
+    fecha date NOT NULL,
+    tipo character varying(45) NOT NULL,
+    descripcion character varying(45) NOT NULL,
+    importe real NOT NULL,
+    iva real NOT NULL,
+    cif character varying(45) NOT NULL,
+    "razonSocial" character varying(45) NOT NULL,
+    "fotoTicket" bytea NOT NULL,
+    "idUsuario" integer NOT NULL,
+    "idGasto" integer NOT NULL,
+    "numeroTicket" bigint,
+    validado boolean
+);
+
+
+ALTER TABLE public."GASTO" OWNER TO iqouknmpzctbyh;
+
+--
+-- TOC entry 220 (class 1259 OID 432880)
+-- Name: GASTO_idGasto_seq; Type: SEQUENCE; Schema: public; Owner: iqouknmpzctbyh
+--
+
+CREATE SEQUENCE public."GASTO_idGasto_seq"
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public."GASTO_idGasto_seq" OWNER TO iqouknmpzctbyh;
+
+--
+-- TOC entry 4372 (class 0 OID 0)
+-- Dependencies: 220
+-- Name: GASTO_idGasto_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: iqouknmpzctbyh
+--
+
+ALTER SEQUENCE public."GASTO_idGasto_seq" OWNED BY public."GASTO"."idGasto";
+
+
+--
+-- TOC entry 221 (class 1259 OID 432881)
+-- Name: JORNADA_LABORAL; Type: TABLE; Schema: public; Owner: iqouknmpzctbyh
+--
+
+CREATE TABLE public."JORNADA_LABORAL" (
+    "idJornadaLAboral" integer NOT NULL,
+    "horaEntrada" time without time zone NOT NULL,
+    "horaSalida" time without time zone NOT NULL,
+    "horaEntrada2" time without time zone NOT NULL,
+    "horaSalida2" time without time zone NOT NULL,
+    "margenFichaje" time without time zone NOT NULL,
+    "horasJornada" time without time zone NOT NULL,
+    "idEmpresa" integer NOT NULL
+);
+
+
+ALTER TABLE public."JORNADA_LABORAL" OWNER TO iqouknmpzctbyh;
+
+--
+-- TOC entry 222 (class 1259 OID 432884)
+-- Name: USUARIO; Type: TABLE; Schema: public; Owner: iqouknmpzctbyh
+--
+
+CREATE TABLE public."USUARIO" (
+    nombre character varying(45) NOT NULL,
+    apellidos character varying(45) NOT NULL,
+    login character varying(45) NOT NULL,
+    password character varying(128) NOT NULL,
+    estado boolean NOT NULL,
+    "idEmpresa" integer NOT NULL,
+    "idJornadaLaboral" integer NOT NULL,
+    "idRol" integer NOT NULL,
+    "idUsuario" integer NOT NULL,
+    nif character varying(45),
+    "emailRecuperacion" character varying(45),
+    tlf character varying(12)[],
+    imei character varying(15)
+);
+
+
+ALTER TABLE public."USUARIO" OWNER TO iqouknmpzctbyh;
+
+--
+-- TOC entry 223 (class 1259 OID 432887)
+-- Name: USUARIO_idUsuario_seq; Type: SEQUENCE; Schema: public; Owner: iqouknmpzctbyh
+--
+
+CREATE SEQUENCE public."USUARIO_idUsuario_seq"
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public."USUARIO_idUsuario_seq" OWNER TO iqouknmpzctbyh;
+
+--
+-- TOC entry 4373 (class 0 OID 0)
+-- Dependencies: 223
+-- Name: USUARIO_idUsuario_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: iqouknmpzctbyh
+--
+
+ALTER SEQUENCE public."USUARIO_idUsuario_seq" OWNED BY public."USUARIO"."idUsuario";
+
+
+--
+-- TOC entry 224 (class 1259 OID 432888)
+-- Name: POLITICA_GASTO; Type: TABLE; Schema: public; Owner: iqouknmpzctbyh
+--
+
+CREATE TABLE public."POLITICA_GASTO" (
+    "idPoliticaGasto" integer DEFAULT nextval('public."USUARIO_idUsuario_seq"'::regclass) NOT NULL,
+    transporte boolean NOT NULL,
+    estancia boolean NOT NULL,
+    manutencion boolean NOT NULL,
+    "idEmpresa" integer NOT NULL
+);
+
+
+ALTER TABLE public."POLITICA_GASTO" OWNER TO iqouknmpzctbyh;
+
+--
+-- TOC entry 225 (class 1259 OID 432892)
+-- Name: ROL; Type: TABLE; Schema: public; Owner: iqouknmpzctbyh
+--
+
+CREATE TABLE public."ROL" (
+    "nombreRol" character varying(45),
+    "idRol" integer NOT NULL
+);
+
+
+ALTER TABLE public."ROL" OWNER TO iqouknmpzctbyh;
+
+--
+-- TOC entry 226 (class 1259 OID 432895)
+-- Name: ROL_idRol_seq; Type: SEQUENCE; Schema: public; Owner: iqouknmpzctbyh
+--
+
+CREATE SEQUENCE public."ROL_idRol_seq"
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public."ROL_idRol_seq" OWNER TO iqouknmpzctbyh;
+
+--
+-- TOC entry 4374 (class 0 OID 0)
+-- Dependencies: 226
+-- Name: ROL_idRol_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: iqouknmpzctbyh
+--
+
+ALTER SEQUENCE public."ROL_idRol_seq" OWNED BY public."ROL"."idRol";
+
+
+--
+-- TOC entry 4194 (class 2604 OID 432896)
+-- Name: AUSENCIA idAusencia; Type: DEFAULT; Schema: public; Owner: iqouknmpzctbyh
+--
+
+ALTER TABLE ONLY public."AUSENCIA" ALTER COLUMN "idAusencia" SET DEFAULT nextval('public."AUSENCIA_idAusencia_seq"'::regclass);
+
+
+--
+-- TOC entry 4195 (class 2604 OID 432897)
+-- Name: DIETA idDieta; Type: DEFAULT; Schema: public; Owner: iqouknmpzctbyh
+--
+
+ALTER TABLE ONLY public."DIETA" ALTER COLUMN "idDieta" SET DEFAULT nextval('public."DIETA_idDieta_seq"'::regclass);
+
+
+--
+-- TOC entry 4196 (class 2604 OID 432898)
+-- Name: EMPRESA idEmpresa; Type: DEFAULT; Schema: public; Owner: iqouknmpzctbyh
+--
+
+ALTER TABLE ONLY public."EMPRESA" ALTER COLUMN "idEmpresa" SET DEFAULT nextval('public."EMPRESA_idEmpresa_seq"'::regclass);
+
+
+--
+-- TOC entry 4197 (class 2604 OID 432899)
+-- Name: FICHAJE idFichaje; Type: DEFAULT; Schema: public; Owner: iqouknmpzctbyh
+--
+
+ALTER TABLE ONLY public."FICHAJE" ALTER COLUMN "idFichaje" SET DEFAULT nextval('public."FICHAJE_idFichaje_seq"'::regclass);
+
+
+--
+-- TOC entry 4199 (class 2604 OID 432900)
+-- Name: GASTO idGasto; Type: DEFAULT; Schema: public; Owner: iqouknmpzctbyh
+--
+
+ALTER TABLE ONLY public."GASTO" ALTER COLUMN "idGasto" SET DEFAULT nextval('public."GASTO_idGasto_seq"'::regclass);
+
+
+--
+-- TOC entry 4202 (class 2604 OID 432901)
+-- Name: ROL idRol; Type: DEFAULT; Schema: public; Owner: iqouknmpzctbyh
+--
+
+ALTER TABLE ONLY public."ROL" ALTER COLUMN "idRol" SET DEFAULT nextval('public."ROL_idRol_seq"'::regclass);
+
+
+--
+-- TOC entry 4200 (class 2604 OID 432902)
+-- Name: USUARIO idUsuario; Type: DEFAULT; Schema: public; Owner: iqouknmpzctbyh
+--
+
+ALTER TABLE ONLY public."USUARIO" ALTER COLUMN "idUsuario" SET DEFAULT nextval('public."USUARIO_idUsuario_seq"'::regclass);
+
+
+--
+-- TOC entry 4204 (class 2606 OID 432904)
+-- Name: AUSENCIA AUSENCIA_pkey; Type: CONSTRAINT; Schema: public; Owner: iqouknmpzctbyh
+--
+
+ALTER TABLE ONLY public."AUSENCIA"
+    ADD CONSTRAINT "AUSENCIA_pkey" PRIMARY KEY ("idAusencia");
+
+
+--
+-- TOC entry 4206 (class 2606 OID 432906)
+-- Name: DIETA DIETA_pkey; Type: CONSTRAINT; Schema: public; Owner: iqouknmpzctbyh
+--
+
+ALTER TABLE ONLY public."DIETA"
+    ADD CONSTRAINT "DIETA_pkey" PRIMARY KEY ("idDieta");
+
+
+--
+-- TOC entry 4208 (class 2606 OID 432908)
+-- Name: EMPRESA EMPRESA_pkey; Type: CONSTRAINT; Schema: public; Owner: iqouknmpzctbyh
+--
+
+ALTER TABLE ONLY public."EMPRESA"
+    ADD CONSTRAINT "EMPRESA_pkey" PRIMARY KEY ("idEmpresa");
+
+
+--
+-- TOC entry 4210 (class 2606 OID 432910)
+-- Name: FICHAJE FICHAJE_pkey; Type: CONSTRAINT; Schema: public; Owner: iqouknmpzctbyh
+--
+
+ALTER TABLE ONLY public."FICHAJE"
+    ADD CONSTRAINT "FICHAJE_pkey" PRIMARY KEY ("idFichaje");
+
+
+--
+-- TOC entry 4212 (class 2606 OID 432912)
+-- Name: GASTO GASTO_pkey; Type: CONSTRAINT; Schema: public; Owner: iqouknmpzctbyh
+--
+
+ALTER TABLE ONLY public."GASTO"
+    ADD CONSTRAINT "GASTO_pkey" PRIMARY KEY ("idGasto");
+
+
+--
+-- TOC entry 4216 (class 2606 OID 432914)
+-- Name: POLITICA_GASTO POLITICA_GASTO_pkey; Type: CONSTRAINT; Schema: public; Owner: iqouknmpzctbyh
+--
+
+ALTER TABLE ONLY public."POLITICA_GASTO"
+    ADD CONSTRAINT "POLITICA_GASTO_pkey" PRIMARY KEY ("idPoliticaGasto");
+
+
+--
+-- TOC entry 4218 (class 2606 OID 432916)
+-- Name: ROL ROL_pkey; Type: CONSTRAINT; Schema: public; Owner: iqouknmpzctbyh
+--
+
+ALTER TABLE ONLY public."ROL"
+    ADD CONSTRAINT "ROL_pkey" PRIMARY KEY ("idRol");
+
+
+--
+-- TOC entry 4214 (class 2606 OID 432918)
+-- Name: USUARIO USUARIO_pkey; Type: CONSTRAINT; Schema: public; Owner: iqouknmpzctbyh
+--
+
+ALTER TABLE ONLY public."USUARIO"
+    ADD CONSTRAINT "USUARIO_pkey" PRIMARY KEY ("idUsuario");
+
+
+--
+-- TOC entry 4220 (class 2606 OID 24010283)
+-- Name: USUARIO ROL; Type: FK CONSTRAINT; Schema: public; Owner: iqouknmpzctbyh
+--
+
+ALTER TABLE ONLY public."USUARIO"
+    ADD CONSTRAINT "ROL" FOREIGN KEY ("idRol") REFERENCES public."ROL"("idRol") NOT VALID;
+
+
+--
+-- TOC entry 4219 (class 2606 OID 4536038)
+-- Name: FICHAJE idUsuario; Type: FK CONSTRAINT; Schema: public; Owner: iqouknmpzctbyh
+--
+
+ALTER TABLE ONLY public."FICHAJE"
+    ADD CONSTRAINT "idUsuario" FOREIGN KEY ("idUsuario") REFERENCES public."USUARIO"("idUsuario") NOT VALID;
+
+
+--
+-- TOC entry 4366 (class 0 OID 0)
+-- Dependencies: 5
+-- Name: SCHEMA public; Type: ACL; Schema: -; Owner: iqouknmpzctbyh
+--
+
+REVOKE ALL ON SCHEMA public FROM postgres;
+REVOKE ALL ON SCHEMA public FROM PUBLIC;
+GRANT ALL ON SCHEMA public TO iqouknmpzctbyh;
+GRANT ALL ON SCHEMA public TO PUBLIC;
+
+
+--
+-- TOC entry 4367 (class 0 OID 0)
+-- Dependencies: 869
+-- Name: LANGUAGE plpgsql; Type: ACL; Schema: -; Owner: postgres
+--
+
+GRANT ALL ON LANGUAGE plpgsql TO iqouknmpzctbyh;
+
+
+-- Completed on 2022-09-07 16:53:10
+
+--
+-- PostgreSQL database dump complete
+--
+

@@ -1,0 +1,2304 @@
+{
+	"info": {
+		"_postman_id": "ec65b436-2493-4e49-8fb9-95edc611919f",
+		"name": "API UbuExoWorks",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "20930297"
+	},
+	"item": [
+		{
+			"name": "Heroku api registra dispositivo",
+			"protocolProfileBehavior": {
+				"strictSSL": true,
+				"followRedirects": true,
+				"followOriginalHttpMethod": false
+			},
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"login\":\"a.socastro@coruna.gal\",\r\n    \"password\": \"probando\",\r\n    \"imei\": \"121211\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://miubuapp.herokuapp.com/api/registraDispositivo",
+					"protocol": "https",
+					"host": [
+						"miubuapp",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"api",
+						"registraDispositivo"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Heroku api registra dispositivo correcto",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"login\":\"prueba@correo.ubu\",\r\n    \"password\": \"probando\",\r\n    \"imei\": \"121212\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://miubuapp.herokuapp.com/api/registraDispositivo",
+							"protocol": "https",
+							"host": [
+								"miubuapp",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"api",
+								"registraDispositivo"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Server",
+							"value": "gunicorn"
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 21 Sep 2022 21:31:50 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Content-Length",
+							"value": "5"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "SAMEORIGIN"
+						},
+						{
+							"key": "X-Xss-Protection",
+							"value": "1; mode=block"
+						},
+						{
+							"key": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"key": "Content-Security-Policy",
+							"value": "default-src * unsafe-inline strict-dynamic unsafe-hashes 'sha256-yVhOaSpFYsHuy4vwNVCVxs7R7CGIk8isIDt57LTu9Fo='; script-src * 'self' 'nonce-2726c7f26c' strict-dynamic unsafe-inline; font-src * strict-dynamic data:; img-src * data: 'self'"
+						},
+						{
+							"key": "Strict-Transport-Security",
+							"value": "max-age=31556926; includeSubDomains"
+						},
+						{
+							"key": "Referrer-Policy",
+							"value": "strict-origin-when-cross-origin"
+						},
+						{
+							"key": "Via",
+							"value": "1.1 vegur"
+						}
+					],
+					"cookie": [],
+					"body": "\"Ok\""
+				},
+				{
+					"name": "Heroku api registra dispositivo incorrecto",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"login\":\"prueba@correo.ubu\",\r\n    \"password\": \"erronea\",\r\n    \"imei\": \"121212\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://miubuapp.herokuapp.com/api/registraDispositivo",
+							"protocol": "https",
+							"host": [
+								"miubuapp",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"api",
+								"registraDispositivo"
+							]
+						}
+					},
+					"status": "MULTIPLE CHOICES",
+					"code": 300,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Server",
+							"value": "gunicorn"
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 21 Sep 2022 21:32:39 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Content-Length",
+							"value": "29"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "SAMEORIGIN"
+						},
+						{
+							"key": "X-Xss-Protection",
+							"value": "1; mode=block"
+						},
+						{
+							"key": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"key": "Content-Security-Policy",
+							"value": "default-src * unsafe-inline strict-dynamic unsafe-hashes 'sha256-yVhOaSpFYsHuy4vwNVCVxs7R7CGIk8isIDt57LTu9Fo='; script-src * 'self' 'nonce-2726c7f26c' strict-dynamic unsafe-inline; font-src * strict-dynamic data:; img-src * data: 'self'"
+						},
+						{
+							"key": "Strict-Transport-Security",
+							"value": "max-age=31556926; includeSubDomains"
+						},
+						{
+							"key": "Referrer-Policy",
+							"value": "strict-origin-when-cross-origin"
+						},
+						{
+							"key": "Via",
+							"value": "1.1 vegur"
+						}
+					],
+					"cookie": [],
+					"body": "\"Contraseña incorrecta\""
+				}
+			]
+		},
+		{
+			"name": "Heroku api login",
+			"protocolProfileBehavior": {
+				"strictSSL": true,
+				"followRedirects": true,
+				"followOriginalHttpMethod": false
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTY2MjA0MjI0NiwianRpIjoiYzJkNTlmNDEtOWY1Zi00OGZlLTg4NDUtZDQzNTVlZWQ3MGExIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6NzYsIm5iZiI6MTY2MjA0MjI0NiwiZXhwIjoxNjYyMDQyODQ2fQ.m1PWopTzvXqxto8KwEvZUNYcoY6CjG0cojGfcYwrR2o",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"login\":\"asocastro@gmail.com\",\r\n    \"password\": \"probando\",\r\n    \"imei\": \"121212\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://miubuapp.herokuapp.com/api/login",
+					"protocol": "https",
+					"host": [
+						"miubuapp",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"api",
+						"login"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Heroku api login correcto",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"login\":\"prueba@correo.ubu\",\r\n    \"password\": \"probando\",\r\n    \"imei\": \"121212\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://miubuapp.herokuapp.com/api/login",
+							"protocol": "https",
+							"host": [
+								"miubuapp",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"api",
+								"login"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Server",
+							"value": "gunicorn"
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 21 Sep 2022 21:33:38 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Content-Length",
+							"value": "293"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "SAMEORIGIN"
+						},
+						{
+							"key": "X-Xss-Protection",
+							"value": "1; mode=block"
+						},
+						{
+							"key": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"key": "Content-Security-Policy",
+							"value": "default-src * unsafe-inline strict-dynamic unsafe-hashes 'sha256-yVhOaSpFYsHuy4vwNVCVxs7R7CGIk8isIDt57LTu9Fo='; script-src * 'self' 'nonce-2726c7f26c' strict-dynamic unsafe-inline; font-src * strict-dynamic data:; img-src * data: 'self'"
+						},
+						{
+							"key": "Strict-Transport-Security",
+							"value": "max-age=31556926; includeSubDomains"
+						},
+						{
+							"key": "Referrer-Policy",
+							"value": "strict-origin-when-cross-origin"
+						},
+						{
+							"key": "Via",
+							"value": "1.1 vegur"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"idUsuario\": 131,\n    \"token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTY2Mzc5NjAxOCwianRpIjoiNDYyNjJjNjQtYTRmNC00NmZhLWE5NzktZGFiOWI4Njc2OTcxIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6MTMxLCJuYmYiOjE2NjM3OTYwMTgsImV4cCI6MTY2Mzc5NjYxOH0.d_b9tcdcg6-GEyN1N3ZQbLWfW8LzdKnnRFu5Ejn0ISQ\"\n}"
+				},
+				{
+					"name": "Heroku api login erroneo",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"login\":\"prueba@correo.ubu\",\r\n    \"password\": \"erronea\",\r\n    \"imei\": \"121212\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://miubuapp.herokuapp.com/api/login",
+							"protocol": "https",
+							"host": [
+								"miubuapp",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"api",
+								"login"
+							]
+						}
+					},
+					"status": "MULTIPLE CHOICES",
+					"code": 300,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Server",
+							"value": "gunicorn"
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 21 Sep 2022 21:35:00 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Content-Length",
+							"value": "29"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "SAMEORIGIN"
+						},
+						{
+							"key": "X-Xss-Protection",
+							"value": "1; mode=block"
+						},
+						{
+							"key": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"key": "Content-Security-Policy",
+							"value": "default-src * unsafe-inline strict-dynamic unsafe-hashes 'sha256-yVhOaSpFYsHuy4vwNVCVxs7R7CGIk8isIDt57LTu9Fo='; script-src * 'self' 'nonce-2726c7f26c' strict-dynamic unsafe-inline; font-src * strict-dynamic data:; img-src * data: 'self'"
+						},
+						{
+							"key": "Strict-Transport-Security",
+							"value": "max-age=31556926; includeSubDomains"
+						},
+						{
+							"key": "Referrer-Policy",
+							"value": "strict-origin-when-cross-origin"
+						},
+						{
+							"key": "Via",
+							"value": "1.1 vegur"
+						}
+					],
+					"cookie": [],
+					"body": "\"contraseña incorrecta\""
+				},
+				{
+					"name": "Heroku api login dispositivo no registrado",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"login\":\"prueba@correo.ubu\",\r\n    \"password\": \"probando\",\r\n    \"imei\": \"000000\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://miubuapp.herokuapp.com/api/login",
+							"protocol": "https",
+							"host": [
+								"miubuapp",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"api",
+								"login"
+							]
+						}
+					},
+					"status": "MULTIPLE CHOICES",
+					"code": 300,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Server",
+							"value": "gunicorn"
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 21 Sep 2022 21:35:33 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Content-Length",
+							"value": "28"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "SAMEORIGIN"
+						},
+						{
+							"key": "X-Xss-Protection",
+							"value": "1; mode=block"
+						},
+						{
+							"key": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"key": "Content-Security-Policy",
+							"value": "default-src * unsafe-inline strict-dynamic unsafe-hashes 'sha256-yVhOaSpFYsHuy4vwNVCVxs7R7CGIk8isIDt57LTu9Fo='; script-src * 'self' 'nonce-2726c7f26c' strict-dynamic unsafe-inline; font-src * strict-dynamic data:; img-src * data: 'self'"
+						},
+						{
+							"key": "Strict-Transport-Security",
+							"value": "max-age=31556926; includeSubDomains"
+						},
+						{
+							"key": "Referrer-Policy",
+							"value": "strict-origin-when-cross-origin"
+						},
+						{
+							"key": "Via",
+							"value": "1.1 vegur"
+						}
+					],
+					"cookie": [],
+					"body": "\"dispositivo no registrado\""
+				}
+			]
+		},
+		{
+			"name": "Heroku Post Fichaje",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTY2MzU5NTQ4MiwianRpIjoiMTFmZjFlZjMtYzIzNS00NmNkLWE1NjMtZmQxZGI1YzM5MTRiIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6MTI2LCJuYmYiOjE2NjM1OTU0ODIsImV4cCI6MTY2MzU5NjA4Mn0.IfEWFMlFWzLUgPuqbzAfXhBlngVDn7bhIlAqBP44QJA",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"idUsuario\":128,\r\n    \"fecha\": \"2022-09-11\",\r\n    \"hora\":\"18:02\",\r\n    \"longitud\":0.0,\r\n    \"latitud\":0.0,\r\n    \"tipo\":\"fichaje\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://miubuapp.herokuapp.com/api/fichaje",
+					"protocol": "https",
+					"host": [
+						"miubuapp",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"api",
+						"fichaje"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Heroku Post Fichaje correcto",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"idUsuario\":131,\r\n    \"fecha\": \"2022-09-21\",\r\n    \"hora\":\"18:02\",\r\n    \"longitud\":0.0,\r\n    \"latitud\":0.0,\r\n    \"tipo\":\"fichaje\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://miubuapp.herokuapp.com/api/fichaje",
+							"protocol": "https",
+							"host": [
+								"miubuapp",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"api",
+								"fichaje"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Server",
+							"value": "gunicorn"
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 21 Sep 2022 21:38:44 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Content-Length",
+							"value": "15"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "SAMEORIGIN"
+						},
+						{
+							"key": "X-Xss-Protection",
+							"value": "1; mode=block"
+						},
+						{
+							"key": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"key": "Content-Security-Policy",
+							"value": "default-src * unsafe-inline strict-dynamic unsafe-hashes 'sha256-yVhOaSpFYsHuy4vwNVCVxs7R7CGIk8isIDt57LTu9Fo='; script-src * 'self' 'nonce-2726c7f26c' strict-dynamic unsafe-inline; font-src * strict-dynamic data:; img-src * data: 'self'"
+						},
+						{
+							"key": "Strict-Transport-Security",
+							"value": "max-age=31556926; includeSubDomains"
+						},
+						{
+							"key": "Referrer-Policy",
+							"value": "strict-origin-when-cross-origin"
+						},
+						{
+							"key": "Via",
+							"value": "1.1 vegur"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"token\": \"Ok\"\n}"
+				},
+				{
+					"name": "Heroku Post Fichaje error autorizacion",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"idUsuario\":76,\r\n    \"fecha\": \"2022-08-20\",\r\n    \"hora\":\"18:02\",\r\n    \"longitud\":0.0,\r\n    \"latitud\":0.0\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://miubuapp.herokuapp.com/api/fichaje",
+							"protocol": "https",
+							"host": [
+								"miubuapp",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"api",
+								"fichaje"
+							]
+						}
+					},
+					"status": "UNAUTHORIZED",
+					"code": 401,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Server",
+							"value": "gunicorn"
+						},
+						{
+							"key": "Date",
+							"value": "Mon, 12 Sep 2022 10:35:43 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Content-Length",
+							"value": "39"
+						},
+						{
+							"key": "Via",
+							"value": "1.1 vegur"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"msg\": \"Missing Authorization Header\"\n}"
+				},
+				{
+					"name": "Heroku Post Fichaje Solapado",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"idUsuario\":131,\r\n    \"fecha\": \"2022-09-21\",\r\n    \"hora\":\"18:02\",\r\n    \"longitud\":0.0,\r\n    \"latitud\":0.0,\r\n    \"tipo\":\"fichaje\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://miubuapp.herokuapp.com/api/fichaje",
+							"protocol": "https",
+							"host": [
+								"miubuapp",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"api",
+								"fichaje"
+							]
+						}
+					},
+					"status": "BAD REQUEST",
+					"code": 400,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Server",
+							"value": "gunicorn"
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 21 Sep 2022 21:40:18 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Content-Length",
+							"value": "21"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "SAMEORIGIN"
+						},
+						{
+							"key": "X-Xss-Protection",
+							"value": "1; mode=block"
+						},
+						{
+							"key": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"key": "Content-Security-Policy",
+							"value": "default-src * unsafe-inline strict-dynamic unsafe-hashes 'sha256-yVhOaSpFYsHuy4vwNVCVxs7R7CGIk8isIDt57LTu9Fo='; script-src * 'self' 'nonce-2726c7f26c' strict-dynamic unsafe-inline; font-src * strict-dynamic data:; img-src * data: 'self'"
+						},
+						{
+							"key": "Strict-Transport-Security",
+							"value": "max-age=31556926; includeSubDomains"
+						},
+						{
+							"key": "Referrer-Policy",
+							"value": "strict-origin-when-cross-origin"
+						},
+						{
+							"key": "Via",
+							"value": "1.1 vegur"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"token\": \"solapado\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Heroku Get fichaje",
+			"protocolProfileBehavior": {
+				"strictSSL": false,
+				"followRedirects": false
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTY2MzU5NjU0NywianRpIjoiNjYzMTU2MWMtNjFiYy00OGIwLTkyMzMtMDZlZGQ4ZDAxMjIxIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6MTI2LCJuYmYiOjE2NjM1OTY1NDcsImV4cCI6MTY2MzU5NzE0N30.ihZCtNRGlMFLedOkOFi8PuxcXHUOa1M51nPPGa-yfuo",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://miubuapp.herokuapp.com/api/get/fichaje?idUsuario=81&fecha=07/08/2022",
+					"protocol": "https",
+					"host": [
+						"miubuapp",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"api",
+						"get",
+						"fichaje"
+					],
+					"query": [
+						{
+							"key": "idUsuario",
+							"value": "81"
+						},
+						{
+							"key": "fecha",
+							"value": "07/08/2022"
+						}
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Heroku Get fichaje",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://miubuapp.herokuapp.com/api/get/fichaje?idUsuario=131&fecha=09/21/2022",
+							"protocol": "https",
+							"host": [
+								"miubuapp",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"api",
+								"get",
+								"fichaje"
+							],
+							"query": [
+								{
+									"key": "idUsuario",
+									"value": "131"
+								},
+								{
+									"key": "fecha",
+									"value": "09/21/2022"
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Server",
+							"value": "gunicorn"
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 21 Sep 2022 21:43:01 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Content-Length",
+							"value": "175"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "SAMEORIGIN"
+						},
+						{
+							"key": "X-Xss-Protection",
+							"value": "1; mode=block"
+						},
+						{
+							"key": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"key": "Content-Security-Policy",
+							"value": "default-src * unsafe-inline strict-dynamic unsafe-hashes 'sha256-yVhOaSpFYsHuy4vwNVCVxs7R7CGIk8isIDt57LTu9Fo='; script-src * 'self' 'nonce-2726c7f26c' strict-dynamic unsafe-inline; font-src * strict-dynamic data:; img-src * data: 'self'"
+						},
+						{
+							"key": "Strict-Transport-Security",
+							"value": "max-age=31556926; includeSubDomains"
+						},
+						{
+							"key": "Referrer-Policy",
+							"value": "strict-origin-when-cross-origin"
+						},
+						{
+							"key": "Via",
+							"value": "1.1 vegur"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"fichajes\": [\n        {\n            \"ID\": 585,\n            \"borrado\": false,\n            \"fecha\": \"21-09-2022\",\n            \"hora\": \"18:02:00\",\n            \"incidencia\": null,\n            \"latitud\": 0,\n            \"longitud\": 0,\n            \"tiempo_trabajado\": \"00:00:00\",\n            \"tipo\": \"entrada\"\n        }\n    ]\n}"
+				},
+				{
+					"name": "Heroku Get fichaje vacio",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://miubuapp.herokuapp.com/api/get/fichaje?idUsuario=131&fecha=09/23/2022",
+							"protocol": "https",
+							"host": [
+								"miubuapp",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"api",
+								"get",
+								"fichaje"
+							],
+							"query": [
+								{
+									"key": "idUsuario",
+									"value": "131"
+								},
+								{
+									"key": "fecha",
+									"value": "09/23/2022"
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Server",
+							"value": "gunicorn"
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 21 Sep 2022 21:43:37 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Content-Length",
+							"value": "16"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "SAMEORIGIN"
+						},
+						{
+							"key": "X-Xss-Protection",
+							"value": "1; mode=block"
+						},
+						{
+							"key": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"key": "Content-Security-Policy",
+							"value": "default-src * unsafe-inline strict-dynamic unsafe-hashes 'sha256-yVhOaSpFYsHuy4vwNVCVxs7R7CGIk8isIDt57LTu9Fo='; script-src * 'self' 'nonce-2726c7f26c' strict-dynamic unsafe-inline; font-src * strict-dynamic data:; img-src * data: 'self'"
+						},
+						{
+							"key": "Strict-Transport-Security",
+							"value": "max-age=31556926; includeSubDomains"
+						},
+						{
+							"key": "Referrer-Policy",
+							"value": "strict-origin-when-cross-origin"
+						},
+						{
+							"key": "Via",
+							"value": "1.1 vegur"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"fichajes\": []\n}"
+				}
+			]
+		},
+		{
+			"name": "Heroku Get fichajes rango",
+			"protocolProfileBehavior": {
+				"strictSSL": false,
+				"followRedirects": false
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTY2Mjk5NTQzNCwianRpIjoiMWU1YWExZjQtNDkzMi00MmQ3LWI5N2YtODQyZGU5ZjgzOTI0IiwidHlwZSI6ImFjY2VzcyIsInN1YiI6NzYsIm5iZiI6MTY2Mjk5NTQzNCwiZXhwIjoxNjYyOTk2MDM0fQ.sUSAs75lTBCWHJRG4BAJ7GuKOPpj2qdJIZWmSvYPP8Q",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://miubuapp.herokuapp.com/api/usuario/fichajesRango?idUsuario=76&fecha_ini=2022/9/1&fecha_fin=2022/9/30",
+					"protocol": "https",
+					"host": [
+						"miubuapp",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"api",
+						"usuario",
+						"fichajesRango"
+					],
+					"query": [
+						{
+							"key": "idUsuario",
+							"value": "76",
+							"description": "Integer"
+						},
+						{
+							"key": "fecha_ini",
+							"value": "2022/9/1",
+							"description": "aaaa/mm/dd"
+						},
+						{
+							"key": "fecha_fin",
+							"value": "2022/9/30",
+							"description": "aaaa/mm/dd"
+						}
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Heroku Get fichajes rango",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://miubuapp.herokuapp.com/api/usuario/fichajesRango?idUsuario=131&fecha_ini=2022/1/1&fecha_fin=2022/9/30",
+							"protocol": "https",
+							"host": [
+								"miubuapp",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"api",
+								"usuario",
+								"fichajesRango"
+							],
+							"query": [
+								{
+									"key": "idUsuario",
+									"value": "131",
+									"description": "Integer"
+								},
+								{
+									"key": "fecha_ini",
+									"value": "2022/1/1",
+									"description": "aaaa/mm/dd"
+								},
+								{
+									"key": "fecha_fin",
+									"value": "2022/9/30",
+									"description": "aaaa/mm/dd"
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Server",
+							"value": "gunicorn"
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 21 Sep 2022 21:46:42 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Content-Length",
+							"value": "654"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "SAMEORIGIN"
+						},
+						{
+							"key": "X-Xss-Protection",
+							"value": "1; mode=block"
+						},
+						{
+							"key": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"key": "Content-Security-Policy",
+							"value": "default-src * unsafe-inline strict-dynamic unsafe-hashes 'sha256-yVhOaSpFYsHuy4vwNVCVxs7R7CGIk8isIDt57LTu9Fo='; script-src * 'self' 'nonce-2726c7f26c' strict-dynamic unsafe-inline; font-src * strict-dynamic data:; img-src * data: 'self'"
+						},
+						{
+							"key": "Strict-Transport-Security",
+							"value": "max-age=31556926; includeSubDomains"
+						},
+						{
+							"key": "Referrer-Policy",
+							"value": "strict-origin-when-cross-origin"
+						},
+						{
+							"key": "Via",
+							"value": "1.1 vegur"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"fichajes\": [\n        {\n            \"ID\": 585,\n            \"borrado\": false,\n            \"fecha\": \"21-09-2022\",\n            \"hora\": \"18:02:00\",\n            \"incidencia\": null,\n            \"latitud\": 0,\n            \"longitud\": 0,\n            \"tiempo_trabajado\": \"00:00:00\",\n            \"tipo\": \"entrada\"\n        },\n        {\n            \"ID\": 586,\n            \"borrado\": false,\n            \"fecha\": \"21-07-2022\",\n            \"hora\": \"18:02:00\",\n            \"incidencia\": null,\n            \"latitud\": 0,\n            \"longitud\": 0,\n            \"tiempo_trabajado\": \"00:00:00\",\n            \"tipo\": \"entrada\"\n        },\n        {\n            \"ID\": 587,\n            \"borrado\": false,\n            \"fecha\": \"21-07-2022\",\n            \"hora\": \"19:02:00\",\n            \"incidencia\": null,\n            \"latitud\": 0,\n            \"longitud\": 0,\n            \"tiempo_trabajado\": \"01:00:00\",\n            \"tipo\": \"salida\"\n        },\n        {\n            \"ID\": 588,\n            \"borrado\": false,\n            \"fecha\": \"21-01-2022\",\n            \"hora\": \"07:02:00\",\n            \"incidencia\": null,\n            \"latitud\": 0,\n            \"longitud\": 0,\n            \"tiempo_trabajado\": \"00:00:00\",\n            \"tipo\": \"entrada\"\n        }\n    ]\n}"
+				},
+				{
+					"name": "Heroku Get fichajes rango vacio",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://miubuapp.herokuapp.com/api/usuario/fichajesRango?idUsuario=131&fecha_ini=2022/10/1&fecha_fin=2022/11/30",
+							"protocol": "https",
+							"host": [
+								"miubuapp",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"api",
+								"usuario",
+								"fichajesRango"
+							],
+							"query": [
+								{
+									"key": "idUsuario",
+									"value": "131",
+									"description": "Integer"
+								},
+								{
+									"key": "fecha_ini",
+									"value": "2022/10/1",
+									"description": "aaaa/mm/dd"
+								},
+								{
+									"key": "fecha_fin",
+									"value": "2022/11/30",
+									"description": "aaaa/mm/dd"
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Server",
+							"value": "gunicorn"
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 21 Sep 2022 21:47:45 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Content-Length",
+							"value": "3"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "SAMEORIGIN"
+						},
+						{
+							"key": "X-Xss-Protection",
+							"value": "1; mode=block"
+						},
+						{
+							"key": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"key": "Content-Security-Policy",
+							"value": "default-src * unsafe-inline strict-dynamic unsafe-hashes 'sha256-yVhOaSpFYsHuy4vwNVCVxs7R7CGIk8isIDt57LTu9Fo='; script-src * 'self' 'nonce-2726c7f26c' strict-dynamic unsafe-inline; font-src * strict-dynamic data:; img-src * data: 'self'"
+						},
+						{
+							"key": "Strict-Transport-Security",
+							"value": "max-age=31556926; includeSubDomains"
+						},
+						{
+							"key": "Referrer-Policy",
+							"value": "strict-origin-when-cross-origin"
+						},
+						{
+							"key": "Via",
+							"value": "1.1 vegur"
+						}
+					],
+					"cookie": [],
+					"body": "[]"
+				}
+			]
+		},
+		{
+			"name": "Heroku Get Fichajes",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTY2Mjk3OTU3MCwianRpIjoiOTVjZmQ3ZGItYWUyMy00MDQ5LWJmZTEtMWQzNTVkMjAzMDVkIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6NzYsIm5iZiI6MTY2Mjk3OTU3MCwiZXhwIjoxNjYyOTgwMTcwfQ.zd07CF49vSy8pEf-HmCVspMIewUVCJqGSJN1MzmUQbY",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://miubuapp.herokuapp.com/api/get/fichajes?idUsuario=76",
+					"protocol": "http",
+					"host": [
+						"miubuapp",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"api",
+						"get",
+						"fichajes"
+					],
+					"query": [
+						{
+							"key": "idUsuario",
+							"value": "76",
+							"description": "Integer"
+						}
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Heroku Get Fichajes",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://miubuapp.herokuapp.com/api/get/fichajes?idUsuario=131",
+							"protocol": "http",
+							"host": [
+								"miubuapp",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"api",
+								"get",
+								"fichajes"
+							],
+							"query": [
+								{
+									"key": "idUsuario",
+									"value": "131",
+									"description": "Integer"
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Server",
+							"value": "gunicorn"
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 21 Sep 2022 21:48:13 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Content-Length",
+							"value": "654"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "SAMEORIGIN"
+						},
+						{
+							"key": "X-Xss-Protection",
+							"value": "1; mode=block"
+						},
+						{
+							"key": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"key": "Content-Security-Policy",
+							"value": "default-src * unsafe-inline strict-dynamic unsafe-hashes 'sha256-yVhOaSpFYsHuy4vwNVCVxs7R7CGIk8isIDt57LTu9Fo='; script-src * 'self' 'nonce-2726c7f26c' strict-dynamic unsafe-inline; font-src * strict-dynamic data:; img-src * data: 'self'"
+						},
+						{
+							"key": "Strict-Transport-Security",
+							"value": "max-age=31556926; includeSubDomains"
+						},
+						{
+							"key": "Referrer-Policy",
+							"value": "strict-origin-when-cross-origin"
+						},
+						{
+							"key": "Via",
+							"value": "1.1 vegur"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"fichajes\": [\n        {\n            \"ID\": 585,\n            \"borrado\": false,\n            \"fecha\": \"21-09-2022\",\n            \"hora\": \"18:02:00\",\n            \"incidencia\": null,\n            \"latitud\": 0,\n            \"longitud\": 0,\n            \"tiempo_trabajado\": \"00:00:00\",\n            \"tipo\": \"entrada\"\n        },\n        {\n            \"ID\": 586,\n            \"borrado\": false,\n            \"fecha\": \"21-07-2022\",\n            \"hora\": \"18:02:00\",\n            \"incidencia\": null,\n            \"latitud\": 0,\n            \"longitud\": 0,\n            \"tiempo_trabajado\": \"00:00:00\",\n            \"tipo\": \"entrada\"\n        },\n        {\n            \"ID\": 587,\n            \"borrado\": false,\n            \"fecha\": \"21-07-2022\",\n            \"hora\": \"19:02:00\",\n            \"incidencia\": null,\n            \"latitud\": 0,\n            \"longitud\": 0,\n            \"tiempo_trabajado\": \"01:00:00\",\n            \"tipo\": \"salida\"\n        },\n        {\n            \"ID\": 588,\n            \"borrado\": false,\n            \"fecha\": \"21-01-2022\",\n            \"hora\": \"07:02:00\",\n            \"incidencia\": null,\n            \"latitud\": 0,\n            \"longitud\": 0,\n            \"tiempo_trabajado\": \"00:00:00\",\n            \"tipo\": \"entrada\"\n        }\n    ]\n}"
+				}
+			]
+		},
+		{
+			"name": "Heroku Usuario RecuperaPassword",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://miubuapp.herokuapp.com/api/usuario/recuperaPassword?email=\"a.socastro@gmail.com\"",
+					"protocol": "https",
+					"host": [
+						"miubuapp",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"api",
+						"usuario",
+						"recuperaPassword"
+					],
+					"query": [
+						{
+							"key": "email",
+							"value": "\"a.socastro@gmail.com\"",
+							"description": "String"
+						}
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Heroku Usuario RecuperaPassword",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://miubuapp.herokuapp.com/api/usuario/recuperaPassword?email=asocastro@gmail.com",
+							"protocol": "https",
+							"host": [
+								"miubuapp",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"api",
+								"usuario",
+								"recuperaPassword"
+							],
+							"query": [
+								{
+									"key": "email",
+									"value": "asocastro@gmail.com",
+									"description": "String"
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "html",
+					"header": [
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Server",
+							"value": "gunicorn"
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 21 Sep 2022 21:50:15 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "text/html; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "2"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "SAMEORIGIN"
+						},
+						{
+							"key": "X-Xss-Protection",
+							"value": "1; mode=block"
+						},
+						{
+							"key": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"key": "Content-Security-Policy",
+							"value": "default-src * unsafe-inline strict-dynamic unsafe-hashes 'sha256-yVhOaSpFYsHuy4vwNVCVxs7R7CGIk8isIDt57LTu9Fo='; script-src * 'self' 'nonce-2726c7f26c' strict-dynamic unsafe-inline; font-src * strict-dynamic data:; img-src * data: 'self'"
+						},
+						{
+							"key": "Strict-Transport-Security",
+							"value": "max-age=31556926; includeSubDomains"
+						},
+						{
+							"key": "Referrer-Policy",
+							"value": "strict-origin-when-cross-origin"
+						},
+						{
+							"key": "Via",
+							"value": "1.1 vegur"
+						}
+					],
+					"cookie": [],
+					"body": "Ok"
+				},
+				{
+					"name": "Heroku Usuario RecuperaPassword usuario incorrecto",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://miubuapp.herokuapp.com/api/usuario/recuperaPassword?email=asocastro@coruna.gal",
+							"protocol": "https",
+							"host": [
+								"miubuapp",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"api",
+								"usuario",
+								"recuperaPassword"
+							],
+							"query": [
+								{
+									"key": "email",
+									"value": "asocastro@coruna.gal",
+									"description": "String"
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "html",
+					"header": [
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Server",
+							"value": "gunicorn"
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 21 Sep 2022 21:49:27 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "text/html; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "28"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "SAMEORIGIN"
+						},
+						{
+							"key": "X-Xss-Protection",
+							"value": "1; mode=block"
+						},
+						{
+							"key": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"key": "Content-Security-Policy",
+							"value": "default-src * unsafe-inline strict-dynamic unsafe-hashes 'sha256-yVhOaSpFYsHuy4vwNVCVxs7R7CGIk8isIDt57LTu9Fo='; script-src * 'self' 'nonce-2726c7f26c' strict-dynamic unsafe-inline; font-src * strict-dynamic data:; img-src * data: 'self'"
+						},
+						{
+							"key": "Strict-Transport-Security",
+							"value": "max-age=31556926; includeSubDomains"
+						},
+						{
+							"key": "Referrer-Policy",
+							"value": "strict-origin-when-cross-origin"
+						},
+						{
+							"key": "Via",
+							"value": "1.1 vegur"
+						}
+					],
+					"cookie": [],
+					"body": "Error: el usuario no existe."
+				}
+			]
+		},
+		{
+			"name": "Heroku Post registraGasto",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTY2Mjk4MjM3NCwianRpIjoiMDcwNTNkMTctZGU0MS00ZjgzLWI4MjctZGNkZDI4NzdhNDk5IiwidHlwZSI6ImFjY2VzcyIsInN1YiI6NzYsIm5iZiI6MTY2Mjk4MjM3NCwiZXhwIjoxNjYyOTgyOTc0fQ.1LR1x0pUvay5CbS2mWI3HDaNotQ66uPvzzIqHHQUJzM",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "ticket",
+							"description": "Bytes",
+							"type": "file",
+							"src": "ticketPrueba.png"
+						},
+						{
+							"key": "idUsuario",
+							"value": "76",
+							"description": "Integer",
+							"type": "text"
+						},
+						{
+							"key": "fecha",
+							"value": "8/25/2022",
+							"description": "Date: dd/mm/aaaa",
+							"type": "text"
+						},
+						{
+							"key": "tipo",
+							"value": "ticket",
+							"description": "String",
+							"type": "text"
+						},
+						{
+							"key": "descripcion",
+							"value": "comida",
+							"description": "String",
+							"type": "text"
+						},
+						{
+							"key": "importe",
+							"value": "129.90",
+							"description": "Float",
+							"type": "text"
+						},
+						{
+							"key": "iva",
+							"value": "2.10",
+							"description": "Float",
+							"type": "text"
+						},
+						{
+							"key": "cif",
+							"value": "C12345678R",
+							"description": "String",
+							"type": "text"
+						},
+						{
+							"key": "razonSocial",
+							"value": "Bar cafeteria S.L",
+							"description": "String",
+							"type": "text"
+						},
+						{
+							"key": "numeroTicket",
+							"value": "001231",
+							"description": "Integer",
+							"type": "text"
+						},
+						{
+							"key": "validado",
+							"value": "False",
+							"description": "Boolean",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://miubuapp.herokuapp.com/api/gasto/registraGasto",
+					"protocol": "https",
+					"host": [
+						"miubuapp",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"api",
+						"gasto",
+						"registraGasto"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Heroku Post registraGasto",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "ticket",
+									"description": "Bytes",
+									"type": "file",
+									"src": "ticketPrueba.png"
+								},
+								{
+									"key": "idUsuario",
+									"value": "131",
+									"description": "Integer",
+									"type": "text"
+								},
+								{
+									"key": "fecha",
+									"value": "8/25/2022",
+									"description": "Date: dd/mm/aaaa",
+									"type": "text"
+								},
+								{
+									"key": "tipo",
+									"value": "ticket",
+									"description": "String",
+									"type": "text"
+								},
+								{
+									"key": "descripcion",
+									"value": "comida",
+									"description": "String",
+									"type": "text"
+								},
+								{
+									"key": "importe",
+									"value": "129.90",
+									"description": "Float",
+									"type": "text"
+								},
+								{
+									"key": "iva",
+									"value": "2.10",
+									"description": "Float",
+									"type": "text"
+								},
+								{
+									"key": "cif",
+									"value": "C12345678R",
+									"description": "String",
+									"type": "text"
+								},
+								{
+									"key": "razonSocial",
+									"value": "Bar cafeteria S.L",
+									"description": "String",
+									"type": "text"
+								},
+								{
+									"key": "numeroTicket",
+									"value": "001231",
+									"description": "Integer",
+									"type": "text"
+								},
+								{
+									"key": "validado",
+									"value": "False",
+									"description": "Boolean",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://miubuapp.herokuapp.com/api/gasto/registraGasto",
+							"protocol": "https",
+							"host": [
+								"miubuapp",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"api",
+								"gasto",
+								"registraGasto"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Server",
+							"value": "gunicorn"
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 21 Sep 2022 22:22:16 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Content-Length",
+							"value": "5"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "SAMEORIGIN"
+						},
+						{
+							"key": "X-Xss-Protection",
+							"value": "1; mode=block"
+						},
+						{
+							"key": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"key": "Content-Security-Policy",
+							"value": "default-src * unsafe-inline strict-dynamic unsafe-hashes 'sha256-yVhOaSpFYsHuy4vwNVCVxs7R7CGIk8isIDt57LTu9Fo='; script-src * 'self' 'nonce-2726c7f26c' strict-dynamic unsafe-inline; font-src * strict-dynamic data:; img-src * data: 'self'"
+						},
+						{
+							"key": "Strict-Transport-Security",
+							"value": "max-age=31556926; includeSubDomains"
+						},
+						{
+							"key": "Referrer-Policy",
+							"value": "strict-origin-when-cross-origin"
+						},
+						{
+							"key": "Via",
+							"value": "1.1 vegur"
+						}
+					],
+					"cookie": [],
+					"body": "\"Ok\""
+				},
+				{
+					"name": "Heroku Post registraGasto sin foto",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "ticket",
+									"description": "Bytes",
+									"type": "file",
+									"src": []
+								},
+								{
+									"key": "idUsuario",
+									"value": "131",
+									"description": "Integer",
+									"type": "text"
+								},
+								{
+									"key": "fecha",
+									"value": "8/25/2022",
+									"description": "Date: dd/mm/aaaa",
+									"type": "text"
+								},
+								{
+									"key": "tipo",
+									"value": "ticket",
+									"description": "String",
+									"type": "text"
+								},
+								{
+									"key": "descripcion",
+									"value": "comida",
+									"description": "String",
+									"type": "text"
+								},
+								{
+									"key": "importe",
+									"value": "200",
+									"description": "Float",
+									"type": "text"
+								},
+								{
+									"key": "iva",
+									"value": "32",
+									"description": "Float",
+									"type": "text"
+								},
+								{
+									"key": "cif",
+									"value": "C12345678R",
+									"description": "String",
+									"type": "text"
+								},
+								{
+									"key": "razonSocial",
+									"value": "Bar cafeteria S.L",
+									"description": "String",
+									"type": "text"
+								},
+								{
+									"key": "numeroTicket",
+									"value": "001231",
+									"description": "Integer",
+									"type": "text"
+								},
+								{
+									"key": "validado",
+									"value": "False",
+									"description": "Boolean",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://miubuapp.herokuapp.com/api/gasto/registraGasto",
+							"protocol": "https",
+							"host": [
+								"miubuapp",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"api",
+								"gasto",
+								"registraGasto"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Server",
+							"value": "gunicorn"
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 21 Sep 2022 22:23:03 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Content-Length",
+							"value": "5"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "SAMEORIGIN"
+						},
+						{
+							"key": "X-Xss-Protection",
+							"value": "1; mode=block"
+						},
+						{
+							"key": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"key": "Content-Security-Policy",
+							"value": "default-src * unsafe-inline strict-dynamic unsafe-hashes 'sha256-yVhOaSpFYsHuy4vwNVCVxs7R7CGIk8isIDt57LTu9Fo='; script-src * 'self' 'nonce-2726c7f26c' strict-dynamic unsafe-inline; font-src * strict-dynamic data:; img-src * data: 'self'"
+						},
+						{
+							"key": "Strict-Transport-Security",
+							"value": "max-age=31556926; includeSubDomains"
+						},
+						{
+							"key": "Referrer-Policy",
+							"value": "strict-origin-when-cross-origin"
+						},
+						{
+							"key": "Via",
+							"value": "1.1 vegur"
+						}
+					],
+					"cookie": [],
+					"body": "\"Ok\""
+				}
+			]
+		},
+		{
+			"name": "Heroku Get Usuario",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTY2Mzc5NjY4NCwianRpIjoiNWVhZjA1YTQtNjI4OC00ZjFkLWIyMjAtMmY2OGFhM2E5NTg0IiwidHlwZSI6ImFjY2VzcyIsInN1YiI6MTMxLCJuYmYiOjE2NjM3OTY2ODQsImV4cCI6MTY2Mzc5NzI4NH0.1H8XG-aikf9lZYGmWyPOXHAEAMDO530FJqQGxT709Hw",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://miubuapp.herokuapp.com/api/get/usuario?idUsuario=131",
+					"protocol": "https",
+					"host": [
+						"miubuapp",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"api",
+						"get",
+						"usuario"
+					],
+					"query": [
+						{
+							"key": "idUsuario",
+							"value": "131",
+							"description": "Integer"
+						}
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Heroku Get Usuario",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://miubuapp.herokuapp.com/api/get/usuario?idUsuario=131",
+							"protocol": "https",
+							"host": [
+								"miubuapp",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"api",
+								"get",
+								"usuario"
+							],
+							"query": [
+								{
+									"key": "idUsuario",
+									"value": "131",
+									"description": "Integer"
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Server",
+							"value": "gunicorn"
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 21 Sep 2022 21:50:52 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Content-Length",
+							"value": "294"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "SAMEORIGIN"
+						},
+						{
+							"key": "X-Xss-Protection",
+							"value": "1; mode=block"
+						},
+						{
+							"key": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"key": "Content-Security-Policy",
+							"value": "default-src * unsafe-inline strict-dynamic unsafe-hashes 'sha256-yVhOaSpFYsHuy4vwNVCVxs7R7CGIk8isIDt57LTu9Fo='; script-src * 'self' 'nonce-2726c7f26c' strict-dynamic unsafe-inline; font-src * strict-dynamic data:; img-src * data: 'self'"
+						},
+						{
+							"key": "Strict-Transport-Security",
+							"value": "max-age=31556926; includeSubDomains"
+						},
+						{
+							"key": "Referrer-Policy",
+							"value": "strict-origin-when-cross-origin"
+						},
+						{
+							"key": "Via",
+							"value": "1.1 vegur"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"apellidos\": \"Pruebas\",\n    \"estado\": true,\n    \"idEmpresa\": 36,\n    \"idJornadaLaboral\": 1,\n    \"idRol\": 2,\n    \"idUsuario\": 131,\n    \"iemi\": \"121212\",\n    \"login\": \"prueba@correo.ubu\",\n    \"nombre\": \"Pepe\",\n    \"password\": \"pbkdf2:sha256:260000$goE1cXy4FFCsmTE4$925fc9e3f55c7c869f05bf7db0b90e253dab4ff8e3f2747a25da868033c75ea1\",\n    \"tlf\": \"222333444\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Heroku  Post SolicitudBorrado",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTY2Mzc5ODU3OCwianRpIjoiNWUzYWJjODItOGJjYy00YzU2LTg4YzAtZjZmY2ZiNTJlMjY4IiwidHlwZSI6ImFjY2VzcyIsInN1YiI6MTMxLCJuYmYiOjE2NjM3OTg1NzgsImV4cCI6MTY2Mzc5OTE3OH0._OYoujkLGlQkHt_jxukFS9Dwd7i-a4NCktYl5gI3GiQ",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "https://miubuapp.herokuapp.com/api/usuario/solicitudBorrado?idUsuario=131&idFichaje=588",
+					"protocol": "https",
+					"host": [
+						"miubuapp",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"api",
+						"usuario",
+						"solicitudBorrado"
+					],
+					"query": [
+						{
+							"key": "idUsuario",
+							"value": "131",
+							"description": "Integer"
+						},
+						{
+							"key": "idFichaje",
+							"value": "588",
+							"description": "Integer"
+						}
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Heroku  Post SolicitudBorrado",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "https://miubuapp.herokuapp.com/api/usuario/solicitudBorrado?idUsuario=131&idFichaje=588",
+							"protocol": "https",
+							"host": [
+								"miubuapp",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"api",
+								"usuario",
+								"solicitudBorrado"
+							],
+							"query": [
+								{
+									"key": "idUsuario",
+									"value": "131",
+									"description": "Integer"
+								},
+								{
+									"key": "idFichaje",
+									"value": "588",
+									"description": "Integer"
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Server",
+							"value": "gunicorn"
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 21 Sep 2022 22:16:32 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Content-Length",
+							"value": "5"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "SAMEORIGIN"
+						},
+						{
+							"key": "X-Xss-Protection",
+							"value": "1; mode=block"
+						},
+						{
+							"key": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"key": "Content-Security-Policy",
+							"value": "default-src * unsafe-inline strict-dynamic unsafe-hashes 'sha256-yVhOaSpFYsHuy4vwNVCVxs7R7CGIk8isIDt57LTu9Fo='; script-src * 'self' 'nonce-2726c7f26c' strict-dynamic unsafe-inline; font-src * strict-dynamic data:; img-src * data: 'self'"
+						},
+						{
+							"key": "Strict-Transport-Security",
+							"value": "max-age=31556926; includeSubDomains"
+						},
+						{
+							"key": "Referrer-Policy",
+							"value": "strict-origin-when-cross-origin"
+						},
+						{
+							"key": "Via",
+							"value": "1.1 vegur"
+						}
+					],
+					"cookie": [],
+					"body": "\"Ok\""
+				},
+				{
+					"name": "Heroku  Post SolicitudBorrado no existe fichaje",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "https://miubuapp.herokuapp.com/api/usuario/solicitudBorrado?idUsuario=131&idFichaje=1",
+							"protocol": "https",
+							"host": [
+								"miubuapp",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"api",
+								"usuario",
+								"solicitudBorrado"
+							],
+							"query": [
+								{
+									"key": "idUsuario",
+									"value": "131",
+									"description": "Integer"
+								},
+								{
+									"key": "idFichaje",
+									"value": "1",
+									"description": "Integer"
+								}
+							]
+						}
+					},
+					"status": "BAD REQUEST",
+					"code": 400,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Server",
+							"value": "gunicorn"
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 21 Sep 2022 22:17:47 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Content-Length",
+							"value": "20"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "SAMEORIGIN"
+						},
+						{
+							"key": "X-Xss-Protection",
+							"value": "1; mode=block"
+						},
+						{
+							"key": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"key": "Content-Security-Policy",
+							"value": "default-src * unsafe-inline strict-dynamic unsafe-hashes 'sha256-yVhOaSpFYsHuy4vwNVCVxs7R7CGIk8isIDt57LTu9Fo='; script-src * 'self' 'nonce-2726c7f26c' strict-dynamic unsafe-inline; font-src * strict-dynamic data:; img-src * data: 'self'"
+						},
+						{
+							"key": "Strict-Transport-Security",
+							"value": "max-age=31556926; includeSubDomains"
+						},
+						{
+							"key": "Referrer-Policy",
+							"value": "strict-origin-when-cross-origin"
+						},
+						{
+							"key": "Via",
+							"value": "1.1 vegur"
+						}
+					],
+					"cookie": [],
+					"body": "\"No existe fichaje\""
+				}
+			]
+		}
+	]
+}
