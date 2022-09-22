@@ -592,20 +592,28 @@ def modifica_usuario():
         return redirect(url_for('home', idEmpresa=id_empresa))
     return render_template("modifica.html", form=form, error=error)    
 
-@main.route('/modificaEmpleado', methods=['GET', 'POST'])
+@main.route('/modificaEmpleado', methods=['GET'])
+@login_required
+def modifica_empleado_get():
+    user= Usuario.get_by_id(session['idUsuario'])
+    form = FormModificaEmpleado()
+    error = None
+
+    form.nombre.data = user.nombre
+    form.apellidos.data = user.apellidos
+    form.nif.data = user.nif
+    form.tlf.data = user.tlf
+    form.imei.data = user.imei
+    form.email.data = user.login
+    form.emailRecuperacion.data = user.emailRecuperacion 
+    return render_template("modificaEmpleado.html", form=form, error=error)
+
+@main.route('/modificaEmpleado', methods=['POST'])
 @login_required
 def modifica_empleado():
     user= Usuario.get_by_id(session['idUsuario'])
     form = FormModificaEmpleado()
     error = None
-    if request.method =='GET':
-        form.nombre.data = user.nombre
-        form.apellidos.data = user.apellidos
-        form.nif.data = user.nif
-        form.tlf.data = user.tlf
-        form.imei.data = user.imei
-        form.email.data = user.login
-        form.emailRecuperacion.data = user.emailRecuperacion 
     if form.validate_on_submit():
         user.nombre = form.nombre.data
         user.apellidos = form.apellidos.data
@@ -615,4 +623,4 @@ def modifica_empleado():
         user.emailRecuperacion = form.emailRecuperacion.data
         user.save()
         return redirect(url_for('home'))
-    return render_template("modificaEmpleado.html", form=form, error=error)
+   
