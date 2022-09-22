@@ -185,14 +185,7 @@
                    
                     //Funcion Ajax para renderizar el boton para eliminar un fichaje   
                     var eliminarFichaje = function( data, type, row, meta ) {
-                        var esGestor = $('#rol').value;
-                        console.log('gestor::', esGestor);
-                        if (esGestor == 'gestor') {
                              return "<button type='button' id='eliminarFichaje' class='btn btn-primary' data-fichaje=" + row['ID'] + "><i class='bi bi-x-lg'></i></button>";
-                        }
-                        else {
-                            return null;
-                        }
                     }
 
                     var calculaTiempo = function( data, type, row, meta ) {
