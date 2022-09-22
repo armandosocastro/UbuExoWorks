@@ -67,6 +67,7 @@
                 <h2>Listado de fichajes</h2>
                 <p class="lead">
                     {%if (current_user.is_admin() == True) or (current_user.is_gestor() == True) %}
+                        <input type="hidden" id="rol" val="gestor">
                         <button id="btnAddFichaje" data-toggle='modal' data-target= '#myModal'>Grabar fichaje</button>
                     {% endif %}
                     <table id="tablaFichajes" 
@@ -184,8 +185,14 @@
                    
                     //Funcion Ajax para renderizar el boton para eliminar un fichaje   
                     var eliminarFichaje = function( data, type, row, meta ) {
-                        
-                         return "<button type='button' id='eliminarFichaje' class='btn btn-primary' data-fichaje=" + row['ID'] + "><i class='bi bi-x-lg'></i></button>";
+                        var esGestor = $('#rol').value;
+                        console.log('gestor::', esGestor);
+                        if (esGestor == 'gestor') {
+                             return "<button type='button' id='eliminarFichaje' class='btn btn-primary' data-fichaje=" + row['ID'] + "><i class='bi bi-x-lg'></i></button>";
+                        }
+                        else {
+                            return null;
+                        }
                     }
 
                     var calculaTiempo = function( data, type, row, meta ) {
