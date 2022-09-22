@@ -14,7 +14,7 @@ from flask_mail import Mail, Message
 from flask_login import current_user, login_required
 # Modelos
 from models.Modelo import Fichaje, Gasto, Usuario, Empresa, Rol
-from formularios import FormAlta, FormModifica
+from formularios import FormAlta, FormModifica, FormModificaEmpleado
 import os #Quitar despues de las prubeas con los tickets
 import base64 #Para codificar/descodificar las imagenes
 from auth import admin_required, gestor_required
@@ -591,3 +591,28 @@ def modifica_usuario():
                 user.save()  
         return redirect(url_for('home', idEmpresa=id_empresa))
     return render_template("modifica.html", form=form, error=error)    
+
+@main.route('/modificaEmpleado', methods=['GET', 'POST'])
+@login_required
+def modifica_empleado():
+    user= Usuario.get_by_id(session['idUsuario'])
+    form = FormModificaEmpleado()
+    error = None
+    if request.method =='GET':
+        form.nombre.data = user.nombre
+        form.apellidos.data = user.apellidos
+        form.nif.data = user.nif
+        form.tlf.data = user.tlf
+        form.imei.data = user.imei
+        form.email.data = user.login
+        form.emailRecuperacion.data = user.emailRecuperacion 
+    if form.validate_on_submit():
+        user.nombre = form.nombre.data
+        user.apellidos = form.apellidos.data
+        user.nif = form.nif.data
+        user.tlf = form.tlf.data
+        user.email = form.email.data
+        user.emailRecuperacion = form.emailRecuperacion.data
+        user.save()
+        return redirect(url_for('home'))
+    return render_template("modificaEmpleado.html", form=form, error=error)

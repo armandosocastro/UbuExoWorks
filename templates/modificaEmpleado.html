@@ -1,0 +1,81 @@
+{% extends "base_template.html" %}
+
+{% block title %}Modificacion datos empleado{% endblock %}
+
+
+{% block content2 %}
+
+<body class="m-0 vh-100 row justify-content-center align-items-center ">
+    <div class="col-auto p-5 text-center">
+
+        {% if error %}
+        <p style="color: red;"><strong>Error:</strong> {{ error }}
+        {% endif %}
+
+        <form action="" method="post" novalidate id="form">
+            {{ form.hidden_tag() }}
+            <input type="hidden" name="accion" value="Modificar" id="idAccion" />
+            <p>
+                {{ form.nombre.label }}<br>
+                {{ form.nombre }}<br>
+                {% for error in form.nombre.errors %}
+                <span style="color: red;">{{ error }}</span>
+                {% endfor %}
+            </p>
+            <p>
+                {{ form.apellidos.label }}<br>
+                {{ form.apellidos }}<br>
+                {% for error in form.apellidos.errors %}
+                <span style="color: red;">{{ error }}</span>
+                {% endfor %}
+            </p>
+            <p>
+                {{ form.nif.label }}<br>
+                {{ form.nif }}<br>
+                {% for error in form.nif.errors %}
+                <span style="color: red;">{{ error }}</span>
+                {% endfor %}
+            </p>
+            <p>
+                {{ form.tlf.label }}<br>
+                {{ form.tlf }}<br>
+                {% for error in form.tlf.errors %}
+                <span style="color: red;">{{ error }}</span>
+                {% endfor %}
+            </p>
+            <p>
+                {{ form.email.label }}<br>
+                {{ form.email }}<br>
+                {% for error in form.email.errors %}
+                <span style="color: red;">{{ error }}</span>
+                {% endfor %}
+            </p>
+            <p>
+                {{ form.emailRecuperacion.label }}<br>
+                {{ form.emailRecuperacion }}<br>
+                {% for error in form.emailRecuperacion.errors %}
+                <span style="color: red;">{{ error }}</span>
+                {% endfor %}
+            </p>
+            <p>
+                {{ form.imei.label }}<br>
+                {{ form.imei }}<br>
+                {% for error in form.imei.errors %}
+                <span style="color: red;">{{ error }}</span>
+                {% endfor %}
+            </p>
+            <p>
+                <input type="submit" class="btn btn-primary btn-xs" value="Modificar" name="modif">
+                </p>
+        </form>
+    </div>
+   
+</body>
+{% endblock %}
+
+
+
+
+
+
+

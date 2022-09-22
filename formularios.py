@@ -82,7 +82,17 @@ class FormModifica(FlaskForm):
     submit_modifica = SubmitField('Modifica') 
     submit_baja = SubmitField('Baja')
 
- 
+class FormModificaEmpleado(FlaskForm):
+    nombre = StringField('Nombre', validators=[DataRequired(message="Campo obligatorio")])
+    apellidos = StringField('Apellidos', validators=[DataRequired(message="Campo obligatorio")])
+    nif = StringField('Nif', validators=[Regexp('[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][A-Z]', message="NIF incorrecto")])
+    tlf = StringField('Telefono', validators=[Regexp('[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]', message="Campo obliogatorio")])
+    email = StringField('Email', validators=[DataRequired(message="Formato correo incorrecto"), Email()])
+    emailRecuperacion = StringField('Email alternativo', validators=[DataRequired(message="Formato correo incorrecto"), Email()])
+    imei = StringField('Imei dispositivo registrado', render_kw={'readonly': True})
+    
+    submit_modifica = SubmitField('Modifica') 
+
  
  
  

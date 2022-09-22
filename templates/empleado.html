@@ -25,6 +25,7 @@
         <p>Tlf.: {{ usuario.tlf }}
         <p>IMEI registrado: {{usuario.imei}}</p>
         <p>Correo recuperacion: {{usuario.emailRecuperacion}}
+        <p><a href="{{ url_for('usuarios_blueprint.modifica_empleado') }}">Modificar</a>
     </p>
     </div>
 
