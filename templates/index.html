@@ -77,12 +77,10 @@
                     integrity="sha512-8uxY/YCNhC7O+ZXitcFjbt1FFC4g7LCGE6uCSxR5MYl2TA9qUKdNUUMoINpBb7O0/Bc8590O8n9zktib1fMiHA==" 
                     crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
-                <!--<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.9.1/extensions/editable/bootstrap-table-editable.js"></script>-->
-                <!--<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.9.1/extensions/export/bootstrap-table-export.js"></script>-->
+               
                 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.9.1/extensions/export/bootstrap-table-export.min.js" 
                     integrity="sha512-B10O3fjdFvKIH2+I1HoNRzhU3PG5lttxH0twDC5/5DpuFesgVEoSOrlPHX7HomSnPhmeO10GXJj6rLmqlejE0w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-               <!-- <script type="text/javascript" src="https://rawgit.com/hhurz/tableExport.jquery.plugin/master/tableExport.js"></script>-->
-                <!--<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.9.1/extensions/filter-control/bootstrap-table-filter-control.js"></script>-->
+              
                 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.9.1/extensions/filter-control/bootstrap-table-filter-control.js" 
                     integrity="sha512-T1Eqdlhk26VUvNaUxFAnoIoLZXNKq1w92qGhp+6Xx/glOAMRSIihOPz00+779RBZrecpx49PFSfRgK0C+9upwQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
                 
@@ -92,12 +90,10 @@
                 <script type="text/javascript" nonce="2726c7f26c">
                     var parametros = new window.URLSearchParams(window.location.search);    
                     var idUsuario = parametros.get('idUsuario');
-                    console.log('idUsuario cargado: ',idUsuario);
                     var fecha_actual = new Date();
                     var strFecha_actual = fecha_actual.getFullYear() + "/" + (fecha_actual.getMonth()+1) + "/" + fecha_actual.getDate();
                     
                     url_home = "{{ url_for('usuarios_blueprint.usuarios_empresa_ajax') }}";
-                    console.log('url carga:', url_home);
 
                     var csrftoken = $('meta[name=csrf-token]').attr('content')
                     var table = $('#tablaEmpleados').DataTable
@@ -158,16 +154,14 @@
                     });
 
                     $('#tablaEmpleados tbody').on('click', '#botonGastos', function () {
-                        
-                        console.log("gastos pulsado tiene el id de usuario: ", this.dataset.id);
+
                         var id = this.dataset.id;
 
                         window.location.href = "{{ url_for('usuarios_blueprint.usuario_gastos') }}" + "?idUsuario=" + id;
                     });
 
                     $('#tablaEmpleados tbody').on('click', '#botonFichajes', function () {
-                        
-                        console.log("fichajes pulsado tiene el id de usuario: ", this.dataset.id);
+
                         var id = this.dataset.id;
 
                         window.location.href = "{{ url_for('usuarios_blueprint.usuario_fichajes') }}" + "?idUsuario=" + id;
@@ -175,8 +169,7 @@
                     });
 
                     $('#tablaEmpleados tbody').on('click', '#botonModificar', function () {
-                        
-                        console.log("modificar pulsado tiene el id de usuario: ", this.dataset.id);
+
                         var id = this.dataset.id;
 
                         window.location.href = "{{ url_for('usuarios_blueprint.modifica_usuario') }}" + "?idUsuario=" + id;

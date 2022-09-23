@@ -20,12 +20,6 @@
             <h2>Listado de gastos</h2>
             <p class="lead">
 
-        <!--<form name="formulario" id="form-prueba" method="POST" action=""> -->
-            <!--
-            {%if (current_user.is_admin() == True) or (current_user.is_gestor() == True) %}       
-                <input type="button" value="Aprobar gastos" id="aprobar"/>
-            {% endif%}
-            -->
                 <table id="table" 
                 data-sortable="true"
                 data-toggle="table"
@@ -50,7 +44,7 @@
                        </thead>  
 
                     </table>
-            <!--</form>-->
+
             </div>                
 
                     <div id="myModal" class="modal fade" role="dialog" >
@@ -94,24 +88,18 @@ integrity="sha512-GsFQLFpndObn08d92Q2GP3RTcc2TbYoWIKscSiEXP/zP0yfkNTld9mWHeeqHuq
 <script src="{{ url_for('static', filename='libs/popper.js') }}"></script>
 
 
-<!--<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>-->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js" 
 integrity="sha512-K1qjQ+NcF2TYO/eI3M6v8EiNYZfA95pQumfvcVrTHtwQVDG+aHRqLi/ETn2uB+1JqwYqVG3LIvdm9lj6imS/pQ==" crossorigin="anonymous"></script>
-<!--<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" 
-integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>-->
 
 
-<!--<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.10.0/bootstrap-table.js"></script>-->
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.10.0/bootstrap-table.js" 
 integrity="sha512-8uxY/YCNhC7O+ZXitcFjbt1FFC4g7LCGE6uCSxR5MYl2TA9qUKdNUUMoINpBb7O0/Bc8590O8n9zktib1fMiHA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<!--<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.9.1/extensions/editable/bootstrap-table-editable.js"></script>-->
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.9.1/extensions/editable/bootstrap-table-editable.js" 
 integrity="sha512-C+KmsrRC+2kdMDNrGBUob8pww5ST/n3Q2blYYLWGFkRYMFedeB89Z3KIIO1/8/iw+yWd9UH4U2YSwXsTJMYgaA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
-<!--
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.21.0/extensions/export/bootstrap-table-export.min.js" 
-    integrity="sha512-tpNXR6peBB3JocCaeOs3vlLYMIkdcolWoM4pWhjLJnF+RlRj8ato/oM5j5K3w/Ff/yUbSLhQjcbonayCpMmJVA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
--->
+
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/TableExport/5.2.0/js/tableexport.js" 
     integrity="sha512-Azqvrwc2opXWFeMnE5xq69qhUAw77VH57FtkbHIf01BzI+C1loZ7YlXzDnMbnvXO7lkv7QuZq0aDZA03h7WO0w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -140,9 +128,8 @@ integrity="sha512-C+KmsrRC+2kdMDNrGBUob8pww5ST/n3Q2blYYLWGFkRYMFedeB89Z3KIIO1/8/
     $(function () {
 
         var idUsuario = "{{ idUsuario }}";
-        console.log('idUsuario cargado: ',idUsuario);
         url_home = "{{ url_for('usuarios_blueprint.ajax_carga_tickets') }}";
-        console.log('url carga:', url_home);
+
         
         //Funcion Ajax para renderizar el checkbox en funcion del valor del dato almacenado en la BBDD    
         var checkValidado = function( data, type, row, meta ) {
@@ -221,30 +208,24 @@ integrity="sha512-C+KmsrRC+2kdMDNrGBUob8pww5ST/n3Q2blYYLWGFkRYMFedeB89Z3KIIO1/8/
         });
 
             $('#checkgasto').on ('click', function(){
-                console.log('check cambio');
                 return false;        
             });
 
 
         //Controlamos el evento 'click' del boton de Aprobacion de gasto dentro de la ventana modal
         $('#botonValida').on('click', function(e) {
-            console.log('estoy en valida boton');
             //extraemos el idGasto del atributo data-gasto del boton
             var idGastoParametro = jQuery('#botonValida').attr('data-gasto');
-            console.log('Y el id es: ', idGastoParametro);
                 $.ajax({
                     type:"POST",
                     data: { idGasto: idGastoParametro},
                     url:url_valida,
                     success: function(resultado) {
-                        console.log('resultado:',resultado);
                         table.ajax.reload(false);  
                     }
                 });
-                console.log('VALIDADO');
                 //cerramos la modal cuando hemos apribado el gasto
                 //El hide no funciona en esta version de bootstrap
-                //jQuery('#myModal').modal('hide');
                 //Para cerrar la modal hacemos una llamada al boton close de la modal por medio de su clase '.close'
                 jQuery('.close').click();
         });
@@ -258,9 +239,7 @@ integrity="sha512-C+KmsrRC+2kdMDNrGBUob8pww5ST/n3Q2blYYLWGFkRYMFedeB89Z3KIIO1/8/
             //sacamos el idGasto del boton pulsado, esta guardado en el atributo data-gasto
             //Para acceder a los datos data- se accede solo por lo que esta despues del -
             datosBoton = triggerButton.data('gasto');
-            console.log('disparador:', datosBoton);
             let idGastoParametro = datosBoton; //guardamos el id del Gasto
-            console.log("id:", idGastoParametro);
 
             var img = $('#showing').attr('src');     
             //Guardamos en data-gasto el idGasto para que podamos usarlo luego en el controlador 'click' del botonValida
@@ -268,11 +247,9 @@ integrity="sha512-C+KmsrRC+2kdMDNrGBUob8pww5ST/n3Q2blYYLWGFkRYMFedeB89Z3KIIO1/8/
             //Generamos la url para llamar al metodo de validacion del ticket
             url_valida = '{{ url_for('usuarios_blueprint.valida_ticket') }}';
             url_valida = url_valida + "?idGasto="+idGastoParametro;
-            console.log('url_valida:',url_valida);
                 
             img = "{{ url_for('usuarios_blueprint.carga_ticket', idGasto=id) }}";
-                
-            console.log('modal mostrada....');
+
                 //No coge el idGastoTabla y se lo tengo que añadir aqui.
             jQuery('#showing').attr('src', img+idGastoParametro);
            

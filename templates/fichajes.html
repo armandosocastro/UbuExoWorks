@@ -165,12 +165,10 @@
                   $(function () {  
                     var parametros = new window.URLSearchParams(window.location.search);    
                     var idUsuario = parametros.get('idUsuario');
-                    console.log('idUsuario cargado: ',idUsuario);
                     var fecha_actual = new Date();
                     var strFecha_actual = fecha_actual.getFullYear() + "/" + (fecha_actual.getMonth()+1) + "/" + fecha_actual.getDate();
                     
                     url_home = "{{ url_for('usuarios_blueprint.usuario_fichajes_ajax') }}";
-                    console.log('url carga:', url_home);
                     var peticionData = {'idUsuario': idUsuario, 'fecha': strFecha_actual};
 
                     //Funcion Ajax para renderizar el boton para mostrar el ticket en funcion del valor del dato almacenado en la BBDD    
@@ -189,7 +187,6 @@
                     }
 
                     var calculaTiempo = function( data, type, row, meta ) {
-                        console.log('calculando jornada');
                         return 'NumeroFichajes' + ' ' + rows.count();
                     }
 
@@ -236,8 +233,6 @@
                                         minutos = parseInt(splitTime1[1])+parseInt(splitTime2[1]);
                                         horas_sum = horas + minutos/60;
                                         minutos_sum = minutos%60;
-                                        console.log('split:', splitTime1, '---', splitTime2);
-                                        console.log('horas:', horas);
 
                                         return horas+':'+minutos;    
                                     }, '00:00:00');
@@ -279,7 +274,6 @@
                         "rowCallback": function( row, data) {
 
                             if (data['borrado'] === true) {
-                                console.log('este esta borrado');
                                 for (var i = 0; i < 9; i++) {
                                     celda = row.cells[i].innerHTML;
                                     $('td:eq('+i+')', row).html('<del>'+celda+'</del>');
@@ -293,13 +287,10 @@
                     });
 
                     $('#tablaFichajes tbody').on('click', '#eliminarFichaje', function () {
-                        console.log("boton pulsado fichaje tiene: ", this.dataset.fichaje);
                         var idFichaje = this.dataset.fichaje;
                        
-                        console.log('url_borrar:',url_borraFichaje);
                         var url_borraFichaje = '{{ url_for('usuarios_blueprint.borrar_fichaje_gestor') }}';
                         url_borraFichaje = url_borraFichaje + "?idFichaje="+idFichaje;
-                        console.log('url_borrar:',url_borraFichaje);
                         //Como el parametro del idFichaje ya va concatenado en la url ya no lo ponemos en "data" de la peticion Ajax
                         $.ajax({
                             type:"POST",
@@ -319,14 +310,11 @@
 
 
                     $('#tablaFichajes tbody').on('click', '#botonMapa', function () {
-                        
-                        console.log("boton pulsado tiene: ", this.dataset.longitud, this.dataset.latitud);
 
                         var longitud = this.dataset.longitud
                         var latitud = this.dataset.latitud
                         var fecha = this.dataset.fecha
                         var hora = this.dataset.hora
-                        console.log('fecha en mapa:', fecha)
                         if (marker == null) {
                             marker = L.marker([longitud,latitud]).addTo(map)
                             marker.bindPopup('<h5>'+fecha+'</h5>'+'<br><h5>'+hora+'</5>');
@@ -342,7 +330,6 @@
                     //Creamos el calendario con los eventos
                         url_eventos = "{{ url_for('usuarios_blueprint.get_fichaje_calendario') }}";
                         url_eventos = url_eventos + '?idUsuario=' + idUsuario + '&fecha=' + strFecha_actual;
-                        console.log('url peticion fichajes: ', url_eventos);
 
                         var calendarEl = document.getElementById('calendar');
                         var calendar = new FullCalendar.Calendar(calendarEl, {
@@ -373,10 +360,8 @@
 
                           dateClick: function(info) {
                               var strFecha_pulsada = info.date.getFullYear() + "/" + (info.date.getMonth()+1) + "/" + info.date.getDate();
-                              console.log('Dia pulsado: ',strFecha_pulsada);
 
                               peticionData = {idUsuario: idUsuario, fecha: strFecha_pulsada};
-                              //console.log('peticion data: ', peticionData);
                               //extraemos el idGasto del atributo data-gasto del boton
                               table.ajax.url(url_home).load();  
                           }
@@ -434,13 +419,11 @@
                         document.getElementById('botonGrabaFichaje').addEventListener('click',
                             function addFichaje() {
                                 url_fichaje = '{{ url_for('usuarios_blueprint.fichaje_gestor') }}';
-                                
-                                console.log('url_fichaje:',url_fichaje);
+
                                 var fecha_fichaje = jQuery('#txtFecha').val();
                                 var hora_fichaje = jQuery('#txtHora').val();
                                 var tipo_fichaje = jQuery('#txtTipo').val();
                                 var incidencia_fichaje = jQuery('#txtIncidencia').val();
-                                console.log("Datos solicitud posrt: ", fecha_fichaje,':',hora_fichaje,':',tipo_fichaje,':',incidencia_fichaje)
                                 $.ajax({
                                     type:"POST",
                                     dataType: "json",
@@ -452,9 +435,8 @@
                                             incidencia:incidencia_fichaje}),
                                     url:url_fichaje,
                                     success: function(resultado) {
-                                        console.log('resultado:', resultado);
+
                                         if (resultado === 'solapado') {
-                                            console.log('resultado:',resultado);
                                             document.getElementById('fichajeSolapado').innerText = "Fichaje solapado";
                                         }
                                         else {
@@ -486,13 +468,10 @@
                   </script>
                 
                 <script type="text/javascript" nonce="2726c7f26c">
-                    console.log('cargado....');
                     const botones = document.querySelectorAll(".btn-primary");
 
                     const haceClick = function (e) {
                         var triggerButton = $(e.relatedTarget);
-                        console.log('aqui', triggerButton.data);
-                        console.log("boton pulsado tiene: ", this.dataset.longitud, this.dataset.latitud);
 
                         var longitud = this.dataset.longitud
                         var latitud = this.dataset.latitud
@@ -508,9 +487,7 @@
                         }
                             map.flyTo([longitud,latitud], 18)
                     }
-                    console.log('antes de eventos botones');
                     botones.forEach(boton => {
-                        console.log('boton');
                         boton.addEventListener("click", haceClick);
                     });
                 </script>
