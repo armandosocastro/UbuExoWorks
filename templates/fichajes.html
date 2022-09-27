@@ -103,10 +103,10 @@
                             <button type="button" class="close" data-dismiss="modal">&times;</button>
                         </div>
                         <div class="mi-modal-body" >
-                            <label>Fecha <input type="text" id="txtFecha" class="form-control" placeholder="Fecha"></label>
-                            <label>Hora <input type="text" id="txtHora" class="form-control" placeholder="Hora"></label>
-                            <label>Tipo <input type="text" id="txtTipo" class="form-control" placeholder="Tipo"></label>
-                            <label>Incidencia <input type="text" id="txtIncidencia" class="form-control" placeholder="Incidencia"></label>
+                            <label>Fecha <input type="date" id="txtFecha" class="form-control" placeholder="fecha"></label>
+                            <label>Hora <input type="text" id="txtHora" class="form-control" placeholder="hh:mm"></label>
+                            <label>Tipo <input type="text" id="txtTipo" class="form-control" placeholder="fichaje o pausa"></label>
+                            <label>Incidencia <input type="text" id="txtIncidencia" class="form-control" placeholder="incidencia"></label>
                         </div>
                         <div class="modal-footer">        
                             {%if (current_user.is_admin() == True) or (current_user.is_gestor() == True) %}      
