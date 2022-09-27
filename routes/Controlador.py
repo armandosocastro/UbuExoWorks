@@ -177,35 +177,45 @@ def fichaje_gestor():
         fichajes_hoy = Fichaje.get_by_idEmpleadoFecha(id_usuario, fecha)
         for fichaje in fichajes_hoy:
             #No permitimos fichajes a la misma hora, debe transcurrir un minuto entre ellos
-            if (fichaje.hora_entrada).strftime("%H:%M") == hora:
-                return jsonify("solapado")
-            if fichaje.tipo == 'entrada':
-                entradas = entradas + 1
-            elif fichaje.tipo == 'salida':
-                    entradas = entradas -1
-            elif fichaje.tipo == 'pausa entrada':
-                pausas = pausas + 1
-            else:
-                pausas = pausas - 1
+            if fichaje.borrado == False:
+                if (fichaje.hora_entrada).strftime("%H:%M") == hora:
+                    return jsonify(token="solapado"), 400
+                if fichaje.tipo == 'entrada':
+                    entradas = entradas + 1
+                elif fichaje.tipo == 'salida':
+                        entradas = entradas -1
+                elif fichaje.tipo == 'pausa entrada':
+                    pausas = pausas + 1
+                else:
+                    pausas = pausas - 1       
+                if fichaje.tipo == 'entrada':    
+                    hora_anterior = fichaje.hora_entrada
+                    hora_anterior = time.strftime(fichaje.hora_entrada, "%H:%M")
         if tipo == 'fichaje':
             if entradas % 2 == 0:
                 tipo_fichaje = 'entrada'
             else:
                 tipo_fichaje = 'salida'
+                hora_pasada = time.fromisoformat(hora)  
+                a_timedelta = datetime.strptime(hora, "%H:%M") - datetime(1900, 1, 1)
+                b_timedelta = datetime.strptime(hora_anterior, "%H:%M") - datetime(1900, 1, 1)
+                tiempo = a_timedelta - b_timedelta
         else:
             if pausas % 2 == 0:
                 tipo_fichaje = 'pausa entrada'
             else:
-                tipo_fichaje = 'pausa salida'      
+                tipo_fichaje = 'pausa salida' 
+
+    
         fichaje = Fichaje(fecha=fecha, hora_entrada=hora, entrada_longitud=longitud, entrada_latitud=latitud,
-                          incidencia=incidencia,idUsuario=id_usuario, tipo=tipo_fichaje, borrado=False)
+                          incidencia=incidencia,idUsuario=id_usuario, tipo=tipo_fichaje, tiempo_trabajado=tiempo,borrado=False)
         fichaje.save()
         return jsonify(token=RESPUESTA_OK),200            
     except Exception as ex:
         print(ex)
         return 'JSON incorrecto', 400
 
-#Metodo para borrado de fichaje por perfil Gestor
+#Metodo para borrado de fichaje por perfi Gestor
 @main.route('/borrarFichaje', methods=['POST'])
 @login_required
 @gestor_required
