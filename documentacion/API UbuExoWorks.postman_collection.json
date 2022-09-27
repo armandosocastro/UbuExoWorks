@@ -21,7 +21,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"login\":\"a.socastro@coruna.gal\",\r\n    \"password\": \"probando\",\r\n    \"imei\": \"121211\"\r\n}\r\n",
+					"raw": "{\r\n    \"login\":\"",\r\n    \"password\": \"\",\r\n    \"imei\": \"121211\"\r\n}\r\n",
 					"options": {
 						"raw": {
 							"language": "json"
