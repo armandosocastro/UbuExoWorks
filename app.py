@@ -45,10 +45,10 @@ def create_app():
     app = Flask(__name__)
     
     csp = {
-        'default-src': ['*', 'unsafe-inline', 'strict-dynamic', 'unsafe-hashes', "'sha256-yVhOaSpFYsHuy4vwNVCVxs7R7CGIk8isIDt57LTu9Fo='"],
+        'default-src': ['*', 'unsafe-inline', 'strict-dynamic'],
         'script-src': ['*', '\'self\'', "'nonce-2726c7f26c'", 'strict-dynamic', 'unsafe-inline'],
         'font-src': ['*', 'strict-dynamic', 'data:'],
-        'img-src': ['*', 'data:', '\'self\''],   
+        'img-src': ['*', '\'self\''],   
     }
     
     talisman = Talisman(app, content_security_policy=csp)
